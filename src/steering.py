@@ -4,7 +4,7 @@ import torch
 
 
 def make_add_direction_hook(direction: torch.Tensor, alpha: float):
-    def hook(resid, _hook):
+    def hook(resid, hook):
         resid[:, -1, :] = resid[:, -1, :] + alpha * direction.to(resid.device)
         return resid
 
