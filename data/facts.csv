@@ -1,0 +1,41 @@
+language,domain,pair_id,statement,label
+en,capital,capital_france,The capital of France is Paris.,1
+en,capital,capital_france,The capital of France is Rome.,0
+en,capital,capital_japan,The capital of Japan is Tokyo.,1
+en,capital,capital_japan,The capital of Japan is Kyoto.,0
+en,capital,capital_italy,The capital of Italy is Rome.,1
+en,capital,capital_italy,The capital of Italy is Milan.,0
+en,capital,capital_canada,The capital of Canada is Ottawa.,1
+en,capital,capital_canada,The capital of Canada is Toronto.,0
+en,geography,nile,The Nile is a river in Africa.,1
+en,geography,nile,The Nile is a mountain in Europe.,0
+en,science,water_freezing,Water freezes at 0 degrees Celsius.,1
+en,science,water_freezing,Water freezes at 100 degrees Celsius.,0
+en,science,earth_sun,The Earth orbits the Sun.,1
+en,science,earth_sun,The Sun orbits the Earth.,0
+en,science,oxygen,Humans need oxygen to survive.,1
+en,science,oxygen,Humans need helium to survive.,0
+en,math,two_plus_two,Two plus two equals four.,1
+en,math,two_plus_two,Two plus two equals five.,0
+en,history,great_wall,The Great Wall is in China.,1
+en,history,great_wall,The Great Wall is in Brazil.,0
+zh,capital,capital_france_zh,法国的首都是巴黎。,1
+zh,capital,capital_france_zh,法国的首都是罗马。,0
+zh,capital,capital_japan_zh,日本的首都是东京。,1
+zh,capital,capital_japan_zh,日本的首都是京都。,0
+zh,capital,capital_italy_zh,意大利的首都是罗马。,1
+zh,capital,capital_italy_zh,意大利的首都是米兰。,0
+zh,capital,capital_canada_zh,加拿大的首都是渥太华。,1
+zh,capital,capital_canada_zh,加拿大的首都是多伦多。,0
+zh,geography,nile_zh,尼罗河位于非洲。,1
+zh,geography,nile_zh,尼罗河位于欧洲的山脉中。,0
+zh,science,water_freezing_zh,水在 0 摄氏度会结冰。,1
+zh,science,water_freezing_zh,水在 100 摄氏度会结冰。,0
+zh,science,earth_sun_zh,地球围绕太阳运行。,1
+zh,science,earth_sun_zh,太阳围绕地球运行。,0
+zh,science,oxygen_zh,人类需要氧气生存。,1
+zh,science,oxygen_zh,人类需要氦气生存。,0
+zh,math,two_plus_two_zh,二加二等于四。,1
+zh,math,two_plus_two_zh,二加二等于五。,0
+zh,history,great_wall_zh,长城位于中国。,1
+zh,history,great_wall_zh,长城位于巴西。,0

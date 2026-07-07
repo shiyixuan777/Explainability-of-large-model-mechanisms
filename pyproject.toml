@@ -1,0 +1,17 @@
+[project]
+name = "mechanistic-interpretability-truth-direction"
+version = "0.1.0"
+description = "A two-week mechanistic interpretability project on truth directions and activation steering."
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]

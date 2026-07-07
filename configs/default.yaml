@@ -1,0 +1,15 @@
+project:
+  title: "Truth Direction for Fact Verification"
+  seed: 42
+
+model:
+  name: "gpt2-small"
+  default_layer: 8
+
+data:
+  path: "data/facts.csv"
+  prompt_template: "Statement: {statement}\nAnswer true or false:"
+
+steering:
+  alphas: [-4, -2, -1, 0, 1, 2, 4]
+  hook_name_template: "blocks.{layer}.hook_resid_post"
