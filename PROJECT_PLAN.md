@@ -17,9 +17,9 @@
 
 ## Day 3-4: Dataset
 
-- 构建 300-500 对 true/false 陈述
-- 领域包括首都、地理、科学常识、人物、组织
-- 先英文，后中文
+- 构建英文 true/false 陈述，先保证 GPT-2-small 能稳定跑通
+- 领域包括首都、国家所在洲、化学元素符号、书籍作者、地标国家、科学常识、数学事实
+- 后续再单独构建中文版本，避免英文 GPT-2-small 被中文样本干扰
 - 固定 train/test split
 
 ## Day 5-6: Locate with Linear Probe

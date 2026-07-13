@@ -30,8 +30,8 @@ python -m venv .venv
 pip install -r requirements.txt
 python -m scripts.check_env
 python -m scripts.build_dataset
-python -m scripts.run_probe --model gpt2-small --data data/facts.csv --out figures/probe_layers.csv
-python -m scripts.run_steering --model gpt2-small --data data/facts.csv --layer 8 --out figures/steering_alpha.csv
+python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --out figures/probe_layers.csv
+python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --layer 8 --out figures/steering_alpha.csv
 ```
 
 如果 `transformer-lens` 或 `torch` 安装很慢，可以先只运行：
@@ -65,4 +65,11 @@ python -m scripts.build_dataset
 
 ## Notes
 
-默认模型是 `gpt2-small`，因为它和 TransformerLens 配合最稳定。完成第一版后，可以把模型替换为 `Qwen/Qwen2.5-0.5B` 或 `Qwen/Qwen2.5-1.5B`，但可能需要根据框架支持情况调整 hook 代码。
+默认数据集 `data/facts.csv` 包含 528 条英文事实判断样本，true/false 各 264 条，覆盖 capital、continent、element_symbol、book_author、landmark_country、science、math 七个领域。默认模型是 `gpt2-small`，因为它和 TransformerLens 配合最稳定。完成第一版后，可以把模型替换为 `Qwen/Qwen2.5-0.5B` 或 `Qwen/Qwen2.5-1.5B`，但可能需要根据框架支持情况调整 hook 代码。
+
+可以用领域过滤做小实验：
+
+```powershell
+python -m scripts.run_probe --domain capital,science
+python -m scripts.run_steering --layer 8 --domain capital,science
+```

@@ -48,6 +48,19 @@ def main() -> None:
         plt.tight_layout()
         plt.savefig(out_dir / "steering_alpha.png", dpi=200)
 
+        if "accuracy_from_logit_sign" in steering.columns:
+            plt.figure(figsize=(7, 4))
+            sns.lineplot(
+                data=steering,
+                x="alpha",
+                y="accuracy_from_logit_sign",
+                marker="o",
+            )
+            plt.ylim(0, 1.05)
+            plt.title("Steering Strength vs Logit-Sign Accuracy")
+            plt.tight_layout()
+            plt.savefig(out_dir / "steering_accuracy.png", dpi=200)
+
     print(f"Saved plots to {out_dir}")
 
 

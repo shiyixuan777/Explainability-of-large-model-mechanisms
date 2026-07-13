@@ -1,41 +1,529 @@
 language,domain,pair_id,statement,label
 en,capital,capital_france,The capital of France is Paris.,1
-en,capital,capital_france,The capital of France is Rome.,0
-en,capital,capital_japan,The capital of Japan is Tokyo.,1
-en,capital,capital_japan,The capital of Japan is Kyoto.,0
+en,capital,capital_france,The capital of France is Dublin.,0
+en,capital,capital_germany,The capital of Germany is Berlin.,1
+en,capital,capital_germany,The capital of Germany is London.,0
 en,capital,capital_italy,The capital of Italy is Rome.,1
-en,capital,capital_italy,The capital of Italy is Milan.,0
+en,capital,capital_italy,The capital of Italy is Reykjavik.,0
+en,capital,capital_spain,The capital of Spain is Madrid.,1
+en,capital,capital_spain,The capital of Spain is Moscow.,0
+en,capital,capital_portugal,The capital of Portugal is Lisbon.,1
+en,capital,capital_portugal,The capital of Portugal is Kyiv.,0
+en,capital,capital_netherlands,The capital of Netherlands is Amsterdam.,1
+en,capital,capital_netherlands,The capital of Netherlands is Ankara.,0
+en,capital,capital_belgium,The capital of Belgium is Brussels.,1
+en,capital,capital_belgium,The capital of Belgium is Cairo.,0
+en,capital,capital_austria,The capital of Austria is Vienna.,1
+en,capital,capital_austria,The capital of Austria is Rabat.,0
+en,capital,capital_switzerland,The capital of Switzerland is Bern.,1
+en,capital,capital_switzerland,The capital of Switzerland is Nairobi.,0
+en,capital,capital_poland,The capital of Poland is Warsaw.,1
+en,capital,capital_poland,The capital of Poland is Addis Ababa.,0
+en,capital,capital_czech_republic,The capital of Czech Republic is Prague.,1
+en,capital,capital_czech_republic,The capital of Czech Republic is Abuja.,0
+en,capital,capital_hungary,The capital of Hungary is Budapest.,1
+en,capital,capital_hungary,The capital of Hungary is Accra.,0
+en,capital,capital_greece,The capital of Greece is Athens.,1
+en,capital,capital_greece,The capital of Greece is Pretoria.,0
+en,capital,capital_norway,The capital of Norway is Oslo.,1
+en,capital,capital_norway,The capital of Norway is New Delhi.,0
+en,capital,capital_sweden,The capital of Sweden is Stockholm.,1
+en,capital,capital_sweden,The capital of Sweden is Beijing.,0
+en,capital,capital_finland,The capital of Finland is Helsinki.,1
+en,capital,capital_finland,The capital of Finland is Tokyo.,0
+en,capital,capital_denmark,The capital of Denmark is Copenhagen.,1
+en,capital,capital_denmark,The capital of Denmark is Seoul.,0
+en,capital,capital_ireland,The capital of Ireland is Dublin.,1
+en,capital,capital_ireland,The capital of Ireland is Bangkok.,0
+en,capital,capital_united_kingdom,The capital of United Kingdom is London.,1
+en,capital,capital_united_kingdom,The capital of United Kingdom is Hanoi.,0
+en,capital,capital_iceland,The capital of Iceland is Reykjavik.,1
+en,capital,capital_iceland,The capital of Iceland is Jakarta.,0
+en,capital,capital_russia,The capital of Russia is Moscow.,1
+en,capital,capital_russia,The capital of Russia is Kuala Lumpur.,0
+en,capital,capital_ukraine,The capital of Ukraine is Kyiv.,1
+en,capital,capital_ukraine,The capital of Ukraine is Singapore.,0
+en,capital,capital_turkey,The capital of Turkey is Ankara.,1
+en,capital,capital_turkey,The capital of Turkey is Manila.,0
+en,capital,capital_egypt,The capital of Egypt is Cairo.,1
+en,capital,capital_egypt,The capital of Egypt is Canberra.,0
+en,capital,capital_morocco,The capital of Morocco is Rabat.,1
+en,capital,capital_morocco,The capital of Morocco is Wellington.,0
+en,capital,capital_kenya,The capital of Kenya is Nairobi.,1
+en,capital,capital_kenya,The capital of Kenya is Ottawa.,0
+en,capital,capital_ethiopia,The capital of Ethiopia is Addis Ababa.,1
+en,capital,capital_ethiopia,"The capital of Ethiopia is Washington, D.C..",0
+en,capital,capital_nigeria,The capital of Nigeria is Abuja.,1
+en,capital,capital_nigeria,The capital of Nigeria is Mexico City.,0
+en,capital,capital_ghana,The capital of Ghana is Accra.,1
+en,capital,capital_ghana,The capital of Ghana is Brasilia.,0
+en,capital,capital_south_africa,The capital of South Africa is Pretoria.,1
+en,capital,capital_south_africa,The capital of South Africa is Buenos Aires.,0
+en,capital,capital_india,The capital of India is New Delhi.,1
+en,capital,capital_india,The capital of India is Santiago.,0
+en,capital,capital_china,The capital of China is Beijing.,1
+en,capital,capital_china,The capital of China is Lima.,0
+en,capital,capital_japan,The capital of Japan is Tokyo.,1
+en,capital,capital_japan,The capital of Japan is Bogota.,0
+en,capital,capital_south_korea,The capital of South Korea is Seoul.,1
+en,capital,capital_south_korea,The capital of South Korea is Caracas.,0
+en,capital,capital_thailand,The capital of Thailand is Bangkok.,1
+en,capital,capital_thailand,The capital of Thailand is Montevideo.,0
+en,capital,capital_vietnam,The capital of Vietnam is Hanoi.,1
+en,capital,capital_vietnam,The capital of Vietnam is Asuncion.,0
+en,capital,capital_indonesia,The capital of Indonesia is Jakarta.,1
+en,capital,capital_indonesia,The capital of Indonesia is Sucre.,0
+en,capital,capital_malaysia,The capital of Malaysia is Kuala Lumpur.,1
+en,capital,capital_malaysia,The capital of Malaysia is Quito.,0
+en,capital,capital_singapore,The capital of Singapore is Singapore.,1
+en,capital,capital_singapore,The capital of Singapore is Riyadh.,0
+en,capital,capital_philippines,The capital of Philippines is Manila.,1
+en,capital,capital_philippines,The capital of Philippines is Tehran.,0
+en,capital,capital_australia,The capital of Australia is Canberra.,1
+en,capital,capital_australia,The capital of Australia is Baghdad.,0
+en,capital,capital_new_zealand,The capital of New Zealand is Wellington.,1
+en,capital,capital_new_zealand,The capital of New Zealand is Jerusalem.,0
 en,capital,capital_canada,The capital of Canada is Ottawa.,1
-en,capital,capital_canada,The capital of Canada is Toronto.,0
-en,geography,nile,The Nile is a river in Africa.,1
-en,geography,nile,The Nile is a mountain in Europe.,0
-en,science,water_freezing,Water freezes at 0 degrees Celsius.,1
-en,science,water_freezing,Water freezes at 100 degrees Celsius.,0
-en,science,earth_sun,The Earth orbits the Sun.,1
-en,science,earth_sun,The Sun orbits the Earth.,0
-en,science,oxygen,Humans need oxygen to survive.,1
-en,science,oxygen,Humans need helium to survive.,0
-en,math,two_plus_two,Two plus two equals four.,1
-en,math,two_plus_two,Two plus two equals five.,0
-en,history,great_wall,The Great Wall is in China.,1
-en,history,great_wall,The Great Wall is in Brazil.,0
-zh,capital,capital_france_zh,法国的首都是巴黎。,1
-zh,capital,capital_france_zh,法国的首都是罗马。,0
-zh,capital,capital_japan_zh,日本的首都是东京。,1
-zh,capital,capital_japan_zh,日本的首都是京都。,0
-zh,capital,capital_italy_zh,意大利的首都是罗马。,1
-zh,capital,capital_italy_zh,意大利的首都是米兰。,0
-zh,capital,capital_canada_zh,加拿大的首都是渥太华。,1
-zh,capital,capital_canada_zh,加拿大的首都是多伦多。,0
-zh,geography,nile_zh,尼罗河位于非洲。,1
-zh,geography,nile_zh,尼罗河位于欧洲的山脉中。,0
-zh,science,water_freezing_zh,水在 0 摄氏度会结冰。,1
-zh,science,water_freezing_zh,水在 100 摄氏度会结冰。,0
-zh,science,earth_sun_zh,地球围绕太阳运行。,1
-zh,science,earth_sun_zh,太阳围绕地球运行。,0
-zh,science,oxygen_zh,人类需要氧气生存。,1
-zh,science,oxygen_zh,人类需要氦气生存。,0
-zh,math,two_plus_two_zh,二加二等于四。,1
-zh,math,two_plus_two_zh,二加二等于五。,0
-zh,history,great_wall_zh,长城位于中国。,1
-zh,history,great_wall_zh,长城位于巴西。,0
+en,capital,capital_canada,The capital of Canada is Amman.,0
+en,capital,capital_united_states,"The capital of United States is Washington, D.C..",1
+en,capital,capital_united_states,The capital of United States is Beirut.,0
+en,capital,capital_mexico,The capital of Mexico is Mexico City.,1
+en,capital,capital_mexico,The capital of Mexico is Islamabad.,0
+en,capital,capital_brazil,The capital of Brazil is Brasilia.,1
+en,capital,capital_brazil,The capital of Brazil is Kabul.,0
+en,capital,capital_argentina,The capital of Argentina is Buenos Aires.,1
+en,capital,capital_argentina,The capital of Argentina is Astana.,0
+en,capital,capital_chile,The capital of Chile is Santiago.,1
+en,capital,capital_chile,The capital of Chile is Ulaanbaatar.,0
+en,capital,capital_peru,The capital of Peru is Lima.,1
+en,capital,capital_peru,The capital of Peru is Kathmandu.,0
+en,capital,capital_colombia,The capital of Colombia is Bogota.,1
+en,capital,capital_colombia,The capital of Colombia is Dhaka.,0
+en,capital,capital_venezuela,The capital of Venezuela is Caracas.,1
+en,capital,capital_venezuela,The capital of Venezuela is Sri Jayawardenepura Kotte.,0
+en,capital,capital_uruguay,The capital of Uruguay is Montevideo.,1
+en,capital,capital_uruguay,The capital of Uruguay is Naypyidaw.,0
+en,capital,capital_paraguay,The capital of Paraguay is Asuncion.,1
+en,capital,capital_paraguay,The capital of Paraguay is Phnom Penh.,0
+en,capital,capital_bolivia,The capital of Bolivia is Sucre.,1
+en,capital,capital_bolivia,The capital of Bolivia is Vientiane.,0
+en,capital,capital_ecuador,The capital of Ecuador is Quito.,1
+en,capital,capital_ecuador,The capital of Ecuador is Havana.,0
+en,capital,capital_saudi_arabia,The capital of Saudi Arabia is Riyadh.,1
+en,capital,capital_saudi_arabia,The capital of Saudi Arabia is Kingston.,0
+en,capital,capital_iran,The capital of Iran is Tehran.,1
+en,capital,capital_iran,The capital of Iran is Santo Domingo.,0
+en,capital,capital_iraq,The capital of Iraq is Baghdad.,1
+en,capital,capital_iraq,The capital of Iraq is San Jose.,0
+en,capital,capital_israel,The capital of Israel is Jerusalem.,1
+en,capital,capital_israel,The capital of Israel is Panama City.,0
+en,capital,capital_jordan,The capital of Jordan is Amman.,1
+en,capital,capital_jordan,The capital of Jordan is Paris.,0
+en,capital,capital_lebanon,The capital of Lebanon is Beirut.,1
+en,capital,capital_lebanon,The capital of Lebanon is Berlin.,0
+en,capital,capital_pakistan,The capital of Pakistan is Islamabad.,1
+en,capital,capital_pakistan,The capital of Pakistan is Rome.,0
+en,capital,capital_afghanistan,The capital of Afghanistan is Kabul.,1
+en,capital,capital_afghanistan,The capital of Afghanistan is Madrid.,0
+en,capital,capital_kazakhstan,The capital of Kazakhstan is Astana.,1
+en,capital,capital_kazakhstan,The capital of Kazakhstan is Lisbon.,0
+en,capital,capital_mongolia,The capital of Mongolia is Ulaanbaatar.,1
+en,capital,capital_mongolia,The capital of Mongolia is Amsterdam.,0
+en,capital,capital_nepal,The capital of Nepal is Kathmandu.,1
+en,capital,capital_nepal,The capital of Nepal is Brussels.,0
+en,capital,capital_bangladesh,The capital of Bangladesh is Dhaka.,1
+en,capital,capital_bangladesh,The capital of Bangladesh is Vienna.,0
+en,capital,capital_sri_lanka,The capital of Sri Lanka is Sri Jayawardenepura Kotte.,1
+en,capital,capital_sri_lanka,The capital of Sri Lanka is Bern.,0
+en,capital,capital_myanmar,The capital of Myanmar is Naypyidaw.,1
+en,capital,capital_myanmar,The capital of Myanmar is Warsaw.,0
+en,capital,capital_cambodia,The capital of Cambodia is Phnom Penh.,1
+en,capital,capital_cambodia,The capital of Cambodia is Prague.,0
+en,capital,capital_laos,The capital of Laos is Vientiane.,1
+en,capital,capital_laos,The capital of Laos is Budapest.,0
+en,capital,capital_cuba,The capital of Cuba is Havana.,1
+en,capital,capital_cuba,The capital of Cuba is Athens.,0
+en,capital,capital_jamaica,The capital of Jamaica is Kingston.,1
+en,capital,capital_jamaica,The capital of Jamaica is Oslo.,0
+en,capital,capital_dominican_republic,The capital of Dominican Republic is Santo Domingo.,1
+en,capital,capital_dominican_republic,The capital of Dominican Republic is Stockholm.,0
+en,capital,capital_costa_rica,The capital of Costa Rica is San Jose.,1
+en,capital,capital_costa_rica,The capital of Costa Rica is Helsinki.,0
+en,capital,capital_panama,The capital of Panama is Panama City.,1
+en,capital,capital_panama,The capital of Panama is Copenhagen.,0
+en,continent,continent_france,France is in Europe.,1
+en,continent,continent_france,France is in South America.,0
+en,continent,continent_germany,Germany is in Europe.,1
+en,continent,continent_germany,Germany is in Australia.,0
+en,continent,continent_italy,Italy is in Europe.,1
+en,continent,continent_italy,Italy is in Africa.,0
+en,continent,continent_spain,Spain is in Europe.,1
+en,continent,continent_spain,Spain is in South America.,0
+en,continent,continent_norway,Norway is in Europe.,1
+en,continent,continent_norway,Norway is in Australia.,0
+en,continent,continent_sweden,Sweden is in Europe.,1
+en,continent,continent_sweden,Sweden is in Africa.,0
+en,continent,continent_poland,Poland is in Europe.,1
+en,continent,continent_poland,Poland is in South America.,0
+en,continent,continent_greece,Greece is in Europe.,1
+en,continent,continent_greece,Greece is in Australia.,0
+en,continent,continent_egypt,Egypt is in Africa.,1
+en,continent,continent_egypt,Egypt is in South America.,0
+en,continent,continent_morocco,Morocco is in Africa.,1
+en,continent,continent_morocco,Morocco is in Europe.,0
+en,continent,continent_kenya,Kenya is in Africa.,1
+en,continent,continent_kenya,Kenya is in North America.,0
+en,continent,continent_ethiopia,Ethiopia is in Africa.,1
+en,continent,continent_ethiopia,Ethiopia is in South America.,0
+en,continent,continent_nigeria,Nigeria is in Africa.,1
+en,continent,continent_nigeria,Nigeria is in Europe.,0
+en,continent,continent_ghana,Ghana is in Africa.,1
+en,continent,continent_ghana,Ghana is in North America.,0
+en,continent,continent_south_africa,South Africa is in Africa.,1
+en,continent,continent_south_africa,South Africa is in South America.,0
+en,continent,continent_algeria,Algeria is in Africa.,1
+en,continent,continent_algeria,Algeria is in Europe.,0
+en,continent,continent_india,India is in Asia.,1
+en,continent,continent_india,India is in South America.,0
+en,continent,continent_china,China is in Asia.,1
+en,continent,continent_china,China is in Australia.,0
+en,continent,continent_japan,Japan is in Asia.,1
+en,continent,continent_japan,Japan is in North America.,0
+en,continent,continent_south_korea,South Korea is in Asia.,1
+en,continent,continent_south_korea,South Korea is in South America.,0
+en,continent,continent_thailand,Thailand is in Asia.,1
+en,continent,continent_thailand,Thailand is in Australia.,0
+en,continent,continent_vietnam,Vietnam is in Asia.,1
+en,continent,continent_vietnam,Vietnam is in North America.,0
+en,continent,continent_indonesia,Indonesia is in Asia.,1
+en,continent,continent_indonesia,Indonesia is in South America.,0
+en,continent,continent_saudi_arabia,Saudi Arabia is in Asia.,1
+en,continent,continent_saudi_arabia,Saudi Arabia is in Australia.,0
+en,continent,continent_australia,Australia is in Australia.,1
+en,continent,continent_australia,Australia is in Asia.,0
+en,continent,continent_new_zealand,New Zealand is in Australia.,1
+en,continent,continent_new_zealand,New Zealand is in Europe.,0
+en,continent,continent_fiji,Fiji is in Australia.,1
+en,continent,continent_fiji,Fiji is in North America.,0
+en,continent,continent_papua_new_guinea,Papua New Guinea is in Australia.,1
+en,continent,continent_papua_new_guinea,Papua New Guinea is in Asia.,0
+en,continent,continent_canada,Canada is in North America.,1
+en,continent,continent_canada,Canada is in Africa.,0
+en,continent,continent_united_states,United States is in North America.,1
+en,continent,continent_united_states,United States is in Asia.,0
+en,continent,continent_mexico,Mexico is in North America.,1
+en,continent,continent_mexico,Mexico is in Australia.,0
+en,continent,continent_cuba,Cuba is in North America.,1
+en,continent,continent_cuba,Cuba is in Africa.,0
+en,continent,continent_jamaica,Jamaica is in North America.,1
+en,continent,continent_jamaica,Jamaica is in Asia.,0
+en,continent,continent_panama,Panama is in North America.,1
+en,continent,continent_panama,Panama is in Australia.,0
+en,continent,continent_brazil,Brazil is in South America.,1
+en,continent,continent_brazil,Brazil is in Asia.,0
+en,continent,continent_argentina,Argentina is in South America.,1
+en,continent,continent_argentina,Argentina is in Europe.,0
+en,continent,continent_chile,Chile is in South America.,1
+en,continent,continent_chile,Chile is in Africa.,0
+en,continent,continent_peru,Peru is in South America.,1
+en,continent,continent_peru,Peru is in Asia.,0
+en,continent,continent_colombia,Colombia is in South America.,1
+en,continent,continent_colombia,Colombia is in Europe.,0
+en,continent,continent_uruguay,Uruguay is in South America.,1
+en,continent,continent_uruguay,Uruguay is in Africa.,0
+en,continent,continent_paraguay,Paraguay is in South America.,1
+en,continent,continent_paraguay,Paraguay is in Asia.,0
+en,continent,continent_bolivia,Bolivia is in South America.,1
+en,continent,continent_bolivia,Bolivia is in Europe.,0
+en,continent,continent_ecuador,Ecuador is in South America.,1
+en,continent,continent_ecuador,Ecuador is in Africa.,0
+en,element_symbol,element_hydrogen,The chemical symbol for hydrogen is H.,1
+en,element_symbol,element_hydrogen,The chemical symbol for hydrogen is Mg.,0
+en,element_symbol,element_helium,The chemical symbol for helium is He.,1
+en,element_symbol,element_helium,The chemical symbol for helium is Al.,0
+en,element_symbol,element_lithium,The chemical symbol for lithium is Li.,1
+en,element_symbol,element_lithium,The chemical symbol for lithium is Si.,0
+en,element_symbol,element_beryllium,The chemical symbol for beryllium is Be.,1
+en,element_symbol,element_beryllium,The chemical symbol for beryllium is P.,0
+en,element_symbol,element_boron,The chemical symbol for boron is B.,1
+en,element_symbol,element_boron,The chemical symbol for boron is S.,0
+en,element_symbol,element_carbon,The chemical symbol for carbon is C.,1
+en,element_symbol,element_carbon,The chemical symbol for carbon is Cl.,0
+en,element_symbol,element_nitrogen,The chemical symbol for nitrogen is N.,1
+en,element_symbol,element_nitrogen,The chemical symbol for nitrogen is Ar.,0
+en,element_symbol,element_oxygen,The chemical symbol for oxygen is O.,1
+en,element_symbol,element_oxygen,The chemical symbol for oxygen is K.,0
+en,element_symbol,element_fluorine,The chemical symbol for fluorine is F.,1
+en,element_symbol,element_fluorine,The chemical symbol for fluorine is Ca.,0
+en,element_symbol,element_neon,The chemical symbol for neon is Ne.,1
+en,element_symbol,element_neon,The chemical symbol for neon is Fe.,0
+en,element_symbol,element_sodium,The chemical symbol for sodium is Na.,1
+en,element_symbol,element_sodium,The chemical symbol for sodium is Cu.,0
+en,element_symbol,element_magnesium,The chemical symbol for magnesium is Mg.,1
+en,element_symbol,element_magnesium,The chemical symbol for magnesium is Zn.,0
+en,element_symbol,element_aluminum,The chemical symbol for aluminum is Al.,1
+en,element_symbol,element_aluminum,The chemical symbol for aluminum is Ag.,0
+en,element_symbol,element_silicon,The chemical symbol for silicon is Si.,1
+en,element_symbol,element_silicon,The chemical symbol for silicon is Au.,0
+en,element_symbol,element_phosphorus,The chemical symbol for phosphorus is P.,1
+en,element_symbol,element_phosphorus,The chemical symbol for phosphorus is Hg.,0
+en,element_symbol,element_sulfur,The chemical symbol for sulfur is S.,1
+en,element_symbol,element_sulfur,The chemical symbol for sulfur is Pb.,0
+en,element_symbol,element_chlorine,The chemical symbol for chlorine is Cl.,1
+en,element_symbol,element_chlorine,The chemical symbol for chlorine is Sn.,0
+en,element_symbol,element_argon,The chemical symbol for argon is Ar.,1
+en,element_symbol,element_argon,The chemical symbol for argon is I.,0
+en,element_symbol,element_potassium,The chemical symbol for potassium is K.,1
+en,element_symbol,element_potassium,The chemical symbol for potassium is U.,0
+en,element_symbol,element_calcium,The chemical symbol for calcium is Ca.,1
+en,element_symbol,element_calcium,The chemical symbol for calcium is Ni.,0
+en,element_symbol,element_iron,The chemical symbol for iron is Fe.,1
+en,element_symbol,element_iron,The chemical symbol for iron is Co.,0
+en,element_symbol,element_copper,The chemical symbol for copper is Cu.,1
+en,element_symbol,element_copper,The chemical symbol for copper is Cr.,0
+en,element_symbol,element_zinc,The chemical symbol for zinc is Zn.,1
+en,element_symbol,element_zinc,The chemical symbol for zinc is Mn.,0
+en,element_symbol,element_silver,The chemical symbol for silver is Ag.,1
+en,element_symbol,element_silver,The chemical symbol for silver is Br.,0
+en,element_symbol,element_gold,The chemical symbol for gold is Au.,1
+en,element_symbol,element_gold,The chemical symbol for gold is Kr.,0
+en,element_symbol,element_mercury,The chemical symbol for mercury is Hg.,1
+en,element_symbol,element_mercury,The chemical symbol for mercury is Xe.,0
+en,element_symbol,element_lead,The chemical symbol for lead is Pb.,1
+en,element_symbol,element_lead,The chemical symbol for lead is Ba.,0
+en,element_symbol,element_tin,The chemical symbol for tin is Sn.,1
+en,element_symbol,element_tin,The chemical symbol for tin is Pt.,0
+en,element_symbol,element_iodine,The chemical symbol for iodine is I.,1
+en,element_symbol,element_iodine,The chemical symbol for iodine is W.,0
+en,element_symbol,element_uranium,The chemical symbol for uranium is U.,1
+en,element_symbol,element_uranium,The chemical symbol for uranium is H.,0
+en,element_symbol,element_nickel,The chemical symbol for nickel is Ni.,1
+en,element_symbol,element_nickel,The chemical symbol for nickel is He.,0
+en,element_symbol,element_cobalt,The chemical symbol for cobalt is Co.,1
+en,element_symbol,element_cobalt,The chemical symbol for cobalt is Li.,0
+en,element_symbol,element_chromium,The chemical symbol for chromium is Cr.,1
+en,element_symbol,element_chromium,The chemical symbol for chromium is Be.,0
+en,element_symbol,element_manganese,The chemical symbol for manganese is Mn.,1
+en,element_symbol,element_manganese,The chemical symbol for manganese is B.,0
+en,element_symbol,element_bromine,The chemical symbol for bromine is Br.,1
+en,element_symbol,element_bromine,The chemical symbol for bromine is C.,0
+en,element_symbol,element_krypton,The chemical symbol for krypton is Kr.,1
+en,element_symbol,element_krypton,The chemical symbol for krypton is N.,0
+en,element_symbol,element_xenon,The chemical symbol for xenon is Xe.,1
+en,element_symbol,element_xenon,The chemical symbol for xenon is O.,0
+en,element_symbol,element_barium,The chemical symbol for barium is Ba.,1
+en,element_symbol,element_barium,The chemical symbol for barium is F.,0
+en,element_symbol,element_platinum,The chemical symbol for platinum is Pt.,1
+en,element_symbol,element_platinum,The chemical symbol for platinum is Ne.,0
+en,element_symbol,element_tungsten,The chemical symbol for tungsten is W.,1
+en,element_symbol,element_tungsten,The chemical symbol for tungsten is Na.,0
+en,book_author,book_1984,George Orwell wrote 1984.,1
+en,book_author,book_1984,F. Scott Fitzgerald wrote 1984.,0
+en,book_author,book_animal_farm,George Orwell wrote Animal Farm.,1
+en,book_author,book_animal_farm,J. D. Salinger wrote Animal Farm.,0
+en,book_author,book_pride_and_prejudice,Jane Austen wrote Pride and Prejudice.,1
+en,book_author,book_pride_and_prejudice,Harper Lee wrote Pride and Prejudice.,0
+en,book_author,book_emma,Jane Austen wrote Emma.,1
+en,book_author,book_emma,J. R. R. Tolkien wrote Emma.,0
+en,book_author,book_jane_eyre,Charlotte Bronte wrote Jane Eyre.,1
+en,book_author,book_jane_eyre,J. R. R. Tolkien wrote Jane Eyre.,0
+en,book_author,book_wuthering_heights,Emily Bronte wrote Wuthering Heights.,1
+en,book_author,book_wuthering_heights,J. K. Rowling wrote Wuthering Heights.,0
+en,book_author,book_moby_dick,Herman Melville wrote Moby-Dick.,1
+en,book_author,book_moby_dick,Ernest Hemingway wrote Moby-Dick.,0
+en,book_author,book_the_great_gatsby,F. Scott Fitzgerald wrote The Great Gatsby.,1
+en,book_author,book_the_great_gatsby,Ernest Hemingway wrote The Great Gatsby.,0
+en,book_author,book_the_catcher_in_the_rye,J. D. Salinger wrote The Catcher in the Rye.,1
+en,book_author,book_the_catcher_in_the_rye,Mark Twain wrote The Catcher in the Rye.,0
+en,book_author,book_to_kill_a_mockingbird,Harper Lee wrote To Kill a Mockingbird.,1
+en,book_author,book_to_kill_a_mockingbird,Mark Twain wrote To Kill a Mockingbird.,0
+en,book_author,book_the_hobbit,J. R. R. Tolkien wrote The Hobbit.,1
+en,book_author,book_the_hobbit,Charles Dickens wrote The Hobbit.,0
+en,book_author,book_the_lord_of_the_rings,J. R. R. Tolkien wrote The Lord of the Rings.,1
+en,book_author,book_the_lord_of_the_rings,Charles Dickens wrote The Lord of the Rings.,0
+en,book_author,book_harry_potter_and_the_philosophers_stone,J. K. Rowling wrote Harry Potter and the Philosopher's Stone.,1
+en,book_author,book_harry_potter_and_the_philosophers_stone,Leo Tolstoy wrote Harry Potter and the Philosopher's Stone.,0
+en,book_author,book_the_old_man_and_the_sea,Ernest Hemingway wrote The Old Man and the Sea.,1
+en,book_author,book_the_old_man_and_the_sea,Leo Tolstoy wrote The Old Man and the Sea.,0
+en,book_author,book_a_farewell_to_arms,Ernest Hemingway wrote A Farewell to Arms.,1
+en,book_author,book_a_farewell_to_arms,Fyodor Dostoevsky wrote A Farewell to Arms.,0
+en,book_author,book_the_adventures_of_tom_sawyer,Mark Twain wrote The Adventures of Tom Sawyer.,1
+en,book_author,book_the_adventures_of_tom_sawyer,Fyodor Dostoevsky wrote The Adventures of Tom Sawyer.,0
+en,book_author,book_adventures_of_huckleberry_finn,Mark Twain wrote Adventures of Huckleberry Finn.,1
+en,book_author,book_adventures_of_huckleberry_finn,Gabriel Garcia Marquez wrote Adventures of Huckleberry Finn.,0
+en,book_author,book_great_expectations,Charles Dickens wrote Great Expectations.,1
+en,book_author,book_great_expectations,Albert Camus wrote Great Expectations.,0
+en,book_author,book_oliver_twist,Charles Dickens wrote Oliver Twist.,1
+en,book_author,book_oliver_twist,Mary Shelley wrote Oliver Twist.,0
+en,book_author,book_war_and_peace,Leo Tolstoy wrote War and Peace.,1
+en,book_author,book_war_and_peace,Bram Stoker wrote War and Peace.,0
+en,book_author,book_anna_karenina,Leo Tolstoy wrote Anna Karenina.,1
+en,book_author,book_anna_karenina,Homer wrote Anna Karenina.,0
+en,book_author,book_crime_and_punishment,Fyodor Dostoevsky wrote Crime and Punishment.,1
+en,book_author,book_crime_and_punishment,Homer wrote Crime and Punishment.,0
+en,book_author,book_the_brothers_karamazov,Fyodor Dostoevsky wrote The Brothers Karamazov.,1
+en,book_author,book_the_brothers_karamazov,Dante Alighieri wrote The Brothers Karamazov.,0
+en,book_author,book_one_hundred_years_of_solitude,Gabriel Garcia Marquez wrote One Hundred Years of Solitude.,1
+en,book_author,book_one_hundred_years_of_solitude,George Orwell wrote One Hundred Years of Solitude.,0
+en,book_author,book_the_stranger,Albert Camus wrote The Stranger.,1
+en,book_author,book_the_stranger,George Orwell wrote The Stranger.,0
+en,book_author,book_frankenstein,Mary Shelley wrote Frankenstein.,1
+en,book_author,book_frankenstein,Jane Austen wrote Frankenstein.,0
+en,book_author,book_dracula,Bram Stoker wrote Dracula.,1
+en,book_author,book_dracula,Jane Austen wrote Dracula.,0
+en,book_author,book_the_odyssey,Homer wrote The Odyssey.,1
+en,book_author,book_the_odyssey,Charlotte Bronte wrote The Odyssey.,0
+en,book_author,book_the_iliad,Homer wrote The Iliad.,1
+en,book_author,book_the_iliad,Emily Bronte wrote The Iliad.,0
+en,book_author,book_the_divine_comedy,Dante Alighieri wrote The Divine Comedy.,1
+en,book_author,book_the_divine_comedy,Herman Melville wrote The Divine Comedy.,0
+en,landmark_country,landmark_the_eiffel_tower,the Eiffel Tower is in France.,1
+en,landmark_country,landmark_the_eiffel_tower,the Eiffel Tower is in India.,0
+en,landmark_country,landmark_the_colosseum,the Colosseum is in Italy.,1
+en,landmark_country,landmark_the_colosseum,the Colosseum is in Japan.,0
+en,landmark_country,landmark_the_leaning_tower_of_pisa,the Leaning Tower of Pisa is in Italy.,1
+en,landmark_country,landmark_the_leaning_tower_of_pisa,the Leaning Tower of Pisa is in Japan.,0
+en,landmark_country,landmark_the_acropolis,the Acropolis is in Greece.,1
+en,landmark_country,landmark_the_acropolis,the Acropolis is in Jordan.,0
+en,landmark_country,landmark_the_great_wall,the Great Wall is in China.,1
+en,landmark_country,landmark_the_great_wall,the Great Wall is in Mexico.,0
+en,landmark_country,landmark_the_taj_mahal,the Taj Mahal is in India.,1
+en,landmark_country,landmark_the_taj_mahal,the Taj Mahal is in Panama.,0
+en,landmark_country,landmark_machu_picchu,Machu Picchu is in Peru.,1
+en,landmark_country,landmark_machu_picchu,Machu Picchu is in Russia.,0
+en,landmark_country,landmark_christ_the_redeemer,Christ the Redeemer is in Brazil.,1
+en,landmark_country,landmark_christ_the_redeemer,Christ the Redeemer is in Russia.,0
+en,landmark_country,landmark_the_pyramids_of_giza,the Pyramids of Giza is in Egypt.,1
+en,landmark_country,landmark_the_pyramids_of_giza,the Pyramids of Giza is in South Africa.,0
+en,landmark_country,landmark_petra,Petra is in Jordan.,1
+en,landmark_country,landmark_petra,Petra is in Spain.,0
+en,landmark_country,landmark_stonehenge,Stonehenge is in United Kingdom.,1
+en,landmark_country,landmark_stonehenge,Stonehenge is in Thailand.,0
+en,landmark_country,landmark_the_statue_of_liberty,the Statue of Liberty is in United States.,1
+en,landmark_country,landmark_the_statue_of_liberty,the Statue of Liberty is in Turkey.,0
+en,landmark_country,landmark_mount_rushmore,Mount Rushmore is in United States.,1
+en,landmark_country,landmark_mount_rushmore,Mount Rushmore is in United Arab Emirates.,0
+en,landmark_country,landmark_the_sydney_opera_house,the Sydney Opera House is in Australia.,1
+en,landmark_country,landmark_the_sydney_opera_house,the Sydney Opera House is in United Kingdom.,0
+en,landmark_country,landmark_angkor_wat,Angkor Wat is in Cambodia.,1
+en,landmark_country,landmark_angkor_wat,Angkor Wat is in United States.,0
+en,landmark_country,landmark_the_burj_khalifa,the Burj Khalifa is in United Arab Emirates.,1
+en,landmark_country,landmark_the_burj_khalifa,the Burj Khalifa is in Australia.,0
+en,landmark_country,landmark_the_kremlin,the Kremlin is in Russia.,1
+en,landmark_country,landmark_the_kremlin,the Kremlin is in Brazil.,0
+en,landmark_country,landmark_neuschwanstein_castle,Neuschwanstein Castle is in Germany.,1
+en,landmark_country,landmark_neuschwanstein_castle,Neuschwanstein Castle is in Cambodia.,0
+en,landmark_country,landmark_the_louvre_museum,the Louvre Museum is in France.,1
+en,landmark_country,landmark_the_louvre_museum,the Louvre Museum is in Canada.,0
+en,landmark_country,landmark_the_sagrada_familia,the Sagrada Familia is in Spain.,1
+en,landmark_country,landmark_the_sagrada_familia,the Sagrada Familia is in China.,0
+en,landmark_country,landmark_chichen_itza,Chichen Itza is in Mexico.,1
+en,landmark_country,landmark_chichen_itza,Chichen Itza is in Egypt.,0
+en,landmark_country,landmark_the_palace_of_versailles,the Palace of Versailles is in France.,1
+en,landmark_country,landmark_the_palace_of_versailles,the Palace of Versailles is in Germany.,0
+en,landmark_country,landmark_the_forbidden_city,the Forbidden City is in China.,1
+en,landmark_country,landmark_the_forbidden_city,the Forbidden City is in Germany.,0
+en,landmark_country,landmark_the_blue_mosque,the Blue Mosque is in Turkey.,1
+en,landmark_country,landmark_the_blue_mosque,the Blue Mosque is in Greece.,0
+en,landmark_country,landmark_the_tower_of_london,the Tower of London is in United Kingdom.,1
+en,landmark_country,landmark_the_tower_of_london,the Tower of London is in India.,0
+en,landmark_country,landmark_the_grand_palace,the Grand Palace is in Thailand.,1
+en,landmark_country,landmark_the_grand_palace,the Grand Palace is in Italy.,0
+en,landmark_country,landmark_mount_fuji,Mount Fuji is in Japan.,1
+en,landmark_country,landmark_mount_fuji,Mount Fuji is in Jordan.,0
+en,landmark_country,landmark_table_mountain,Table Mountain is in South Africa.,1
+en,landmark_country,landmark_table_mountain,Table Mountain is in Jordan.,0
+en,landmark_country,landmark_the_cn_tower,the CN Tower is in Canada.,1
+en,landmark_country,landmark_the_cn_tower,the CN Tower is in Mexico.,0
+en,landmark_country,landmark_the_panama_canal,the Panama Canal is in Panama.,1
+en,landmark_country,landmark_the_panama_canal,the Panama Canal is in Peru.,0
+en,science,science_water_freezing,Water freezes at 0 degrees Celsius at standard pressure.,1
+en,science,science_water_freezing,Water freezes at 100 degrees Celsius at standard pressure.,0
+en,science,science_water_boiling,Water boils at 100 degrees Celsius at standard pressure.,1
+en,science,science_water_boiling,Water boils at 0 degrees Celsius at standard pressure.,0
+en,science,science_earth_orbit,The Earth orbits the Sun.,1
+en,science,science_earth_orbit,The Sun orbits the Earth.,0
+en,science,science_moon_orbit,The Moon orbits the Earth.,1
+en,science,science_moon_orbit,The Earth orbits the Moon.,0
+en,science,science_human_oxygen,Humans need oxygen to survive.,1
+en,science,science_human_oxygen,Humans need helium to survive.,0
+en,science,science_photosynthesis,Plants use photosynthesis to convert light energy into chemical energy.,1
+en,science,science_photosynthesis,Plants use photosynthesis to convert sound into gravity.,0
+en,science,science_dna,DNA carries genetic information in living organisms.,1
+en,science,science_dna,DNA carries electrical power in household wiring.,0
+en,science,science_heart,The heart pumps blood through the body.,1
+en,science,science_heart,The heart pumps air into the lungs.,0
+en,science,science_brain,The brain is part of the nervous system.,1
+en,science,science_brain,The brain is part of the digestive system.,0
+en,science,science_electron_charge,Electrons have a negative electric charge.,1
+en,science,science_electron_charge,Electrons have a positive electric charge.,0
+en,science,science_proton_charge,Protons have a positive electric charge.,1
+en,science,science_proton_charge,Protons have a negative electric charge.,0
+en,science,science_triangle,A triangle has three sides.,1
+en,science,science_triangle,A triangle has four sides.,0
+en,science,science_square,A square has four equal sides.,1
+en,science,science_square,A square has three equal sides.,0
+en,science,science_sound,Sound travels through air as waves.,1
+en,science,science_sound,Sound travels through air as solid cubes.,0
+en,science,science_gravity,Gravity attracts masses toward each other.,1
+en,science,science_gravity,Gravity makes masses repel each other.,0
+en,science,science_largest_ocean,The Pacific Ocean is the largest ocean on Earth.,1
+en,science,science_largest_ocean,The Arctic Ocean is the largest ocean on Earth.,0
+en,science,science_red_planet,Mars is often called the Red Planet.,1
+en,science,science_red_planet,Venus is often called the Red Planet.,0
+en,science,science_largest_planet,Jupiter is the largest planet in the Solar System.,1
+en,science,science_largest_planet,Mercury is the largest planet in the Solar System.,0
+en,science,science_closest_planet,Mercury is the closest planet to the Sun.,1
+en,science,science_closest_planet,Neptune is the closest planet to the Sun.,0
+en,science,science_saturn_rings,Saturn has prominent rings.,1
+en,science,science_saturn_rings,Mercury has prominent rings.,0
+en,science,science_skeleton,The human skeleton contains bones.,1
+en,science,science_skeleton,The human skeleton contains feathers.,0
+en,science,science_mammals,Mammals are warm-blooded vertebrates.,1
+en,science,science_mammals,Mammals are cold-blooded plants.,0
+en,science,science_birds,Birds usually have feathers.,1
+en,science,science_birds,Birds usually have scales instead of feathers.,0
+en,science,science_fish,Fish live in water and breathe using gills.,1
+en,science,science_fish,Fish live in fire and breathe using leaves.,0
+en,science,science_carbon_dioxide,Carbon dioxide contains carbon and oxygen.,1
+en,science,science_carbon_dioxide,Carbon dioxide contains gold and helium.,0
+en,math,math_add_2_2,Two plus two equals four.,1
+en,math,math_add_2_2,Two plus two equals five.,0
+en,math,math_add_3_5,Three plus five equals eight.,1
+en,math,math_add_3_5,Three plus five equals nine.,0
+en,math,math_sub_7_4,Seven minus four equals three.,1
+en,math,math_sub_7_4,Seven minus four equals two.,0
+en,math,math_sub_9_6,Nine minus six equals three.,1
+en,math,math_sub_9_6,Nine minus six equals four.,0
+en,math,math_mul_6_7,Six times seven equals forty-two.,1
+en,math,math_mul_6_7,Six times seven equals forty-one.,0
+en,math,math_mul_8_8,Eight times eight equals sixty-four.,1
+en,math,math_mul_8_8,Eight times eight equals sixty-three.,0
+en,math,math_div_12_3,Twelve divided by three equals four.,1
+en,math,math_div_12_3,Twelve divided by three equals five.,0
+en,math,math_div_15_5,Fifteen divided by five equals three.,1
+en,math,math_div_15_5,Fifteen divided by five equals four.,0
+en,math,math_sqrt_9,The square root of nine is three.,1
+en,math,math_sqrt_9,The square root of nine is four.,0
+en,math,math_sqrt_16,The square root of sixteen is four.,1
+en,math,math_sqrt_16,The square root of sixteen is five.,0
+en,math,math_compare_10_7,Ten is greater than seven.,1
+en,math,math_compare_10_7,Ten is less than seven.,0
+en,math,math_compare_5_11,Five is less than eleven.,1
+en,math,math_compare_5_11,Five is greater than eleven.,0
+en,math,math_right_angle,A right angle measures ninety degrees.,1
+en,math,math_right_angle,A right angle measures forty-five degrees.,0
+en,math,math_circle_degrees,A full circle has 360 degrees.,1
+en,math,math_circle_degrees,A full circle has 180 degrees.,0
+en,math,math_prime,A prime number has exactly two positive divisors.,1
+en,math,math_prime,A prime number has exactly three positive divisors.,0
+en,math,math_two_prime,The number two is prime.,1
+en,math,math_two_prime,The number two is composite.,0
+en,math,math_nine_composite,The number nine is composite.,1
+en,math,math_nine_composite,The number nine is prime.,0
+en,math,math_zero_even,Zero is an even number.,1
+en,math,math_zero_even,Zero is an odd number.,0
+en,math,math_kilometer,One kilometer equals 1000 meters.,1
+en,math,math_kilometer,One kilometer equals 100 meters.,0
+en,math,math_hour,One hour contains 60 minutes.,1
+en,math,math_hour,One hour contains 100 minutes.,0

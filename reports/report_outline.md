@@ -22,7 +22,8 @@
 ## 4. Experimental Setup
 
 - 模型：GPT-2-small；扩展可用 Qwen2.5-0.5B
-- 数据集：英文和中文事实判断陈述
+- 数据集：528 条英文事实判断陈述，true/false 各 264 条
+- 领域：capital、continent、element_symbol、book_author、landmark_country、science、math
 - Hook 点：`blocks.{layer}.hook_resid_post`
 - 指标：accuracy, AUC, logit difference
 
@@ -30,6 +31,7 @@
 
 - 每层 probe 结果
 - 哪些层开始形成 truth/false 可分结构
+- 分领域结果：地理、科学、数学等事实是否有不同层级模式
 - 失败案例分析
 
 ## 6. Steering Results

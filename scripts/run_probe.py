@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.dataset import load_dataset
+from src.dataset import filter_dataset, load_dataset
 from src.model_hooks import collect_resid_post_by_layer, load_hooked_transformer, make_prompts
 from src.truth_direction import evaluate_layer_probe
 
@@ -15,6 +15,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="gpt2-small")
     parser.add_argument("--data", default="data/facts.csv")
     parser.add_argument("--out", default="figures/probe_layers.csv")
+    parser.add_argument("--language", default="en")
+    parser.add_argument("--domain", default=None, help="Comma-separated domain filter, e.g. capital,science")
     parser.add_argument(
         "--prompt-template",
         default="Statement: {statement}\nAnswer true or false:",
@@ -24,7 +26,9 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    data = load_dataset(args.data)
+    data = filter_dataset(load_dataset(args.data), language=args.language, domain=args.domain)
+    print(f"Using {len(data)} rows from {args.data}")
+    print(data["domain"].value_counts().sort_index().to_string())
     prompts = make_prompts(data["statement"].tolist(), args.prompt_template)
     labels = data["label"].to_numpy()
 
