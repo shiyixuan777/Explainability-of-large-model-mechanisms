@@ -1,0 +1,9 @@
+language,domain,pair_id,statement,label,layer,split,prob_true,predicted_label,predicted_name,label_name,correct,confidence,margin_from_threshold
+en,capital,capital_laos,The capital of Laos is Vientiane.,1,8,test,0.0030285304,0,false,true,False,0.9969715,0.49697146
+en,capital,capital_canada,The capital of Canada is Amman.,0,8,test,0.96367216,1,true,false,False,0.96367216,0.46367216
+en,capital,capital_chile,The capital of Chile is Santiago.,1,8,test,0.1790589,0,false,true,False,0.8209411,0.3209411
+en,capital,capital_india,The capital of India is New Delhi.,1,8,test,0.217044,0,false,true,False,0.782956,0.282956
+en,capital,capital_morocco,The capital of Morocco is Rabat.,1,8,test,0.21939959,0,false,true,False,0.7806004,0.28060043
+en,capital,capital_nigeria,The capital of Nigeria is Mexico City.,0,8,test,0.68832856,1,true,false,False,0.68832856,0.18832856
+en,capital,capital_kenya,The capital of Kenya is Nairobi.,1,8,test,0.34704047,0,false,true,False,0.6529595,0.15295953
+en,capital,capital_nepal,The capital of Nepal is Kathmandu.,1,8,test,0.47241953,0,false,true,False,0.5275805,0.02758047

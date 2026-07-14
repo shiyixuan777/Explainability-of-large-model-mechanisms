@@ -193,6 +193,36 @@ figures/pca_capital_layer8.png
 
 因此，PCA 不能代替 probe 的定量结论。如果图上 true/false 没有完全分开，也不意味着高维空间不可分；本项目仍以 group split probe AUC 作为主要定位指标，PCA 图只作为报告中的直观补充。
 
+### 6.5 样本级错误分析
+
+为了理解 probe 的失败模式，我们新增了样本级错误分析。该脚本使用与主实验相同的 group split，在第 8 层训练 capital probe，并导出测试集上每条样本的 `prob_true`、预测标签、置信度和是否预测正确。
+
+运行命令：
+
+```powershell
+python -m scripts.run_error_analysis --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/error_analysis_capital_layer8.csv
+```
+
+输出文件：
+
+```text
+figures/error_analysis_capital_layer8.csv
+figures/error_analysis_capital_layer8_errors.csv
+```
+
+第 8 层测试集共有 46 条样本，其中 38 条预测正确、8 条预测错误，accuracy=0.826，AUC=0.953。错误样例如下：
+
+| Statement | Label | Prediction | prob_true |
+|---|---|---|---:|
+| The capital of Laos is Vientiane. | true | false | 0.003 |
+| The capital of Canada is Amman. | false | true | 0.964 |
+| The capital of Chile is Santiago. | true | false | 0.179 |
+| The capital of India is New Delhi. | true | false | 0.217 |
+| The capital of Morocco is Rabat. | true | false | 0.219 |
+| The capital of Nigeria is Mexico City. | false | true | 0.688 |
+
+这个结果说明：probe 的排序能力很强，因此 AUC 很高；但固定 `0.5` 阈值仍会产生偏置，尤其会把一部分真实首都判断成 false。换句话说，当前实验更能证明“第 8 层激活中存在可线性读取的 truth/false 信息”，但不能直接证明一个默认阈值就能稳定作为事实判断器。
+
 ## 7. Steering 与 Ablation 结果
 
 我们首先尝试最简单的 mean-difference truth direction：

@@ -95,6 +95,26 @@ It does not need to separate true/false perfectly, because PCA keeps high-varian
 directions rather than the supervised probe direction.
 ```
 
+## Locate: Error Analysis
+
+```powershell
+python -m scripts.run_error_analysis --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/error_analysis_capital_layer8.csv
+```
+
+Expected artifacts:
+
+```text
+figures/error_analysis_capital_layer8.csv
+figures/error_analysis_capital_layer8_errors.csv
+```
+
+Key expected result:
+
+```text
+layer 8 test accuracy around 0.826 and AUC around 0.953
+8 misclassified test examples under the fixed 0.5 threshold
+```
+
 ## Causal Locate: Activation Patching
 
 ```powershell

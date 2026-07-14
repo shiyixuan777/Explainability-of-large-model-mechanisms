@@ -1,0 +1,47 @@
+language,domain,pair_id,statement,label,layer,split,prob_true,predicted_label,predicted_name,label_name,correct,confidence,margin_from_threshold
+en,capital,capital_laos,The capital of Laos is Vientiane.,1,8,test,0.0030285304,0,false,true,False,0.9969715,0.49697146
+en,capital,capital_canada,The capital of Canada is Amman.,0,8,test,0.96367216,1,true,false,False,0.96367216,0.46367216
+en,capital,capital_chile,The capital of Chile is Santiago.,1,8,test,0.1790589,0,false,true,False,0.8209411,0.3209411
+en,capital,capital_india,The capital of India is New Delhi.,1,8,test,0.217044,0,false,true,False,0.782956,0.282956
+en,capital,capital_morocco,The capital of Morocco is Rabat.,1,8,test,0.21939959,0,false,true,False,0.7806004,0.28060043
+en,capital,capital_nigeria,The capital of Nigeria is Mexico City.,0,8,test,0.68832856,1,true,false,False,0.68832856,0.18832856
+en,capital,capital_kenya,The capital of Kenya is Nairobi.,1,8,test,0.34704047,0,false,true,False,0.6529595,0.15295953
+en,capital,capital_nepal,The capital of Nepal is Kathmandu.,1,8,test,0.47241953,0,false,true,False,0.5275805,0.02758047
+en,capital,capital_sri_lanka,The capital of Sri Lanka is Sri Jayawardenepura Kotte.,1,8,test,1.0,1,true,true,True,1.0,0.5
+en,capital,capital_panama,The capital of Panama is Copenhagen.,0,8,test,5.737635e-07,0,false,false,True,0.9999994,0.49999943
+en,capital,capital_afghanistan,The capital of Afghanistan is Madrid.,0,8,test,1.1960258e-06,0,false,false,True,0.9999988,0.4999988
+en,capital,capital_italy,The capital of Italy is Reykjavik.,0,8,test,4.146211e-06,0,false,false,True,0.9999958,0.49999586
+en,capital,capital_iran,The capital of Iran is Santo Domingo.,0,8,test,5.393462e-06,0,false,false,True,0.99999464,0.4999946
+en,capital,capital_nepal,The capital of Nepal is Brussels.,0,8,test,9.410948e-06,0,false,false,True,0.9999906,0.49999058
+en,capital,capital_switzerland,The capital of Switzerland is Nairobi.,0,8,test,1.8262846e-05,0,false,false,True,0.99998176,0.49998173
+en,capital,capital_colombia,The capital of Colombia is Dhaka.,0,8,test,4.753854e-05,0,false,false,True,0.99995244,0.49995247
+en,capital,capital_ukraine,The capital of Ukraine is Kyiv.,1,8,test,0.9999356,1,true,true,True,0.9999356,0.49993563
+en,capital,capital_morocco,The capital of Morocco is Wellington.,0,8,test,7.8741636e-05,0,false,false,True,0.99992126,0.49992126
+en,capital,capital_israel,The capital of Israel is Panama City.,0,8,test,9.902942e-05,0,false,false,True,0.999901,0.49990097
+en,capital,capital_laos,The capital of Laos is Budapest.,0,8,test,0.0002806369,0,false,false,True,0.9997194,0.49971935
+en,capital,capital_portugal,The capital of Portugal is Kyiv.,0,8,test,0.00031680366,0,false,false,True,0.9996832,0.4996832
+en,capital,capital_kenya,The capital of Kenya is Ottawa.,0,8,test,0.00032514185,0,false,false,True,0.99967486,0.49967486
+en,capital,capital_chile,The capital of Chile is Ulaanbaatar.,0,8,test,0.00072802993,0,false,false,True,0.999272,0.49927196
+en,capital,capital_france,The capital of France is Dublin.,0,8,test,0.0012489455,0,false,false,True,0.99875104,0.49875104
+en,capital,capital_bangladesh,The capital of Bangladesh is Vienna.,0,8,test,0.0013164631,0,false,false,True,0.9986835,0.49868354
+en,capital,capital_ukraine,The capital of Ukraine is Singapore.,0,8,test,0.0017831168,0,false,false,True,0.99821687,0.4982169
+en,capital,capital_jamaica,The capital of Jamaica is Kingston.,1,8,test,0.997965,1,true,true,True,0.997965,0.49796498
+en,capital,capital_panama,The capital of Panama is Panama City.,1,8,test,0.99779606,1,true,true,True,0.99779606,0.49779606
+en,capital,capital_afghanistan,The capital of Afghanistan is Kabul.,1,8,test,0.9971403,1,true,true,True,0.9971403,0.4971403
+en,capital,capital_israel,The capital of Israel is Jerusalem.,1,8,test,0.9950138,1,true,true,True,0.9950138,0.49501377
+en,capital,capital_india,The capital of India is Santiago.,0,8,test,0.005492368,0,false,false,True,0.9945076,0.49450764
+en,capital,capital_bangladesh,The capital of Bangladesh is Dhaka.,1,8,test,0.9935675,1,true,true,True,0.9935675,0.49356753
+en,capital,capital_france,The capital of France is Paris.,1,8,test,0.9929925,1,true,true,True,0.9929925,0.49299252
+en,capital,capital_canada,The capital of Canada is Ottawa.,1,8,test,0.9902851,1,true,true,True,0.9902851,0.4902851
+en,capital,capital_portugal,The capital of Portugal is Lisbon.,1,8,test,0.9875351,1,true,true,True,0.9875351,0.48753512
+en,capital,capital_italy,The capital of Italy is Rome.,1,8,test,0.97822565,1,true,true,True,0.97822565,0.47822565
+en,capital,capital_switzerland,The capital of Switzerland is Bern.,1,8,test,0.9760007,1,true,true,True,0.9760007,0.47600073
+en,capital,capital_colombia,The capital of Colombia is Bogota.,1,8,test,0.9674087,1,true,true,True,0.9674087,0.46740872
+en,capital,capital_jamaica,The capital of Jamaica is Oslo.,0,8,test,0.034148548,0,false,false,True,0.9658514,0.46585146
+en,capital,capital_ecuador,The capital of Ecuador is Quito.,1,8,test,0.9625854,1,true,true,True,0.9625854,0.4625854
+en,capital,capital_sri_lanka,The capital of Sri Lanka is Bern.,0,8,test,0.05736782,0,false,false,True,0.9426322,0.44263217
+en,capital,capital_belgium,The capital of Belgium is Cairo.,0,8,test,0.11534902,0,false,false,True,0.884651,0.38465098
+en,capital,capital_nigeria,The capital of Nigeria is Abuja.,1,8,test,0.8200821,1,true,true,True,0.8200821,0.32008213
+en,capital,capital_iran,The capital of Iran is Tehran.,1,8,test,0.7957752,1,true,true,True,0.7957752,0.29577518
+en,capital,capital_belgium,The capital of Belgium is Brussels.,1,8,test,0.74566704,1,true,true,True,0.74566704,0.24566704
+en,capital,capital_ecuador,The capital of Ecuador is Havana.,0,8,test,0.42795575,0,false,false,True,0.57204425,0.07204425
