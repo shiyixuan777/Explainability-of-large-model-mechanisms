@@ -51,6 +51,7 @@ python -m scripts.run_activation_patching --model gpt2-small --out figures/activ
 python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
 python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
 python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --steering figures/steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --ablation figures/ablation_capital_probe_layer8.csv
+python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
 ```
 
 更详细的复现实验清单见：
@@ -82,6 +83,7 @@ reports/reproducibility_checklist.md
 - 模块级 activation patching：`figures/activation_patching_capital_recall.png`
 - Probe-direction steering：`figures/steering_capital_probe_layer8*.png`
 - Probe-direction ablation：`figures/ablation_capital_probe_layer8*.png`
+- 自动结果汇总：`reports/results_summary.md`
 - 项目报告草稿：`reports/project_report.md`
 - 复现实验清单：`reports/reproducibility_checklist.md`
 

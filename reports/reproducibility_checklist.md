@@ -188,6 +188,18 @@ Main report draft:
 reports/project_report.md
 ```
 
+Machine-generated result summary:
+
+```powershell
+python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+```
+
+Expected artifact:
+
+```text
+reports/results_summary.md
+```
+
 Report should mention:
 
 - Dataset construction
