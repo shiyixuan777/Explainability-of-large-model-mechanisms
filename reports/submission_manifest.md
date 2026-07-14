@@ -15,6 +15,7 @@ python -m scripts.validate_project
 | Item | Path | Status |
 |---|---|---|
 | Final report | `reports/final_report.md` | OK |
+| Presentation deck | `reports/project_presentation.pptx` | OK |
 | Draft report | `reports/project_report.md` | OK |
 | Results summary | `reports/results_summary.md` | OK |
 | Reproducibility checklist | `reports/reproducibility_checklist.md` | OK |
@@ -61,10 +62,12 @@ python -m scripts.validate_project
 | Results summary | `scripts/summarize_results.py` | OK |
 | Project validation | `scripts/validate_project.py` | OK |
 | Submission manifest | `scripts/prepare_submission.py` | OK |
+| Presentation deck builder | `scripts/build_presentation_deck.mjs` | OK |
 
 ## Recommended Submission Focus
 
 - Main report: `reports/final_report.md`
+- Presentation deck: `reports/project_presentation.pptx`
 - Full codebase: `src/`, `scripts/`, `data/`, `figures/`, `reports/`
 - Reproducibility proof: `reports/reproducibility_checklist.md` and `reports/results_summary.md`
 - Presentation support: `reports/presentation_outline.md`

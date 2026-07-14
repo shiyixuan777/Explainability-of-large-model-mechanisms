@@ -32,6 +32,7 @@ figures/probe_layers.png
 figures/steering_alpha.csv
 figures/steering_alpha.png
 figures/steering_accuracy.png
+*.pptx.inspect.ndjson
 
 # OS / editor
 .DS_Store

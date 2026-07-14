@@ -88,6 +88,7 @@ reports/reproducibility_checklist.md
 - 自动结果汇总：`reports/results_summary.md`
 - 一键交付验证：`python -m scripts.validate_project`
 - 正式版项目报告：`reports/final_report.md`
+- 答辩 PPT 初稿：`reports/project_presentation.pptx`
 - 提交清单：`reports/submission_manifest.md`
 - 项目报告草稿：`reports/project_report.md`
 - 复现实验清单：`reports/reproducibility_checklist.md`
@@ -98,6 +99,7 @@ reports/reproducibility_checklist.md
 
 ```text
 reports/final_report.md
+reports/project_presentation.pptx
 reports/submission_manifest.md
 ```
 

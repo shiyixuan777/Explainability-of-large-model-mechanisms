@@ -5,6 +5,7 @@ from pathlib import Path
 
 REPORT_FILES = [
     ("Final report", "reports/final_report.md"),
+    ("Presentation deck", "reports/project_presentation.pptx"),
     ("Draft report", "reports/project_report.md"),
     ("Results summary", "reports/results_summary.md"),
     ("Reproducibility checklist", "reports/reproducibility_checklist.md"),
@@ -47,6 +48,7 @@ SCRIPT_FILES = [
     ("Results summary", "scripts/summarize_results.py"),
     ("Project validation", "scripts/validate_project.py"),
     ("Submission manifest", "scripts/prepare_submission.py"),
+    ("Presentation deck builder", "scripts/build_presentation_deck.mjs"),
 ]
 
 
@@ -98,6 +100,7 @@ def main() -> None:
         "## Recommended Submission Focus",
         "",
         "- Main report: `reports/final_report.md`",
+        "- Presentation deck: `reports/project_presentation.pptx`",
         "- Full codebase: `src/`, `scripts/`, `data/`, `figures/`, `reports/`",
         "- Reproducibility proof: `reports/reproducibility_checklist.md` and `reports/results_summary.md`",
         "- Presentation support: `reports/presentation_outline.md`",
