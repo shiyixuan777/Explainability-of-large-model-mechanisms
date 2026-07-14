@@ -86,15 +86,16 @@ reports/reproducibility_checklist.md
 - Probe-direction ablation：`figures/ablation_capital_probe_layer8*.png`
 - 自动结果汇总：`reports/results_summary.md`
 - 一键交付验证：`python -m scripts.validate_project`
+- 正式版项目报告：`reports/final_report.md`
 - 项目报告草稿：`reports/project_report.md`
 - 复现实验清单：`reports/reproducibility_checklist.md`
 - 最终交付检查表：`reports/final_deliverable_checklist.md`
 - 答辩提纲：`reports/presentation_outline.md`
 
-当前报告草稿见：
+当前正式版报告见：
 
 ```text
-reports/project_report.md
+reports/final_report.md
 ```
 
 提交前建议按以下文件逐项核对：

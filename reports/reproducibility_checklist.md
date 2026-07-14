@@ -185,6 +185,7 @@ fixed_direction_score_gap decreases from about +0.573 to 0 at strength=1.0
 Main report draft:
 
 ```text
+reports/final_report.md
 reports/project_report.md
 ```
 

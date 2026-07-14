@@ -6,13 +6,13 @@
 
 | 课程要求 | 当前完成情况 | 证据文件 |
 |---|---|---|
-| 深入理解 Transformer 架构细节 | 报告解释 residual stream 与 hook 点，实验使用 `hook_resid_post`、`hook_attn_out`、`hook_mlp_out` | `reports/project_report.md` 第 3、8 节；`src/model_hooks.py`；`scripts/run_activation_patching.py` |
+| 深入理解 Transformer 架构细节 | 报告解释 residual stream 与 hook 点，实验使用 `hook_resid_post`、`hook_attn_out`、`hook_mlp_out` | `reports/final_report.md` 第 3、5 节；`src/model_hooks.py`；`scripts/run_activation_patching.py` |
 | 掌握 Hook 机制 | 使用 TransformerLens 读取和修改中间层激活 | `src/model_hooks.py`；`src/steering.py`；`scripts/run_activation_patching.py` |
 | Locate：定位关键层与模块 | 完成分领域 probe sweep、focused capital probe、PCA 辅助可视化、activation patching | `figures/probe_sweep.csv`；`figures/probe_capital_answer.csv`；`figures/pca_capital_layer8.png`；`figures/activation_patching_capital_recall.csv` |
 | Steer & Improve：推理阶段干预 | 完成 mean-difference/probe-direction steering 与 probe-direction ablation | `scripts/run_steering.py`；`scripts/run_ablation.py`；`figures/steering_capital_probe_layer8.csv`；`figures/ablation_capital_probe_layer8.csv` |
-| 顶会/Arxiv 机制可解释性论文复现 | 对齐 truth direction / geometry of truth 工作，复现 true/false 线性结构、可视化、因果干预思想 | `reports/project_report.md` 第 2 节；`reports/results_summary.md` |
+| 顶会/Arxiv 机制可解释性论文复现 | 对齐 truth direction / geometry of truth 工作，复现 true/false 线性结构、可视化、因果干预思想 | `reports/final_report.md` 第 2、7 节；`reports/results_summary.md` |
 | 代码与详细可视化对比结果 | 提供脚本、CSV、PNG、自动结果汇总 | `scripts/`；`src/`；`figures/`；`reports/results_summary.md` |
-| 总结自己的分析与想法 | 报告包含负结果、错误样本、局限与个人分析 | `reports/project_report.md` 第 6.5、7、9、11 节 |
+| 总结自己的分析与想法 | 报告包含负结果、错误样本、局限与个人分析 | `reports/final_report.md` 第 4.4、6、8、9 节 |
 
 ## 当前核心结论
 
@@ -28,6 +28,6 @@
 - 运行 `python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md`，确保报告中的数字与 CSV 一致。
 - 运行 `python -m scripts.validate_project`，检查关键文件、图表和核心指标是否齐全。
 - 运行 `python -m compileall scripts src`，确认脚本语法无误。
-- 检查 `reports/project_report.md` 是否已经转成老师要求的 PDF 或 Word 格式。
+- 检查 `reports/final_report.md` 是否已经转成老师要求的 PDF 或 Word 格式。
 - 检查所有报告中引用的图表路径是否存在。
 - 如需要答辩，按 `reports/presentation_outline.md` 制作 8-10 页 slides。

@@ -10,6 +10,7 @@ REQUIRED_FILES = [
     "INSTALL.md",
     "requirements.txt",
     "data/facts.csv",
+    "reports/final_report.md",
     "reports/project_report.md",
     "reports/results_summary.md",
     "reports/reproducibility_checklist.md",
@@ -106,7 +107,8 @@ def validate_interventions() -> None:
 
 
 def validate_report_docs() -> None:
-    report_text = Path("reports/project_report.md").read_text(encoding="utf-8")
+    report_text = Path("reports/final_report.md").read_text(encoding="utf-8")
+    report_text_lower = report_text.lower()
     required_terms = [
         ("Locate", "Locate"),
         ("Steering", "Steering"),
@@ -116,7 +118,7 @@ def validate_report_docs() -> None:
         ("Personal analysis section", "个人分析"),
     ]
     for label, term in required_terms:
-        check(term in report_text, f"project report mentions {label}")
+        check(term.lower() in report_text_lower, f"final report mentions {label}")
 
 
 def main() -> None:
