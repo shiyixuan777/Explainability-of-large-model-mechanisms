@@ -173,6 +173,21 @@ def main() -> None:
         ]
         lines += ["## Activation Patching: Best Layer by Component", "", markdown_table(rows), ""]
 
+    truth_patching = read_csv(figures_dir / "truth_verification_patching_resid.csv")
+    if truth_patching is not None:
+        best = truth_patching.sort_values("mean_recovery", ascending=False).head(5)
+        rows = [
+            {
+                "layer": int(row.layer),
+                "mean_recovery": fmt(row.mean_recovery),
+                "median_recovery": fmt(row.median_recovery),
+                "patched_logit_diff": fmt(row.patched_true_minus_false_logit_diff),
+                "mean_abs_logit_shift": fmt(row.mean_abs_logit_shift),
+            }
+            for row in best.itertuples(index=False)
+        ]
+        lines += ["## Truth Verification Residual Patching", "", markdown_table(rows), ""]
+
     steering = read_csv(figures_dir / "steering_capital_probe_layer8.csv")
     if steering is not None:
         rows = [
@@ -187,6 +202,21 @@ def main() -> None:
             for row in steering.itertuples(index=False)
         ]
         lines += ["## Probe-Direction Steering", "", markdown_table(rows), ""]
+
+    oracle = read_csv(figures_dir / "oracle_steering_capital_probe_layer8.csv")
+    if oracle is not None:
+        rows = [
+            {
+                "alpha": fmt(row.alpha, digits=1),
+                "logit_sign_accuracy": fmt(row.accuracy_from_logit_sign),
+                "probe_threshold_accuracy": fmt(row.accuracy_from_probe_score_threshold),
+                "mean_logit_correct_margin": fmt(row.mean_logit_correct_margin),
+                "mean_probe_correct_margin": fmt(row.mean_probe_correct_margin),
+                "mode": row.steering_mode,
+            }
+            for row in oracle.itertuples(index=False)
+        ]
+        lines += ["## Oracle Conditional Steering", "", markdown_table(rows), ""]
 
     ablation = read_csv(figures_dir / "ablation_capital_probe_layer8.csv")
     if ablation is not None:

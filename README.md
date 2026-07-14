@@ -14,24 +14,25 @@ reports/final_report.md
 
 1. GPT-2-small 的 residual stream 中是否存在可由 linear probe 读取的 true/false 信息？
 2. 这种可读性是否跨领域、跨 prompt 稳定？
-3. activation patching 是否能为相关事实知识召回提供因果定位证据？
+3. true/false verification residual patching 是否能提供更直接的因果定位证据？
 4. probe direction steering 是否能改变内部 probe score，并进一步改善输出行为？
 5. ablation 能否说明 true/false 信息是否局限于单一方向？
 
 ## Method Overview
 
 - **Locate**: layer-wise linear probe, domain/prompt sweep, PCA, error analysis.
-- **Supplementary causal test**: activation patching on a related capital recall task.
-- **Steering and ablation**: probe-direction steering with held-out group split, and probe-direction ablation.
-- **Reproduction target**: Bao et al. 2025 as the main reproduction target; Marks and Tegmark 2023 as background.
+- **Patching**: related capital recall patching and direct true/false verification residual patching.
+- **Steering and ablation**: naive global steering, oracle conditional steering, and probe-direction ablation.
+- **Reproduction target**: partial reproduction of Bao et al. 2025; Marks and Tegmark 2023 as background.
 
 ## Key Results
 
 - Mixed-domain truth direction is weak: the best all-domain separability is only moderate.
 - In capital fact verification, layer-8 residual stream reaches AUC 0.953 and layer-10 accuracy reaches 0.870.
 - PCA does not cleanly separate true/false in two dimensions, so the signal is not simply the highest-variance direction.
-- Capital recall patching is useful but limited: it localizes related factual recall information, not direct true/false verification.
-- Probe-direction steering moves the internal probe score, but logit-sign true/false accuracy stays at 0.500.
+- Truth verification residual patching shows late-layer recovery, but the average absolute logit shift is small.
+- Naive probe-direction steering moves the internal probe score, but logit-sign true/false accuracy stays at 0.500.
+- Oracle conditional steering improves held-out probe-threshold accuracy from 0.826 to 1.000, but still does not improve logit-sign output accuracy.
 - Direction ablation removes the fixed-direction score gap, but a retrained probe still recovers AUC above 0.94, suggesting redundant subspace structure.
 
 ## Quick Start
@@ -54,9 +55,11 @@ python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language 
 python -m scripts.run_activation_pca --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/pca_capital_layer8.csv
 python -m scripts.run_error_analysis --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/error_analysis_capital_layer8.csv
 python -m scripts.run_activation_patching --model gpt2-small --out figures/activation_patching_capital_recall.csv --components resid_post,attn_out,mlp_out
+python -m scripts.run_truth_verification_patching --model gpt2-small --data data/facts.csv --language en --domain capital --out figures/truth_verification_patching_resid.csv
 python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
+python -m scripts.run_oracle_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas 0 0.5 1 2 4 8 --out figures/oracle_steering_capital_probe_layer8.csv
 python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
-python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --steering figures/steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --ablation figures/ablation_capital_probe_layer8.csv
+python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --steering figures/steering_capital_probe_layer8.csv --oracle-steering figures/oracle_steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --truth-patching figures/truth_verification_patching_resid.csv --ablation figures/ablation_capital_probe_layer8.csv
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
 python -m scripts.prepare_submission
 python -m scripts.validate_project
@@ -82,7 +85,9 @@ python -m scripts.validate_project
 - PCA visualization: `figures/pca_capital_layer8.csv`, `figures/pca_capital_layer8.png`
 - Error analysis: `figures/error_analysis_capital_layer8.csv`, `figures/error_analysis_capital_layer8_errors.csv`
 - Capital recall patching: `figures/activation_patching_capital_recall.csv`, `figures/activation_patching_capital_recall.png`
+- Truth verification patching: `figures/truth_verification_patching_resid.csv`, `figures/truth_verification_patching_resid*.png`
 - Held-out probe-direction steering: `figures/steering_capital_probe_layer8.csv`, `figures/steering_capital_probe_layer8*.png`
+- Oracle conditional steering: `figures/oracle_steering_capital_probe_layer8.csv`, `figures/oracle_steering_capital_probe_layer8*.png`
 - Probe-direction ablation: `figures/ablation_capital_probe_layer8.csv`, `figures/ablation_capital_probe_layer8*.png`
 - Final report: `reports/final_report.md`
 - Reproducibility checklist: `reports/reproducibility_checklist.md`

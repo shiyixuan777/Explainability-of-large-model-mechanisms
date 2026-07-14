@@ -1,0 +1,7 @@
+direction_method,layer,seed,train_rows,test_rows,split,threshold_source,steering_mode,alpha,accuracy_from_logit_sign,accuracy_from_probe_score_threshold,mean_logit_correct_margin,mean_probe_correct_margin,mean_probe_score,probe_score_threshold
+probe,8,42,106,46,group,train_midpoint,oracle_label_conditioned,0.0,0.5,0.8260869565217391,-0.02514779008924961,0.2864765226840973,-1.5597418546676636,-1.6080493927001953
+probe,8,42,106,46,group,train_midpoint,oracle_label_conditioned,0.5,0.5,1.0,-0.029095327481627464,0.7864765524864197,-1.5597418546676636,-1.6080493927001953
+probe,8,42,106,46,group,train_midpoint,oracle_label_conditioned,1.0,0.5,1.0,-0.033042844384908676,1.2864766120910645,-1.5597418546676636,-1.6080493927001953
+probe,8,42,106,46,group,train_midpoint,oracle_label_conditioned,2.0,0.5,1.0,-0.04093659296631813,2.2864763736724854,-1.5597418546676636,-1.6080493927001953
+probe,8,42,106,46,group,train_midpoint,oracle_label_conditioned,4.0,0.5,1.0,-0.05672140792012215,4.2864766120910645,-1.5597416162490845,-1.6080493927001953
+probe,8,42,106,46,group,train_midpoint,oracle_label_conditioned,8.0,0.5,1.0,-0.08829206228256226,8.286477088928223,-1.5597418546676636,-1.6080493927001953

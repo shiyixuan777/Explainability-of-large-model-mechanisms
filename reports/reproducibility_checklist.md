@@ -142,6 +142,28 @@ Key expected result:
 resid_post layer 11 mean_recovery around 1.0
 ```
 
+## Direct Causal Test: Truth Verification Residual Patching
+
+```powershell
+python -m scripts.run_truth_verification_patching --model gpt2-small --data data/facts.csv --language en --domain capital --out figures/truth_verification_patching_resid.csv
+python -m scripts.plot_results --truth-patching figures/truth_verification_patching_resid.csv
+```
+
+Expected artifacts:
+
+```text
+figures/truth_verification_patching_resid.csv
+figures/truth_verification_patching_resid.png
+figures/truth_verification_patching_resid_logit_shift.png
+```
+
+Key expected result:
+
+```text
+layer 11 mean_recovery around 1.0
+layer 11 mean_abs_logit_shift around 0.076
+```
+
 ## Steering: Held-out Probe Direction
 
 ```powershell
@@ -165,6 +187,28 @@ The script uses group split: 106 train rows and 46 test rows.
 The probe threshold is fit on the train split.
 alpha=0 held-out probe-threshold accuracy is around 0.826.
 true/false logit-sign accuracy remains 0.500 across the alpha sweep.
+```
+
+## Improve Diagnostic: Oracle Conditional Steering
+
+```powershell
+python -m scripts.run_oracle_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas 0 0.5 1 2 4 8 --out figures/oracle_steering_capital_probe_layer8.csv
+python -m scripts.plot_results --oracle-steering figures/oracle_steering_capital_probe_layer8.csv
+```
+
+Expected artifacts:
+
+```text
+figures/oracle_steering_capital_probe_layer8.csv
+figures/oracle_steering_capital_probe_layer8.png
+figures/oracle_steering_capital_probe_layer8_margins.png
+```
+
+Key expected result:
+
+```text
+probe-threshold accuracy improves from 0.826 to 1.000 under oracle labels
+logit-sign accuracy remains 0.500
 ```
 
 ## Ablation: Probe Direction Removal

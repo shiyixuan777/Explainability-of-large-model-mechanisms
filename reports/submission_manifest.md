@@ -35,10 +35,16 @@ python -m scripts.validate_project
 | Error examples CSV | `figures/error_analysis_capital_layer8_errors.csv` | OK |
 | Activation patching CSV | `figures/activation_patching_capital_recall.csv` | OK |
 | Activation patching figure | `figures/activation_patching_capital_recall.png` | OK |
+| Truth verification patching CSV | `figures/truth_verification_patching_resid.csv` | OK |
+| Truth verification patching figure | `figures/truth_verification_patching_resid.png` | OK |
+| Truth verification patching logit-shift figure | `figures/truth_verification_patching_resid_logit_shift.png` | OK |
 | Steering CSV | `figures/steering_capital_probe_layer8.csv` | OK |
 | Steering logit figure | `figures/steering_capital_probe_layer8.png` | OK |
 | Steering accuracy figure | `figures/steering_capital_probe_layer8_accuracy.png` | OK |
 | Steering probe accuracy figure | `figures/steering_capital_probe_layer8_probe_accuracy.png` | OK |
+| Oracle steering CSV | `figures/oracle_steering_capital_probe_layer8.csv` | OK |
+| Oracle steering figure | `figures/oracle_steering_capital_probe_layer8.png` | OK |
+| Oracle steering margins figure | `figures/oracle_steering_capital_probe_layer8_margins.png` | OK |
 | Ablation CSV | `figures/ablation_capital_probe_layer8.csv` | OK |
 | Ablation figure | `figures/ablation_capital_probe_layer8.png` | OK |
 | Ablation score gap figure | `figures/ablation_capital_probe_layer8_score_gap.png` | OK |
@@ -54,7 +60,9 @@ python -m scripts.validate_project
 | Activation PCA | `scripts/run_activation_pca.py` | OK |
 | Error analysis | `scripts/run_error_analysis.py` | OK |
 | Activation patching | `scripts/run_activation_patching.py` | OK |
+| Truth verification patching | `scripts/run_truth_verification_patching.py` | OK |
 | Steering | `scripts/run_steering.py` | OK |
+| Oracle steering | `scripts/run_oracle_steering.py` | OK |
 | Ablation | `scripts/run_ablation.py` | OK |
 | Plotting | `scripts/plot_results.py` | OK |
 | Results summary | `scripts/summarize_results.py` | OK |

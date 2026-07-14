@@ -17,7 +17,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--probe", default="figures/probe_layers.csv")
     parser.add_argument("--probe-sweep", default="figures/probe_sweep.csv")
     parser.add_argument("--steering", default="figures/steering_alpha.csv")
+    parser.add_argument("--oracle-steering", default="figures/oracle_steering_capital_probe_layer8.csv")
     parser.add_argument("--patching", default="figures/activation_patching_capital_recall.csv")
+    parser.add_argument("--truth-patching", default="figures/truth_verification_patching_resid.csv")
     parser.add_argument("--ablation", default="figures/ablation_capital_probe_layer8.csv")
     parser.add_argument("--out-dir", default="figures")
     return parser.parse_args()
@@ -117,6 +119,71 @@ def main() -> None:
         plt.title("Activation Patching Recovery by Layer")
         plt.tight_layout()
         plt.savefig(out_dir / output_png_name(patching_path), dpi=200)
+
+    truth_patching_path = Path(args.truth_patching)
+    if truth_patching_path.exists():
+        truth_patching = pd.read_csv(truth_patching_path)
+        plt.figure(figsize=(7, 4))
+        sns.lineplot(data=truth_patching, x="layer", y="mean_recovery", marker="o")
+        plt.axhline(0, color="black", linewidth=1)
+        plt.axhline(1, color="black", linewidth=1, linestyle="--")
+        plt.title("Truth Verification Residual Patching Recovery")
+        plt.tight_layout()
+        plt.savefig(out_dir / output_png_name(truth_patching_path), dpi=200)
+
+        if "mean_abs_logit_shift" in truth_patching.columns:
+            plt.figure(figsize=(7, 4))
+            sns.lineplot(data=truth_patching, x="layer", y="mean_abs_logit_shift", marker="o")
+            plt.axhline(0, color="black", linewidth=1)
+            plt.title("Truth Verification Patching Mean Absolute Logit Shift")
+            plt.tight_layout()
+            plt.savefig(out_dir / output_png_name(truth_patching_path, "_logit_shift"), dpi=200)
+
+    oracle_steering_path = Path(args.oracle_steering)
+    if oracle_steering_path.exists():
+        oracle = pd.read_csv(oracle_steering_path)
+        plt.figure(figsize=(7, 4))
+        sns.lineplot(
+            data=oracle,
+            x="alpha",
+            y="accuracy_from_probe_score_threshold",
+            marker="o",
+            label="probe-threshold accuracy",
+        )
+        if "accuracy_from_logit_sign" in oracle.columns:
+            sns.lineplot(
+                data=oracle,
+                x="alpha",
+                y="accuracy_from_logit_sign",
+                marker="o",
+                label="logit-sign accuracy",
+            )
+        plt.ylim(0, 1.05)
+        plt.title("Oracle Conditional Steering Accuracy")
+        plt.tight_layout()
+        plt.savefig(out_dir / output_png_name(oracle_steering_path), dpi=200)
+
+        if "mean_probe_correct_margin" in oracle.columns:
+            plt.figure(figsize=(7, 4))
+            sns.lineplot(
+                data=oracle,
+                x="alpha",
+                y="mean_probe_correct_margin",
+                marker="o",
+                label="probe margin",
+            )
+            if "mean_logit_correct_margin" in oracle.columns:
+                sns.lineplot(
+                    data=oracle,
+                    x="alpha",
+                    y="mean_logit_correct_margin",
+                    marker="o",
+                    label="logit margin",
+                )
+            plt.axhline(0, color="black", linewidth=1)
+            plt.title("Oracle Conditional Steering Margins")
+            plt.tight_layout()
+            plt.savefig(out_dir / output_png_name(oracle_steering_path, "_margins"), dpi=200)
 
     ablation_path = Path(args.ablation)
     if ablation_path.exists():

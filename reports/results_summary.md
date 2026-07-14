@@ -73,6 +73,16 @@ Misclassified examples:
 | resid_post | 11 | 1.000 | 1.000 | 0.264 |
 | mlp_out | 7 | 0.388 | 0.074 | -1.022 |
 
+## Truth Verification Residual Patching
+
+| layer | mean_recovery | median_recovery | patched_logit_diff | mean_abs_logit_shift |
+| --- | --- | --- | --- | --- |
+| 11 | 1.000 | 1.000 | 1.547 | 0.076 |
+| 10 | 0.816 | 0.814 | 1.540 | 0.068 |
+| 9 | 0.607 | 0.622 | 1.538 | 0.055 |
+| 8 | 0.568 | 0.541 | 1.536 | 0.052 |
+| 3 | 0.321 | 0.257 | 1.535 | 0.035 |
+
 ## Probe-Direction Steering
 
 | alpha | logit_sign_accuracy | heldout_probe_threshold_accuracy | mean_probe_score | split | threshold_source |
@@ -86,6 +96,17 @@ Misclassified examples:
 | 2.0 | 0.500 | 0.500 | 0.440 | group | train_midpoint |
 | 4.0 | 0.500 | 0.500 | 2.440 | group | train_midpoint |
 | 8.0 | 0.500 | 0.500 | 6.440 | group | train_midpoint |
+
+## Oracle Conditional Steering
+
+| alpha | logit_sign_accuracy | probe_threshold_accuracy | mean_logit_correct_margin | mean_probe_correct_margin | mode |
+| --- | --- | --- | --- | --- | --- |
+| 0.0 | 0.500 | 0.826 | -0.025 | 0.286 | oracle_label_conditioned |
+| 0.5 | 0.500 | 1.000 | -0.029 | 0.786 | oracle_label_conditioned |
+| 1.0 | 0.500 | 1.000 | -0.033 | 1.286 | oracle_label_conditioned |
+| 2.0 | 0.500 | 1.000 | -0.041 | 2.286 | oracle_label_conditioned |
+| 4.0 | 0.500 | 1.000 | -0.057 | 4.286 | oracle_label_conditioned |
+| 8.0 | 0.500 | 1.000 | -0.088 | 8.286 | oracle_label_conditioned |
 
 ## Probe-Direction Ablation
 

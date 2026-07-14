@@ -27,10 +27,16 @@ REQUIRED_FILES = [
     "figures/error_analysis_capital_layer8_errors.csv",
     "figures/activation_patching_capital_recall.csv",
     "figures/activation_patching_capital_recall.png",
+    "figures/truth_verification_patching_resid.csv",
+    "figures/truth_verification_patching_resid.png",
+    "figures/truth_verification_patching_resid_logit_shift.png",
     "figures/steering_capital_probe_layer8.csv",
     "figures/steering_capital_probe_layer8.png",
     "figures/steering_capital_probe_layer8_accuracy.png",
     "figures/steering_capital_probe_layer8_probe_accuracy.png",
+    "figures/oracle_steering_capital_probe_layer8.csv",
+    "figures/oracle_steering_capital_probe_layer8.png",
+    "figures/oracle_steering_capital_probe_layer8_margins.png",
     "figures/ablation_capital_probe_layer8.csv",
     "figures/ablation_capital_probe_layer8.png",
     "figures/ablation_capital_probe_layer8_score_gap.png",
@@ -92,6 +98,19 @@ def validate_interventions() -> None:
     check(not resid11.empty, "resid_post layer 11 patching row exists")
     check(float(resid11["mean_recovery"].iloc[0]) >= 0.99, "resid_post layer 11 recovery >= 0.99")
 
+    truth_patching = read_csv("figures/truth_verification_patching_resid.csv")
+    truth_resid11 = truth_patching.loc[truth_patching["layer"] == 11].iloc[0]
+    truth_resid8 = truth_patching.loc[truth_patching["layer"] == 8].iloc[0]
+    check(float(truth_resid11["mean_recovery"]) >= 0.99, "truth verification resid_post layer 11 recovery >= 0.99")
+    check(
+        float(truth_resid11["mean_abs_logit_shift"]) < 0.1,
+        "truth verification patching has small absolute logit shift",
+    )
+    check(
+        float(truth_resid8["mean_recovery"]) > 0.5,
+        "truth verification patching has late-layer recovery by layer 8",
+    )
+
     steering = read_csv("figures/steering_capital_probe_layer8.csv")
     check((steering["accuracy_from_logit_sign"] == 0.5).all(), "steering logit-sign accuracy stays at 0.5")
     check((steering["split"] == "group").all(), "steering uses group held-out split")
@@ -104,6 +123,24 @@ def validate_interventions() -> None:
     score_delta = float(steering["mean_probe_score"].iloc[-1] - steering["mean_probe_score"].iloc[0])
     alpha_delta = float(steering["alpha"].iloc[-1] - steering["alpha"].iloc[0])
     check(abs(score_delta - alpha_delta) < 0.1, "steering probe score moves approximately with alpha")
+
+    oracle = read_csv("figures/oracle_steering_capital_probe_layer8.csv")
+    oracle_alpha0 = oracle.loc[oracle["alpha"] == 0].iloc[0]
+    oracle_alpha05 = oracle.loc[oracle["alpha"] == 0.5].iloc[0]
+    check(
+        float(oracle_alpha05["accuracy_from_probe_score_threshold"])
+        > float(oracle_alpha0["accuracy_from_probe_score_threshold"]),
+        "oracle steering improves held-out probe-threshold accuracy",
+    )
+    check(
+        (oracle["accuracy_from_logit_sign"] == 0.5).all(),
+        "oracle steering still does not improve logit-sign accuracy",
+    )
+    check(
+        float(oracle["mean_probe_correct_margin"].iloc[-1])
+        > float(oracle["mean_probe_correct_margin"].iloc[0]),
+        "oracle steering improves probe correct margin",
+    )
 
     ablation = read_csv("figures/ablation_capital_probe_layer8.csv")
     baseline_gap = float(ablation.loc[ablation["strength"] == 0, "fixed_direction_score_gap"].iloc[0])
@@ -124,6 +161,8 @@ def validate_report_docs() -> None:
         ("Activation Patching", "Activation Patching"),
         ("Bao et al. reproduction target", "Bao et al."),
         ("Capital recall limitation", "capital recall"),
+        ("Truth verification patching", "truth verification residual patching"),
+        ("Oracle conditional steering", "oracle conditional steering"),
         ("No output improvement", "without output improvement"),
         ("Distributed subspace conclusion", "subspace"),
     ]
