@@ -2,7 +2,7 @@
 
 ## 摘要
 
-本项目围绕“大模型机制可解释性”的 Locate、Steer & Improve 和论文复现要求，研究 GPT-2-small 在事实判断任务中是否存在可线性读取的 true/false 表征。我们构建了 528 条英文事实判断数据，覆盖 capital、continent、element_symbol、book_author、landmark_country、science、math 七个领域，并使用 TransformerLens 提取每层 residual stream 激活。初始混合领域实验表明，整体 truth/false 表征较弱；进一步按领域和 prompt 扫描后发现，capital fact verification 中存在非常强的线性可分信号，最佳层 AUC 达到 0.953。这说明在结构一致的事实任务中，GPT-2-small 的中后层 residual stream 包含可被线性 probe 读取的真假信息。然而，当前 mean-difference steering 尚未提升 true/false logit-sign accuracy，提示可读性不必然等于直接可控性，后续需要 activation patching 或 probe-direction steering 提供更强因果证据。
+本项目围绕“大模型机制可解释性”的 Locate、Steer & Improve 和论文复现要求，研究 GPT-2-small 在事实判断任务中是否存在可线性读取、可定位、可干预的 true/false 表征。我们构建了 528 条英文事实判断数据，覆盖 capital、continent、element_symbol、book_author、landmark_country、science、math 七个领域，并使用 TransformerLens 提取每层 residual stream 激活。初始混合领域实验表明，整体 truth/false 表征较弱；进一步按领域和 prompt 扫描后发现，capital fact verification 中存在非常强的线性可分信号，最佳层 AUC 达到 0.953。这说明在结构一致的事实任务中，GPT-2-small 的中后层 residual stream 包含可被线性 probe 读取的真假信息。随后我们补充了 activation patching、probe-direction steering 和 probe-direction ablation：patching 支持后层 residual stream 对 capital recall 具有因果贡献；steering 能稳定移动内部 probe score，但不能直接提升 naive true/false 输出；ablation 显示单一 truth direction 可被移除，但真假信息仍可从冗余子空间中重新读出。
 
 ## 1. 项目目标
 
