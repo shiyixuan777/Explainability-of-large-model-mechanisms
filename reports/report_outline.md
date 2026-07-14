@@ -49,12 +49,13 @@
 - Capital recall prompt.
 - Patch `hook_resid_post` from clean country prompt into corrupt country prompt.
 - Measure recovery of clean capital vs corrupt capital logit difference.
+- Module comparison now includes `hook_resid_post`, `hook_attn_out`, and `hook_mlp_out`.
 
 下一步：
 
 - Probe-direction steering.
 - Optional ablation of truth direction.
-- Patch `attn_out` and `mlp_out` separately.
+- Head-level attention patching.
 
 ## 8. Discussion
 

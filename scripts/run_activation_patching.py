@@ -17,6 +17,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-pairs", type=int, default=64)
     parser.add_argument("--offset", type=int, default=17)
     parser.add_argument("--prompt-template", default="The capital of {country} is")
+    parser.add_argument(
+        "--components",
+        default="resid_post,attn_out,mlp_out",
+        help="Comma-separated components to patch: resid_post,attn_out,mlp_out",
+    )
     return parser.parse_args()
 
 
@@ -63,10 +68,21 @@ def capital_logit_diff(logits: torch.Tensor, clean_tokens: list[int], corrupt_to
     return final_logits[rows, clean_index] - final_logits[rows, corrupt_index]
 
 
+COMPONENT_TO_HOOK = {
+    "resid_post": "blocks.{layer}.hook_resid_post",
+    "attn_out": "blocks.{layer}.hook_attn_out",
+    "mlp_out": "blocks.{layer}.hook_mlp_out",
+}
+
+
 def main() -> None:
     args = parse_args()
     model = load_hooked_transformer(args.model)
     examples = build_capital_recall_pairs(model, args.max_pairs, args.offset, args.prompt_template)
+    components = [component.strip() for component in args.components.split(",") if component.strip()]
+    unknown = sorted(set(components).difference(COMPONENT_TO_HOOK))
+    if unknown:
+        raise ValueError(f"Unknown components: {unknown}. Valid: {sorted(COMPONENT_TO_HOOK)}")
 
     clean_prompts = [example["clean_prompt"] for example in examples]
     corrupt_prompts = [example["corrupt_prompt"] for example in examples]
@@ -85,37 +101,41 @@ def main() -> None:
     denominator = clean_diff - corrupt_diff
 
     rows = []
-    for layer in range(model.cfg.n_layers):
-        clean_resid = clean_cache[f"blocks.{layer}.hook_resid_post"]
+    for component in components:
+        for layer in range(model.cfg.n_layers):
+            hook_name = COMPONENT_TO_HOOK[component].format(layer=layer)
+            clean_activation = clean_cache[hook_name]
 
-        def patch_resid(resid, hook):
-            resid[:, -1, :] = clean_resid[:, -1, :]
-            return resid
+            def patch_activation(activation, hook, clean_activation=clean_activation):
+                activation[:, -1, :] = clean_activation[:, -1, :]
+                return activation
 
-        with torch.no_grad():
-            patched_logits = model.run_with_hooks(
-                corrupt_tokens,
-                fwd_hooks=[(f"blocks.{layer}.hook_resid_post", patch_resid)],
+            with torch.no_grad():
+                patched_logits = model.run_with_hooks(
+                    corrupt_tokens,
+                    fwd_hooks=[(hook_name, patch_activation)],
+                )
+            patched_diff = capital_logit_diff(
+                patched_logits, clean_answer_tokens, corrupt_answer_tokens
+            ).detach()
+            recovery = (patched_diff - corrupt_diff) / (denominator + 1e-8)
+            rows.append(
+                {
+                    "component": component,
+                    "hook_name": hook_name,
+                    "layer": layer,
+                    "n_pairs": len(examples),
+                    "clean_logit_diff": float(clean_diff.mean()),
+                    "corrupt_logit_diff": float(corrupt_diff.mean()),
+                    "patched_logit_diff": float(patched_diff.mean()),
+                    "mean_recovery": float(recovery.mean()),
+                    "median_recovery": float(recovery.median()),
+                }
             )
-        patched_diff = capital_logit_diff(
-            patched_logits, clean_answer_tokens, corrupt_answer_tokens
-        ).detach()
-        recovery = (patched_diff - corrupt_diff) / (denominator + 1e-8)
-        rows.append(
-            {
-                "layer": layer,
-                "n_pairs": len(examples),
-                "clean_logit_diff": float(clean_diff.mean()),
-                "corrupt_logit_diff": float(corrupt_diff.mean()),
-                "patched_logit_diff": float(patched_diff.mean()),
-                "mean_recovery": float(recovery.mean()),
-                "median_recovery": float(recovery.median()),
-            }
-        )
-        print(
-            f"layer={layer:02d} patched_diff={patched_diff.mean():+.3f} "
-            f"mean_recovery={recovery.mean():+.3f}"
-        )
+            print(
+                f"component={component:10s} layer={layer:02d} "
+                f"patched_diff={patched_diff.mean():+.3f} mean_recovery={recovery.mean():+.3f}"
+            )
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)

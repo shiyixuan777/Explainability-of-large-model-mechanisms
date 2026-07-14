@@ -88,7 +88,10 @@ def main() -> None:
     if patching_path.exists():
         patching = pd.read_csv(patching_path)
         plt.figure(figsize=(7, 4))
-        sns.lineplot(data=patching, x="layer", y="mean_recovery", marker="o")
+        if "component" in patching.columns:
+            sns.lineplot(data=patching, x="layer", y="mean_recovery", hue="component", marker="o")
+        else:
+            sns.lineplot(data=patching, x="layer", y="mean_recovery", marker="o")
         plt.axhline(0, color="black", linewidth=1)
         plt.axhline(1, color="black", linewidth=1, linestyle="--")
         plt.title("Activation Patching Recovery by Layer")

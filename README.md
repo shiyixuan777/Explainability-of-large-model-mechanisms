@@ -86,3 +86,10 @@ python -m scripts.run_steering --layer 8 --domain capital,science
 ```powershell
 python -m scripts.run_probe_sweep --model gpt2-small --data data/facts.csv --out figures/probe_sweep.csv
 ```
+
+运行模块级 activation patching：
+
+```powershell
+python -m scripts.run_activation_patching --components resid_post,attn_out,mlp_out
+python -m scripts.plot_results --patching figures/activation_patching_capital_recall.csv
+```

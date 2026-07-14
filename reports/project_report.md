@@ -202,9 +202,15 @@ corrupt: The capital of Germany is
 logit(" Paris") - logit(" Berlin")
 ```
 
-然后在 corrupt prompt 的前向传播中，将某一层最后 token 位置的 `hook_resid_post` 替换为 clean prompt 对应层的激活，观察目标 logit difference 是否恢复。
+然后在 corrupt prompt 的前向传播中，将某一层最后 token 位置的 clean activation patch 到 corrupt run 中，观察目标 logit difference 是否恢复。当前实验比较了三类 hook：
 
-当前实验自动跳过 GPT-2 tokenizer 中不是 single token 的首都名，最终使用 22 对 single-token capital pairs。结果如下：
+```text
+blocks.{layer}.hook_resid_post
+blocks.{layer}.hook_attn_out
+blocks.{layer}.hook_mlp_out
+```
+
+当前实验自动跳过 GPT-2 tokenizer 中不是 single token 的首都名，最终使用 22 对 single-token capital pairs。首先看 residual stream patching：
 
 | Layer | Patched Logit Diff | Mean Recovery |
 |---:|---:|---:|
@@ -223,7 +229,15 @@ logit(" Paris") - logit(" Berlin")
 
 其中 clean baseline 的平均 logit difference 为 `+0.264`，corrupt baseline 为 `-1.039`。第 11 层 patch 后恢复到 `+0.264`，说明 residual stream 最后一层携带了足以恢复目标首都输出的信息。第 9-10 层 patched logit diff 也明显向 clean 方向移动，但尚未完全恢复。
 
-这个结果提供了比线性 probe 更强的因果证据：在 capital recall 任务中，替换关键层 residual stream 会直接改变目标首都 token 的输出 logit。它也提示，当前的 causal effect 更靠近模型后层或输出前 residual stream，而不是早期层。
+模块级 patching 进一步显示：
+
+| Component | Best Layer | Patched Logit Diff | Mean Recovery | Median Recovery |
+|---|---:|---:|---:|---:|
+| resid_post | 11 | 0.264 | 1.000 | 1.000 |
+| attn_out | 11 | -0.672 | 1.762 | 1.077 |
+| mlp_out | 7 | -1.022 | 0.388 | 0.074 |
+
+这个结果提供了比线性 probe 更强的因果证据：在 capital recall 任务中，替换关键层 residual stream 会直接改变目标首都 token 的输出 logit。模块对比提示，后层 attention output 对恢复目标首都信息有明显贡献，而 MLP output 的单独 patching 效果较弱。需要注意的是，`attn_out` 的 mean recovery 较高，但平均 patched logit diff 仍未翻正，因此它更适合被解释为“对恢复有强贡献”，而不是“单独足以完成恢复”。整体 causal effect 最清晰地出现在最后层 residual stream。
 
 对应结果文件：
 
@@ -238,7 +252,7 @@ figures/activation_patching_capital_recall.png
 
 1. 在混合领域事实判断中，GPT-2-small 的 truth/false 线性结构较弱。
 2. 在结构一致的 capital fact verification 中，truth/false 信息可被高精度线性 probe 读取，最佳 AUC 达到 0.953。
-3. 在 capital recall 的 activation patching 中，后层 residual stream patching 可以恢复目标首都 logit，提供了初步因果证据。
+3. 在 capital recall 的 activation patching 中，后层 residual stream patching 可以恢复目标首都 logit，模块级结果显示最后层 attention output 贡献明显，MLP output 单独贡献较弱。
 4. 可读性不等于可控性；当前 mean-difference steering 没有提升 true/false 输出判断，需要更强的 steering 方法。
 
 ## 9. 下一步计划
@@ -247,7 +261,7 @@ figures/activation_patching_capital_recall.png
 
 1. Probe-direction steering：使用 logistic regression probe 的权重方向，而不是简单 mean difference，作为 steering vector。
 2. Ablation：从 residual stream 中减去 truth direction，观察 probe separability 或模型输出是否下降。
-3. 将 activation patching 扩展到更多 hook 点，例如 `attn_out` 和 `mlp_out`。
+3. 将 activation patching 扩展到 head-level attention patching。
 4. 可选模型拓展：在 Qwen2.5-0.5B 或 Qwen2.5-0.5B-Instruct 上复现实验。
 
 ## 10. 个人分析
