@@ -200,6 +200,13 @@ Expected artifact:
 reports/results_summary.md
 ```
 
+Final submission helpers:
+
+```text
+reports/final_deliverable_checklist.md
+reports/presentation_outline.md
+```
+
 Report should mention:
 
 - Dataset construction

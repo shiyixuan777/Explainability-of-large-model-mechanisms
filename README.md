@@ -86,11 +86,20 @@ reports/reproducibility_checklist.md
 - 自动结果汇总：`reports/results_summary.md`
 - 项目报告草稿：`reports/project_report.md`
 - 复现实验清单：`reports/reproducibility_checklist.md`
+- 最终交付检查表：`reports/final_deliverable_checklist.md`
+- 答辩提纲：`reports/presentation_outline.md`
 
 当前报告草稿见：
 
 ```text
 reports/project_report.md
+```
+
+提交前建议按以下文件逐项核对：
+
+```text
+reports/final_deliverable_checklist.md
+reports/presentation_outline.md
 ```
 
 ## Notes
