@@ -181,6 +181,51 @@ truth_direction = mean(h_true) - mean(h_false)
 
 > Linear probe 证明了 capital 任务中存在可读的真假信息，但 mean-difference steering 尚未证明该方向具有直接可控的因果作用。
 
+### 6.1 Probe-direction steering
+
+为了更贴近 Locate 阶段发现的线性边界，我们进一步使用 logistic regression probe 的权重方向作为 steering direction。具体做法是先在第 8 层 capital activations 上训练 probe，再把标准化空间中的线性权重转换回原始 residual stream 坐标，得到单位向量：
+
+```text
+v_probe = normalized(probe_weight_in_activation_space)
+```
+
+然后在第 8 层最后 token 位置执行：
+
+```text
+h = h + alpha * v_probe
+```
+
+实验输出两个指标：
+
+- `accuracy_from_logit_sign`：根据模型输出 `logit(" true") - logit(" false")` 判断。
+- `accuracy_from_probe_score_threshold`：根据内部 probe projection score 和校准阈值判断。
+
+结果如下：
+
+| Alpha | Logit-sign Accuracy | Probe-threshold Accuracy | Mean Probe Score |
+|---:|---:|---:|---:|
+| -8 | 0.500 | 0.500 | -9.353 |
+| -4 | 0.500 | 0.500 | -5.353 |
+| -2 | 0.500 | 0.500 | -3.353 |
+| -1 | 0.500 | 0.507 | -2.353 |
+| 0 | 0.500 | 1.000 | -1.353 |
+| 1 | 0.500 | 0.500 | -0.353 |
+| 2 | 0.500 | 0.500 | 0.647 |
+| 4 | 0.500 | 0.500 | 2.647 |
+| 8 | 0.500 | 0.500 | 6.647 |
+
+这个结果说明 probe direction 确实控制了内部表示的 projection score：alpha 每增加 1，mean probe score 也近似增加 1。然而，因为我们对所有样本统一加入同一个方向，true 和 false 样本会一起移动，导致 calibrated probe accuracy 在 alpha 偏离 0 后反而下降。这是一个重要负结果：
+
+> Probe direction 可以控制内部表示的“真假方向坐标”，但 naive global steering 不能自动 improve true/false 分类；要改善行为，需要输入条件化 steering、ablation 或更精细的 causal intervention。
+
+对应图表：
+
+```text
+figures/steering_capital_probe_layer8.csv
+figures/steering_capital_probe_layer8.png
+figures/steering_capital_probe_layer8_probe_accuracy.png
+```
+
 ## 7. Activation Patching 初步结果
 
 为了补充更直接的因果定位实验，我们新增了 capital recall 形式的 activation patching。这个实验不再让 GPT-2-small 输出 `true` 或 `false`，而是使用更适合自回归语言模型的事实召回 prompt：
@@ -253,16 +298,15 @@ figures/activation_patching_capital_recall.png
 1. 在混合领域事实判断中，GPT-2-small 的 truth/false 线性结构较弱。
 2. 在结构一致的 capital fact verification 中，truth/false 信息可被高精度线性 probe 读取，最佳 AUC 达到 0.953。
 3. 在 capital recall 的 activation patching 中，后层 residual stream patching 可以恢复目标首都 logit，模块级结果显示最后层 attention output 贡献明显，MLP output 单独贡献较弱。
-4. 可读性不等于可控性；当前 mean-difference steering 没有提升 true/false 输出判断，需要更强的 steering 方法。
+4. Probe-direction steering 可以控制内部 probe score，但 naive global steering 没有提升 true/false 输出判断，说明可读性不等于直接可改善性。
 
 ## 9. 下一步计划
 
 后续需要补强课程要求中的因果干预部分：
 
-1. Probe-direction steering：使用 logistic regression probe 的权重方向，而不是简单 mean difference，作为 steering vector。
-2. Ablation：从 residual stream 中减去 truth direction，观察 probe separability 或模型输出是否下降。
-3. 将 activation patching 扩展到 head-level attention patching。
-4. 可选模型拓展：在 Qwen2.5-0.5B 或 Qwen2.5-0.5B-Instruct 上复现实验。
+1. Ablation：从 residual stream 中减去 truth direction，观察 probe separability 或模型输出是否下降。
+2. 将 activation patching 扩展到 head-level attention patching。
+3. 可选模型拓展：在 Qwen2.5-0.5B 或 Qwen2.5-0.5B-Instruct 上复现实验。
 
 ## 10. 个人分析
 

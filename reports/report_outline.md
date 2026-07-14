@@ -39,8 +39,9 @@
 ## 6. Steering Results
 
 - Mean-difference truth direction.
+- Probe-direction steering.
 - Alpha sweep.
-- Current negative result: naive steering changes logit scale but does not improve logit-sign accuracy.
+- Current negative result: steering controls internal probe score but does not improve true/false output accuracy under naive global intervention.
 
 ## 7. Next Causal Experiments
 
@@ -53,7 +54,6 @@
 
 下一步：
 
-- Probe-direction steering.
 - Optional ablation of truth direction.
 - Head-level attention patching.
 

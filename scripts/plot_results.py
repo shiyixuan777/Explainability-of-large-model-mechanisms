@@ -67,6 +67,25 @@ def main() -> None:
             plt.tight_layout()
             plt.savefig(out_dir / output_png_name(steering_path, "_accuracy"), dpi=200)
 
+        probe_accuracy_column = None
+        if "accuracy_from_probe_score_threshold" in steering.columns:
+            probe_accuracy_column = "accuracy_from_probe_score_threshold"
+        elif "accuracy_from_probe_score_sign" in steering.columns:
+            probe_accuracy_column = "accuracy_from_probe_score_sign"
+
+        if probe_accuracy_column:
+            plt.figure(figsize=(7, 4))
+            sns.lineplot(
+                data=steering,
+                x="alpha",
+                y=probe_accuracy_column,
+                marker="o",
+            )
+            plt.ylim(0, 1.05)
+            plt.title("Steering Strength vs Probe-Score Accuracy")
+            plt.tight_layout()
+            plt.savefig(out_dir / output_png_name(steering_path, "_probe_accuracy"), dpi=200)
+
     sweep_path = Path(args.probe_sweep)
     if sweep_path.exists():
         sweep = pd.read_csv(sweep_path)

@@ -16,6 +16,27 @@ def mean_difference_direction(activations: torch.Tensor, labels: np.ndarray) -> 
     return direction / (direction.norm() + 1e-8)
 
 
+def probe_direction(activations: torch.Tensor, labels: np.ndarray) -> torch.Tensor:
+    x = activations.numpy()
+    y = labels.astype(int)
+    clf = make_pipeline(
+        StandardScaler(),
+        LogisticRegression(max_iter=2000, class_weight="balanced"),
+    )
+    clf.fit(x, y)
+    scaler = clf.named_steps["standardscaler"]
+    logistic = clf.named_steps["logisticregression"]
+    # Convert the standardized-space linear probe back into the original activation basis.
+    direction_np = logistic.coef_[0] / (scaler.scale_ + 1e-8)
+    direction = torch.tensor(direction_np, dtype=activations.dtype)
+    return direction / (direction.norm() + 1e-8)
+
+
+def projection_scores(activations: torch.Tensor, direction: torch.Tensor) -> torch.Tensor:
+    direction = direction.to(activations.device)
+    return activations @ direction
+
+
 def evaluate_layer_probe(
     activations: torch.Tensor,
     labels: np.ndarray,
