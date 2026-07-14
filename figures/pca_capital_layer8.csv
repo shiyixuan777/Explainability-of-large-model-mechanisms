@@ -1,0 +1,153 @@
+statement,label,domain,pair_id,label_name,pc1,pc2,layer,pc1_explained_variance,pc2_explained_variance
+The capital of France is Paris.,1,capital,capital_france,true,-1.7717162,-9.657758,8,0.6196742653846741,0.11669307947158813
+The capital of France is Dublin.,0,capital,capital_france,false,-1.3081528,-9.655855,8,0.6196742653846741,0.11669307947158813
+The capital of Germany is Berlin.,1,capital,capital_germany,true,-1.759269,-8.927931,8,0.6196742653846741,0.11669307947158813
+The capital of Germany is London.,0,capital,capital_germany,false,-2.136328,-9.979995,8,0.6196742653846741,0.11669307947158813
+The capital of Italy is Rome.,1,capital,capital_italy,true,-1.6754563,-9.184954,8,0.6196742653846741,0.11669307947158813
+The capital of Italy is Reykjavik.,0,capital,capital_italy,false,4.7566934,14.670702,8,0.6196742653846741,0.11669307947158813
+The capital of Spain is Madrid.,1,capital,capital_spain,true,-1.1864617,-9.400741,8,0.6196742653846741,0.11669307947158813
+The capital of Spain is Moscow.,0,capital,capital_spain,false,-1.0471895,-8.486787,8,0.6196742653846741,0.11669307947158813
+The capital of Portugal is Lisbon.,1,capital,capital_portugal,true,-0.12278673,-7.280649,8,0.6196742653846741,0.11669307947158813
+The capital of Portugal is Kyiv.,0,capital,capital_portugal,false,1.9134789,-0.3591348,8,0.6196742653846741,0.11669307947158813
+The capital of Netherlands is Amsterdam.,1,capital,capital_netherlands,true,-1.2382784,-8.605888,8,0.6196742653846741,0.11669307947158813
+The capital of Netherlands is Ankara.,0,capital,capital_netherlands,false,-1.1353246,-8.051234,8,0.6196742653846741,0.11669307947158813
+The capital of Belgium is Brussels.,1,capital,capital_belgium,true,-0.95655996,-7.6030703,8,0.6196742653846741,0.11669307947158813
+The capital of Belgium is Cairo.,0,capital,capital_belgium,false,-0.81039727,-7.3091354,8,0.6196742653846741,0.11669307947158813
+The capital of Austria is Vienna.,1,capital,capital_austria,true,-0.53612155,-8.5378065,8,0.6196742653846741,0.11669307947158813
+The capital of Austria is Rabat.,0,capital,capital_austria,false,0.8614228,-3.142051,8,0.6196742653846741,0.11669307947158813
+The capital of Switzerland is Bern.,1,capital,capital_switzerland,true,-1.4392146,-7.3595877,8,0.6196742653846741,0.11669307947158813
+The capital of Switzerland is Nairobi.,0,capital,capital_switzerland,false,2.6190975,5.775238,8,0.6196742653846741,0.11669307947158813
+The capital of Poland is Warsaw.,1,capital,capital_poland,true,0.124325685,-5.9000483,8,0.6196742653846741,0.11669307947158813
+The capital of Poland is Addis Ababa.,0,capital,capital_poland,false,5.609703,13.911035,8,0.6196742653846741,0.11669307947158813
+The capital of Czech Republic is Prague.,1,capital,capital_czech_republic,true,2.0909417,1.1283906,8,0.6196742653846741,0.11669307947158813
+The capital of Czech Republic is Abuja.,0,capital,capital_czech_republic,false,3.5047033,4.944149,8,0.6196742653846741,0.11669307947158813
+The capital of Hungary is Budapest.,1,capital,capital_hungary,true,0.9164554,-4.8544283,8,0.6196742653846741,0.11669307947158813
+The capital of Hungary is Accra.,0,capital,capital_hungary,false,1.5214899,-0.86576444,8,0.6196742653846741,0.11669307947158813
+The capital of Greece is Athens.,1,capital,capital_greece,true,-0.09466091,-6.8407416,8,0.6196742653846741,0.11669307947158813
+The capital of Greece is Pretoria.,0,capital,capital_greece,false,1.9537994,-1.4837099,8,0.6196742653846741,0.11669307947158813
+The capital of Norway is Oslo.,1,capital,capital_norway,true,-0.15174918,-6.6846037,8,0.6196742653846741,0.11669307947158813
+The capital of Norway is New Delhi.,0,capital,capital_norway,false,1.4549583,-1.7877479,8,0.6196742653846741,0.11669307947158813
+The capital of Sweden is Stockholm.,1,capital,capital_sweden,true,-0.706531,-6.3063884,8,0.6196742653846741,0.11669307947158813
+The capital of Sweden is Beijing.,0,capital,capital_sweden,false,-0.31409714,-6.803608,8,0.6196742653846741,0.11669307947158813
+The capital of Finland is Helsinki.,1,capital,capital_finland,true,1.5957348,-3.8719912,8,0.6196742653846741,0.11669307947158813
+The capital of Finland is Tokyo.,0,capital,capital_finland,false,0.60918975,-4.5152335,8,0.6196742653846741,0.11669307947158813
+The capital of Denmark is Copenhagen.,1,capital,capital_denmark,true,-0.17979039,-6.587899,8,0.6196742653846741,0.11669307947158813
+The capital of Denmark is Seoul.,0,capital,capital_denmark,false,0.120037,-5.655997,8,0.6196742653846741,0.11669307947158813
+The capital of Ireland is Dublin.,1,capital,capital_ireland,true,-0.47061455,-8.238015,8,0.6196742653846741,0.11669307947158813
+The capital of Ireland is Bangkok.,0,capital,capital_ireland,false,0.15037239,-7.0345044,8,0.6196742653846741,0.11669307947158813
+The capital of United Kingdom is London.,1,capital,capital_united_kingdom,true,1.3038803,-2.2512345,8,0.6196742653846741,0.11669307947158813
+The capital of United Kingdom is Hanoi.,0,capital,capital_united_kingdom,false,5.427133,13.545016,8,0.6196742653846741,0.11669307947158813
+The capital of Iceland is Reykjavik.,1,capital,capital_iceland,true,6.946028,20.887392,8,0.6196742653846741,0.11669307947158813
+The capital of Iceland is Jakarta.,0,capital,capital_iceland,false,1.6783135,-2.551719,8,0.6196742653846741,0.11669307947158813
+The capital of Russia is Moscow.,1,capital,capital_russia,true,-0.9771347,-7.572851,8,0.6196742653846741,0.11669307947158813
+The capital of Russia is Kuala Lumpur.,0,capital,capital_russia,false,0.61298776,-2.3518713,8,0.6196742653846741,0.11669307947158813
+The capital of Ukraine is Kyiv.,1,capital,capital_ukraine,true,3.3178525,2.3167589,8,0.6196742653846741,0.11669307947158813
+The capital of Ukraine is Singapore.,0,capital,capital_ukraine,false,1.136523,-4.9651284,8,0.6196742653846741,0.11669307947158813
+The capital of Turkey is Ankara.,1,capital,capital_turkey,true,-0.97167486,-5.5464926,8,0.6196742653846741,0.11669307947158813
+The capital of Turkey is Manila.,0,capital,capital_turkey,false,0.4173717,-4.6033926,8,0.6196742653846741,0.11669307947158813
+The capital of Egypt is Cairo.,1,capital,capital_egypt,true,-0.36503965,-6.486401,8,0.6196742653846741,0.11669307947158813
+The capital of Egypt is Canberra.,0,capital,capital_egypt,false,-1.9223605,-13.100687,8,0.6196742653846741,0.11669307947158813
+The capital of Morocco is Rabat.,1,capital,capital_morocco,true,1.6609986,0.48345074,8,0.6196742653846741,0.11669307947158813
+The capital of Morocco is Wellington.,0,capital,capital_morocco,false,0.2693434,-8.963874,8,0.6196742653846741,0.11669307947158813
+The capital of Kenya is Nairobi.,1,capital,capital_kenya,true,4.079862,7.86961,8,0.6196742653846741,0.11669307947158813
+The capital of Kenya is Ottawa.,0,capital,capital_kenya,false,1.2852062,-6.1782923,8,0.6196742653846741,0.11669307947158813
+The capital of Ethiopia is Addis Ababa.,1,capital,capital_ethiopia,true,6.9821367,16.16752,8,0.6196742653846741,0.11669307947158813
+"The capital of Ethiopia is Washington, D.C..",0,capital,capital_ethiopia,false,6.6922746,21.008682,8,0.6196742653846741,0.11669307947158813
+The capital of Nigeria is Abuja.,1,capital,capital_nigeria,true,2.3986878,-0.3844321,8,0.6196742653846741,0.11669307947158813
+The capital of Nigeria is Mexico City.,0,capital,capital_nigeria,false,2.7654812,1.5237727,8,0.6196742653846741,0.11669307947158813
+The capital of Ghana is Accra.,1,capital,capital_ghana,true,2.0101495,0.99873,8,0.6196742653846741,0.11669307947158813
+The capital of Ghana is Brasilia.,0,capital,capital_ghana,false,2.6752462,1.8750627,8,0.6196742653846741,0.11669307947158813
+The capital of South Africa is Pretoria.,1,capital,capital_south_africa,true,4.788031,6.238845,8,0.6196742653846741,0.11669307947158813
+The capital of South Africa is Buenos Aires.,0,capital,capital_south_africa,false,4.7311754,6.4166994,8,0.6196742653846741,0.11669307947158813
+The capital of India is New Delhi.,1,capital,capital_india,true,1.381492,-0.30472907,8,0.6196742653846741,0.11669307947158813
+The capital of India is Santiago.,0,capital,capital_india,false,-0.23444451,-4.3985925,8,0.6196742653846741,0.11669307947158813
+The capital of China is Beijing.,1,capital,capital_china,true,-0.23472753,-6.964678,8,0.6196742653846741,0.11669307947158813
+The capital of China is Lima.,0,capital,capital_china,false,0.5314546,-5.6645975,8,0.6196742653846741,0.11669307947158813
+The capital of Japan is Tokyo.,1,capital,capital_japan,true,-0.5147952,-5.883976,8,0.6196742653846741,0.11669307947158813
+The capital of Japan is Bogota.,0,capital,capital_japan,false,2.164899,0.5699029,8,0.6196742653846741,0.11669307947158813
+The capital of South Korea is Seoul.,1,capital,capital_south_korea,true,2.6487465,0.9645014,8,0.6196742653846741,0.11669307947158813
+The capital of South Korea is Caracas.,0,capital,capital_south_korea,false,3.8760633,6.130471,8,0.6196742653846741,0.11669307947158813
+The capital of Thailand is Bangkok.,1,capital,capital_thailand,true,1.4889084,-4.311711,8,0.6196742653846741,0.11669307947158813
+The capital of Thailand is Montevideo.,0,capital,capital_thailand,false,3.4292827,2.2504194,8,0.6196742653846741,0.11669307947158813
+The capital of Vietnam is Hanoi.,1,capital,capital_vietnam,true,4.0811086,6.749609,8,0.6196742653846741,0.11669307947158813
+The capital of Vietnam is Asuncion.,0,capital,capital_vietnam,false,4.4555836,7.656725,8,0.6196742653846741,0.11669307947158813
+The capital of Indonesia is Jakarta.,1,capital,capital_indonesia,true,1.146671,-2.9097633,8,0.6196742653846741,0.11669307947158813
+The capital of Indonesia is Sucre.,0,capital,capital_indonesia,false,1.9555515,1.5055891,8,0.6196742653846741,0.11669307947158813
+The capital of Malaysia is Kuala Lumpur.,1,capital,capital_malaysia,true,1.1085981,-1.4378462,8,0.6196742653846741,0.11669307947158813
+The capital of Malaysia is Quito.,0,capital,capital_malaysia,false,2.4941208,0.19213833,8,0.6196742653846741,0.11669307947158813
+The capital of Singapore is Singapore.,1,capital,capital_singapore,true,0.904019,-5.314952,8,0.6196742653846741,0.11669307947158813
+The capital of Singapore is Riyadh.,0,capital,capital_singapore,false,1.0363739,-4.620328,8,0.6196742653846741,0.11669307947158813
+The capital of Philippines is Manila.,1,capital,capital_philippines,true,2.5276656,-3.142101,8,0.6196742653846741,0.11669307947158813
+The capital of Philippines is Tehran.,0,capital,capital_philippines,false,1.5169077,-4.4097486,8,0.6196742653846741,0.11669307947158813
+The capital of Australia is Canberra.,1,capital,capital_australia,true,-2.5681136,-14.727398,8,0.6196742653846741,0.11669307947158813
+The capital of Australia is Baghdad.,0,capital,capital_australia,false,-0.055707306,-8.236105,8,0.6196742653846741,0.11669307947158813
+The capital of New Zealand is Wellington.,1,capital,capital_new_zealand,true,3.026333,-3.4363875,8,0.6196742653846741,0.11669307947158813
+The capital of New Zealand is Jerusalem.,0,capital,capital_new_zealand,false,3.396853,0.34994087,8,0.6196742653846741,0.11669307947158813
+The capital of Canada is Ottawa.,1,capital,capital_canada,true,0.80590814,-7.362524,8,0.6196742653846741,0.11669307947158813
+The capital of Canada is Amman.,0,capital,capital_canada,false,1.5916246,-3.0739586,8,0.6196742653846741,0.11669307947158813
+"The capital of United States is Washington, D.C..",1,capital,capital_united_states,true,5.2201586,23.043459,8,0.6196742653846741,0.11669307947158813
+The capital of United States is Beirut.,0,capital,capital_united_states,false,0.57452357,-1.9430217,8,0.6196742653846741,0.11669307947158813
+The capital of Mexico is Mexico City.,1,capital,capital_mexico,true,1.1398647,-1.9259734,8,0.6196742653846741,0.11669307947158813
+The capital of Mexico is Islamabad.,0,capital,capital_mexico,false,-0.8587766,-7.493917,8,0.6196742653846741,0.11669307947158813
+The capital of Brazil is Brasilia.,1,capital,capital_brazil,true,1.7240443,-0.30617478,8,0.6196742653846741,0.11669307947158813
+The capital of Brazil is Kabul.,0,capital,capital_brazil,false,0.5914968,-6.262819,8,0.6196742653846741,0.11669307947158813
+The capital of Argentina is Buenos Aires.,1,capital,capital_argentina,true,2.0845215,-1.3223389,8,0.6196742653846741,0.11669307947158813
+The capital of Argentina is Astana.,0,capital,capital_argentina,false,2.1082783,-1.6116685,8,0.6196742653846741,0.11669307947158813
+The capital of Chile is Santiago.,1,capital,capital_chile,true,0.40574396,-5.964935,8,0.6196742653846741,0.11669307947158813
+The capital of Chile is Ulaanbaatar.,0,capital,capital_chile,false,7.0443006,24.031164,8,0.6196742653846741,0.11669307947158813
+The capital of Peru is Lima.,1,capital,capital_peru,true,1.0614805,-5.0174727,8,0.6196742653846741,0.11669307947158813
+The capital of Peru is Kathmandu.,0,capital,capital_peru,false,4.7186127,7.838741,8,0.6196742653846741,0.11669307947158813
+The capital of Colombia is Bogota.,1,capital,capital_colombia,true,2.1793244,-0.58397585,8,0.6196742653846741,0.11669307947158813
+The capital of Colombia is Dhaka.,0,capital,capital_colombia,false,2.4361255,-0.3798066,8,0.6196742653846741,0.11669307947158813
+The capital of Venezuela is Caracas.,1,capital,capital_venezuela,true,2.6010551,-1.2041203,8,0.6196742653846741,0.11669307947158813
+The capital of Venezuela is Sri Jayawardenepura Kotte.,0,capital,capital_venezuela,false,0.88396364,46.104637,8,0.6196742653846741,0.11669307947158813
+The capital of Uruguay is Montevideo.,1,capital,capital_uruguay,true,2.506566,0.40400255,8,0.6196742653846741,0.11669307947158813
+The capital of Uruguay is Naypyidaw.,0,capital,capital_uruguay,false,4.8775625,15.75326,8,0.6196742653846741,0.11669307947158813
+The capital of Paraguay is Asuncion.,1,capital,capital_paraguay,true,7.6255713,19.628881,8,0.6196742653846741,0.11669307947158813
+The capital of Paraguay is Phnom Penh.,0,capital,capital_paraguay,false,8.15625,25.909237,8,0.6196742653846741,0.11669307947158813
+The capital of Bolivia is Sucre.,1,capital,capital_bolivia,true,2.9221404,0.3335165,8,0.6196742653846741,0.11669307947158813
+The capital of Bolivia is Vientiane.,0,capital,capital_bolivia,false,5.544104,7.7270427,8,0.6196742653846741,0.11669307947158813
+The capital of Ecuador is Quito.,1,capital,capital_ecuador,true,2.40779,0.6756248,8,0.6196742653846741,0.11669307947158813
+The capital of Ecuador is Havana.,0,capital,capital_ecuador,false,0.90929645,-4.106735,8,0.6196742653846741,0.11669307947158813
+The capital of Saudi Arabia is Riyadh.,1,capital,capital_saudi_arabia,true,0.870603,-3.1094453,8,0.6196742653846741,0.11669307947158813
+The capital of Saudi Arabia is Kingston.,0,capital,capital_saudi_arabia,false,1.3710665,-3.51612,8,0.6196742653846741,0.11669307947158813
+The capital of Iran is Tehran.,1,capital,capital_iran,true,-0.35760713,-5.851266,8,0.6196742653846741,0.11669307947158813
+The capital of Iran is Santo Domingo.,0,capital,capital_iran,false,7.02895,23.511164,8,0.6196742653846741,0.11669307947158813
+The capital of Iraq is Baghdad.,1,capital,capital_iraq,true,-0.18462552,-6.0459075,8,0.6196742653846741,0.11669307947158813
+The capital of Iraq is San Jose.,0,capital,capital_iraq,false,0.6767048,-3.7323074,8,0.6196742653846741,0.11669307947158813
+The capital of Israel is Jerusalem.,1,capital,capital_israel,true,-0.46561804,-6.852669,8,0.6196742653846741,0.11669307947158813
+The capital of Israel is Panama City.,0,capital,capital_israel,false,2.4016879,0.8826779,8,0.6196742653846741,0.11669307947158813
+The capital of Jordan is Amman.,1,capital,capital_jordan,true,0.062442403,-3.3314235,8,0.6196742653846741,0.11669307947158813
+The capital of Jordan is Paris.,0,capital,capital_jordan,false,-1.1971315,-7.2233586,8,0.6196742653846741,0.11669307947158813
+The capital of Lebanon is Beirut.,1,capital,capital_lebanon,true,-0.41866452,-5.794883,8,0.6196742653846741,0.11669307947158813
+The capital of Lebanon is Berlin.,0,capital,capital_lebanon,false,-0.60886854,-6.1442337,8,0.6196742653846741,0.11669307947158813
+The capital of Pakistan is Islamabad.,1,capital,capital_pakistan,true,-0.6634209,-5.2419624,8,0.6196742653846741,0.11669307947158813
+The capital of Pakistan is Rome.,0,capital,capital_pakistan,false,-0.6822158,-4.332749,8,0.6196742653846741,0.11669307947158813
+The capital of Afghanistan is Kabul.,1,capital,capital_afghanistan,true,1.0489215,-6.533308,8,0.6196742653846741,0.11669307947158813
+The capital of Afghanistan is Madrid.,0,capital,capital_afghanistan,false,0.44610378,-7.088015,8,0.6196742653846741,0.11669307947158813
+The capital of Kazakhstan is Astana.,1,capital,capital_kazakhstan,true,3.1727986,1.618318,8,0.6196742653846741,0.11669307947158813
+The capital of Kazakhstan is Lisbon.,0,capital,capital_kazakhstan,false,1.8205138,-2.8252633,8,0.6196742653846741,0.11669307947158813
+The capital of Mongolia is Ulaanbaatar.,1,capital,capital_mongolia,true,8.3385,27.697517,8,0.6196742653846741,0.11669307947158813
+The capital of Mongolia is Amsterdam.,0,capital,capital_mongolia,false,1.89189,-3.2416482,8,0.6196742653846741,0.11669307947158813
+The capital of Nepal is Kathmandu.,1,capital,capital_nepal,true,6.0581794,13.919874,8,0.6196742653846741,0.11669307947158813
+The capital of Nepal is Brussels.,0,capital,capital_nepal,false,2.061777,-0.51987016,8,0.6196742653846741,0.11669307947158813
+The capital of Bangladesh is Dhaka.,1,capital,capital_bangladesh,true,2.8621197,2.9787664,8,0.6196742653846741,0.11669307947158813
+The capital of Bangladesh is Vienna.,0,capital,capital_bangladesh,false,1.2644867,-2.028472,8,0.6196742653846741,0.11669307947158813
+The capital of Sri Lanka is Sri Jayawardenepura Kotte.,1,capital,capital_sri_lanka,true,-266.50406,10.782198,8,0.6196742653846741,0.11669307947158813
+The capital of Sri Lanka is Bern.,0,capital,capital_sri_lanka,false,1.519162,-1.2824907,8,0.6196742653846741,0.11669307947158813
+The capital of Myanmar is Naypyidaw.,1,capital,capital_myanmar,true,6.4334,19.078457,8,0.6196742653846741,0.11669307947158813
+The capital of Myanmar is Warsaw.,0,capital,capital_myanmar,false,1.7378429,-4.2884965,8,0.6196742653846741,0.11669307947158813
+The capital of Cambodia is Phnom Penh.,1,capital,capital_cambodia,true,6.1805797,17.845194,8,0.6196742653846741,0.11669307947158813
+The capital of Cambodia is Prague.,0,capital,capital_cambodia,false,1.7745289,-1.6988931,8,0.6196742653846741,0.11669307947158813
+The capital of Laos is Vientiane.,1,capital,capital_laos,true,5.5796494,8.787669,8,0.6196742653846741,0.11669307947158813
+The capital of Laos is Budapest.,0,capital,capital_laos,false,2.3822343,-2.3850646,8,0.6196742653846741,0.11669307947158813
+The capital of Cuba is Havana.,1,capital,capital_cuba,true,1.3777404,-3.2612631,8,0.6196742653846741,0.11669307947158813
+The capital of Cuba is Athens.,0,capital,capital_cuba,false,0.8196618,-4.1838007,8,0.6196742653846741,0.11669307947158813
+The capital of Jamaica is Kingston.,1,capital,capital_jamaica,true,1.3982368,-5.6320124,8,0.6196742653846741,0.11669307947158813
+The capital of Jamaica is Oslo.,0,capital,capital_jamaica,false,1.1927707,-5.3358493,8,0.6196742653846741,0.11669307947158813
+The capital of Dominican Republic is Santo Domingo.,1,capital,capital_dominican_republic,true,8.929697,32.608665,8,0.6196742653846741,0.11669307947158813
+The capital of Dominican Republic is Stockholm.,0,capital,capital_dominican_republic,false,2.1940196,0.7372684,8,0.6196742653846741,0.11669307947158813
+The capital of Costa Rica is San Jose.,1,capital,capital_costa_rica,true,3.2305582,4.14865,8,0.6196742653846741,0.11669307947158813
+The capital of Costa Rica is Helsinki.,0,capital,capital_costa_rica,false,2.399798,0.110219866,8,0.6196742653846741,0.11669307947158813
+The capital of Panama is Panama City.,1,capital,capital_panama,true,3.0178144,3.013585,8,0.6196742653846741,0.11669307947158813
+The capital of Panama is Copenhagen.,0,capital,capital_panama,false,1.0092123,-3.5673602,8,0.6196742653846741,0.11669307947158813

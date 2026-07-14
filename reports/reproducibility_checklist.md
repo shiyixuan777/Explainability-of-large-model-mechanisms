@@ -74,6 +74,27 @@ layer 8 AUC around 0.953
 layer 10 accuracy around 0.870
 ```
 
+## Locate: Activation PCA
+
+```powershell
+python -m scripts.run_activation_pca --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/pca_capital_layer8.csv
+```
+
+Expected artifacts:
+
+```text
+figures/pca_capital_layer8.csv
+figures/pca_capital_layer8.png
+```
+
+Key expected result:
+
+```text
+The figure gives a qualitative two-dimensional view of layer-8 capital activations.
+It does not need to separate true/false perfectly, because PCA keeps high-variance
+directions rather than the supervised probe direction.
+```
+
 ## Causal Locate: Activation Patching
 
 ```powershell

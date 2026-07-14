@@ -45,6 +45,7 @@ python -m scripts.build_dataset
 ```powershell
 python -m scripts.run_probe_sweep --model gpt2-small --data data/facts.csv --out figures/probe_sweep.csv
 python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --domain capital --prompt-template "Statement: {statement}`nAnswer true or false:" --out figures/probe_capital_answer.csv
+python -m scripts.run_activation_pca --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/pca_capital_layer8.csv
 python -m scripts.run_activation_patching --model gpt2-small --out figures/activation_patching_capital_recall.csv --components resid_post,attn_out,mlp_out
 python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
 python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
@@ -75,6 +76,7 @@ reports/reproducibility_checklist.md
 
 - 每层 probe accuracy / AUC 曲线：`figures/probe_capital_answer.png`
 - 分领域 probe sweep：`figures/probe_sweep_summary.png`
+- 激活 PCA 散点图：`figures/pca_capital_layer8.png`
 - 模块级 activation patching：`figures/activation_patching_capital_recall.png`
 - Probe-direction steering：`figures/steering_capital_probe_layer8*.png`
 - Probe-direction ablation：`figures/ablation_capital_probe_layer8*.png`

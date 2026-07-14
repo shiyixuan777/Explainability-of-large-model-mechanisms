@@ -172,6 +172,27 @@ Answer true or false:
 figures/probe_capital_answer.png
 ```
 
+### 6.4 Activation PCA 可视化
+
+为了给 linear probe 结果提供更直观的辅助证据，我们新增了第 8 层 residual activation 的 PCA 可视化。该实验不训练分类器，而是直接把 capital 样本在第 8 层 final-token residual stream 中的高维激活降到二维，观察 true/false 样本是否出现可见的空间结构。
+
+运行命令：
+
+```powershell
+python -m scripts.run_activation_pca --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/pca_capital_layer8.csv
+```
+
+输出文件：
+
+```text
+figures/pca_capital_layer8.csv
+figures/pca_capital_layer8.png
+```
+
+当前 PCA 图中 true/false 样本没有在二维平面上完全分开，这反而提醒我们：第 8 层 AUC=0.953 的可分性主要由高维 probe 方向捕捉，未必会直接出现在解释方差最大的前两个主成分上。绘图时 CSV 保留全部样本，但 PNG 默认裁掉二维坐标两端 1% 极端点，避免个别长实体样本拉伸坐标轴。
+
+因此，PCA 不能代替 probe 的定量结论。如果图上 true/false 没有完全分开，也不意味着高维空间不可分；本项目仍以 group split probe AUC 作为主要定位指标，PCA 图只作为报告中的直观补充。
+
 ## 7. Steering 与 Ablation 结果
 
 我们首先尝试最简单的 mean-difference truth direction：
