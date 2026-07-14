@@ -27,6 +27,12 @@ wandb/
 outputs/
 experiments/tmp/
 
+# Legacy local experiment outputs superseded by named capital/probe artifacts
+figures/probe_layers.png
+figures/steering_alpha.csv
+figures/steering_alpha.png
+figures/steering_accuracy.png
+
 # OS / editor
 .DS_Store
 Thumbs.db

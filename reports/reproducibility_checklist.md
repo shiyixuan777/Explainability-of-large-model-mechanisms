@@ -193,12 +193,14 @@ Machine-generated result summary:
 
 ```powershell
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+python -m scripts.prepare_submission
 ```
 
 Expected artifact:
 
 ```text
 reports/results_summary.md
+reports/submission_manifest.md
 ```
 
 Project validation:

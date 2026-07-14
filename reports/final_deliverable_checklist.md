@@ -26,6 +26,7 @@
 ## 最后提交前还应检查
 
 - 运行 `python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md`，确保报告中的数字与 CSV 一致。
+- 运行 `python -m scripts.prepare_submission`，生成最终提交清单 `reports/submission_manifest.md`。
 - 运行 `python -m scripts.validate_project`，检查关键文件、图表和核心指标是否齐全。
 - 运行 `python -m compileall scripts src`，确认脚本语法无误。
 - 检查 `reports/final_report.md` 是否已经转成老师要求的 PDF 或 Word 格式。
