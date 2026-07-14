@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 import torch
+from sklearn.model_selection import GroupShuffleSplit
 
 from src.dataset import filter_dataset, load_dataset
 from src.model_hooks import collect_resid_post_by_layer, load_hooked_transformer, make_prompts
@@ -22,6 +23,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--domain", default=None, help="Comma-separated domain filter, e.g. capital,science")
     parser.add_argument("--direction-method", choices=["mean_diff", "probe"], default="mean_diff")
     parser.add_argument("--alphas", nargs="+", type=float, default=[-4, -2, -1, 0, 1, 2, 4])
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--true-token", default=" true")
     parser.add_argument("--false-token", default=" false")
     parser.add_argument(
@@ -38,23 +40,32 @@ def main() -> None:
     print(data["domain"].value_counts().sort_index().to_string())
     prompts = make_prompts(data["statement"].tolist(), args.prompt_template)
     labels = data["label"].to_numpy()
+    groups = data["pair_id"].to_numpy()
 
     model = load_hooked_transformer(args.model)
     activations = collect_resid_post_by_layer(model, prompts)[args.layer]
+    splitter = GroupShuffleSplit(n_splits=1, test_size=0.3, random_state=args.seed)
+    train_idx, test_idx = next(splitter.split(activations.numpy(), labels, groups=groups))
+    train_activations = activations[train_idx]
+    test_activations = activations[test_idx]
+    train_labels = labels[train_idx]
+    test_labels = labels[test_idx]
+    test_prompts = [prompts[i] for i in test_idx]
+
     if args.direction_method == "mean_diff":
-        direction = mean_difference_direction(activations, labels)
+        direction = mean_difference_direction(train_activations, train_labels)
     else:
-        direction = probe_direction(activations, labels)
+        direction = probe_direction(train_activations, train_labels)
     direction = direction.to(model.cfg.device)
 
-    tokens = model.to_tokens(prompts, prepend_bos=True)
+    tokens = model.to_tokens(test_prompts, prepend_bos=True)
     true_token = model.to_single_token(args.true_token)
     false_token = model.to_single_token(args.false_token)
 
     rows = []
-    base_probe_scores = activations @ direction.detach().cpu()
+    train_probe_scores = train_activations @ direction.detach().cpu()
     probe_threshold = float(
-        0.5 * (base_probe_scores[labels == 1].mean() + base_probe_scores[labels == 0].mean())
+        0.5 * (train_probe_scores[train_labels == 1].mean() + train_probe_scores[train_labels == 0].mean())
     )
     for alpha in args.alphas:
         with torch.no_grad():
@@ -62,19 +73,24 @@ def main() -> None:
         diffs = logit_diff(logits, true_token=true_token, false_token=false_token).detach().cpu()
         # Adding alpha * direction to the final-token residual changes projection by alpha
         # because direction is normalized.
-        probe_scores = (activations @ direction.detach().cpu()) + alpha
+        probe_scores = (test_activations @ direction.detach().cpu()) + alpha
         predicted_true = (diffs.numpy() > 0).astype(int)
-        accuracy = float((predicted_true == labels).mean())
+        accuracy = float((predicted_true == test_labels).mean())
         probe_predicted_true = (probe_scores.numpy() > probe_threshold).astype(int)
-        probe_accuracy = float((probe_predicted_true == labels).mean())
-        true_mean = float(diffs[labels == 1].mean())
-        false_mean = float(diffs[labels == 0].mean())
-        probe_true_mean = float(probe_scores[labels == 1].mean())
-        probe_false_mean = float(probe_scores[labels == 0].mean())
+        probe_accuracy = float((probe_predicted_true == test_labels).mean())
+        true_mean = float(diffs[test_labels == 1].mean())
+        false_mean = float(diffs[test_labels == 0].mean())
+        probe_true_mean = float(probe_scores[test_labels == 1].mean())
+        probe_false_mean = float(probe_scores[test_labels == 0].mean())
         rows.append(
             {
                 "direction_method": args.direction_method,
                 "layer": args.layer,
+                "seed": args.seed,
+                "train_rows": len(train_idx),
+                "test_rows": len(test_idx),
+                "split": "group",
+                "threshold_source": "train_midpoint",
                 "alpha": alpha,
                 "mean_logit_diff_true_minus_false": float(diffs.mean()),
                 "mean_logit_diff_on_true_examples": true_mean,

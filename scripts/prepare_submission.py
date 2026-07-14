@@ -5,13 +5,10 @@ from pathlib import Path
 
 REPORT_FILES = [
     ("Final report", "reports/final_report.md"),
-    ("Final report PDF", "reports/final_report.pdf"),
-    ("Presentation deck", "reports/project_presentation.pptx"),
     ("Draft report", "reports/project_report.md"),
     ("Results summary", "reports/results_summary.md"),
     ("Reproducibility checklist", "reports/reproducibility_checklist.md"),
     ("Final deliverable checklist", "reports/final_deliverable_checklist.md"),
-    ("Presentation outline", "reports/presentation_outline.md"),
 ]
 
 CORE_RESULT_FILES = [
@@ -47,10 +44,8 @@ SCRIPT_FILES = [
     ("Ablation", "scripts/run_ablation.py"),
     ("Plotting", "scripts/plot_results.py"),
     ("Results summary", "scripts/summarize_results.py"),
-    ("Report PDF export", "scripts/export_report_pdf.py"),
     ("Project validation", "scripts/validate_project.py"),
     ("Submission manifest", "scripts/prepare_submission.py"),
-    ("Presentation deck builder", "scripts/build_presentation_deck.mjs"),
 ]
 
 
@@ -84,7 +79,6 @@ def main() -> None:
         "",
         "```powershell",
         "python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md",
-        "python -m scripts.export_report_pdf --input reports/final_report.md --out reports/final_report.pdf",
         "python -m scripts.validate_project",
         "```",
         "",
@@ -103,11 +97,8 @@ def main() -> None:
         "## Recommended Submission Focus",
         "",
         "- Main report: `reports/final_report.md`",
-        "- Main report PDF: `reports/final_report.pdf`",
-        "- Presentation deck: `reports/project_presentation.pptx`",
         "- Full codebase: `src/`, `scripts/`, `data/`, `figures/`, `reports/`",
         "- Reproducibility proof: `reports/reproducibility_checklist.md` and `reports/results_summary.md`",
-        "- Presentation support: `reports/presentation_outline.md`",
         "",
     ]
 

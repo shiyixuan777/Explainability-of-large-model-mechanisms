@@ -7,7 +7,6 @@ It lists the files that should be included or checked before final course submis
 
 ```powershell
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
-python -m scripts.export_report_pdf --input reports/final_report.md --out reports/final_report.pdf
 python -m scripts.validate_project
 ```
 
@@ -16,13 +15,10 @@ python -m scripts.validate_project
 | Item | Path | Status |
 |---|---|---|
 | Final report | `reports/final_report.md` | OK |
-| Final report PDF | `reports/final_report.pdf` | OK |
-| Presentation deck | `reports/project_presentation.pptx` | OK |
 | Draft report | `reports/project_report.md` | OK |
 | Results summary | `reports/results_summary.md` | OK |
 | Reproducibility checklist | `reports/reproducibility_checklist.md` | OK |
 | Final deliverable checklist | `reports/final_deliverable_checklist.md` | OK |
-| Presentation outline | `reports/presentation_outline.md` | OK |
 
 ## Core Results
 
@@ -62,16 +58,11 @@ python -m scripts.validate_project
 | Ablation | `scripts/run_ablation.py` | OK |
 | Plotting | `scripts/plot_results.py` | OK |
 | Results summary | `scripts/summarize_results.py` | OK |
-| Report PDF export | `scripts/export_report_pdf.py` | OK |
 | Project validation | `scripts/validate_project.py` | OK |
 | Submission manifest | `scripts/prepare_submission.py` | OK |
-| Presentation deck builder | `scripts/build_presentation_deck.mjs` | OK |
 
 ## Recommended Submission Focus
 
 - Main report: `reports/final_report.md`
-- Main report PDF: `reports/final_report.pdf`
-- Presentation deck: `reports/project_presentation.pptx`
 - Full codebase: `src/`, `scripts/`, `data/`, `figures/`, `reports/`
 - Reproducibility proof: `reports/reproducibility_checklist.md` and `reports/results_summary.md`
-- Presentation support: `reports/presentation_outline.md`

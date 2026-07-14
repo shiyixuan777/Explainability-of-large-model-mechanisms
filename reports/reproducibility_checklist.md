@@ -1,6 +1,6 @@
 # Reproducibility Checklist
 
-This checklist records the commands and artifacts needed to reproduce the current project results.
+This checklist records the commands and expected artifacts needed to reproduce the current Markdown report.
 
 ## Environment
 
@@ -11,7 +11,7 @@ pip install -r requirements.txt
 python -m scripts.check_env
 ```
 
-Expected result: all required packages are marked `OK`.
+Expected result: required packages are marked `OK`.
 
 ## Dataset
 
@@ -50,7 +50,8 @@ figures/probe_sweep_summary.png
 Key expected result:
 
 ```text
-capital + answer prompt: best AUC around 0.95
+capital + answer prompt: best AUC around 0.953
+mixed-domain settings: clearly weaker than capital
 ```
 
 ## Locate: Focused Capital Probe
@@ -90,9 +91,9 @@ figures/pca_capital_layer8.png
 Key expected result:
 
 ```text
-The figure gives a qualitative two-dimensional view of layer-8 capital activations.
-It does not need to separate true/false perfectly, because PCA keeps high-variance
-directions rather than the supervised probe direction.
+PC1 explained variance around 0.620
+PC2 explained variance around 0.117
+The 2D PCA projection does not cleanly separate true/false.
 ```
 
 ## Locate: Error Analysis
@@ -111,11 +112,11 @@ figures/error_analysis_capital_layer8_errors.csv
 Key expected result:
 
 ```text
-layer 8 test accuracy around 0.826 and AUC around 0.953
-8 misclassified test examples under the fixed 0.5 threshold
+layer 8 test accuracy around 0.826
+8 misclassified test examples
 ```
 
-## Causal Locate: Activation Patching
+## Supplementary Causal Test: Capital Recall Patching
 
 ```powershell
 python -m scripts.run_activation_patching --model gpt2-small --out figures/activation_patching_capital_recall.csv --components resid_post,attn_out,mlp_out
@@ -129,15 +130,19 @@ figures/activation_patching_capital_recall.csv
 figures/activation_patching_capital_recall.png
 ```
 
+Important limitation:
+
+```text
+This is a capital recall patching experiment, not direct true/false verification patching.
+```
+
 Key expected result:
 
 ```text
 resid_post layer 11 mean_recovery around 1.0
-attn_out layer 11 shows strong recovery signal
-mlp_out is weaker
 ```
 
-## Steer: Probe-Direction Steering
+## Steering: Held-out Probe Direction
 
 ```powershell
 python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
@@ -156,10 +161,13 @@ figures/steering_capital_probe_layer8_probe_accuracy.png
 Key expected result:
 
 ```text
-Probe score moves with alpha, but true/false logit-sign accuracy remains around 0.5.
+The script uses group split: 106 train rows and 46 test rows.
+The probe threshold is fit on the train split.
+alpha=0 held-out probe-threshold accuracy is around 0.826.
+true/false logit-sign accuracy remains 0.500 across the alpha sweep.
 ```
 
-## Improve/Ablate: Probe-Direction Ablation
+## Ablation: Probe Direction Removal
 
 ```powershell
 python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
@@ -178,52 +186,22 @@ Key expected result:
 
 ```text
 fixed_direction_score_gap decreases from about +0.573 to 0 at strength=1.0
+retrained probe AUC remains above 0.94 after ablation
 ```
 
-## Report
-
-Main report draft:
-
-```text
-reports/final_report.md
-reports/project_report.md
-```
-
-Machine-generated result summary:
+## Report and Validation
 
 ```powershell
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
-python -m scripts.export_report_pdf --input reports/final_report.md --out reports/final_report.pdf
 python -m scripts.prepare_submission
+python -m scripts.validate_project
+python -m compileall scripts src
 ```
 
-Expected artifact:
+Expected artifacts:
 
 ```text
+reports/final_report.md
 reports/results_summary.md
-reports/final_report.pdf
 reports/submission_manifest.md
 ```
-
-Project validation:
-
-```powershell
-python -m scripts.validate_project
-```
-
-Final submission helpers:
-
-```text
-reports/final_deliverable_checklist.md
-reports/presentation_outline.md
-```
-
-Report should mention:
-
-- Dataset construction
-- Linear probe localization
-- Domain-wise truth-direction consistency
-- Activation patching
-- Probe-direction steering
-- Probe-direction ablation
-- Limitations and next steps

@@ -83,7 +83,7 @@ def main() -> None:
                 marker="o",
             )
             plt.ylim(0, 1.05)
-            plt.title("Steering Strength vs Probe-Score Accuracy")
+            plt.title("Steering Strength vs Held-Out Probe-Score Accuracy")
             plt.tight_layout()
             plt.savefig(out_dir / output_png_name(steering_path, "_probe_accuracy"), dpi=200)
 

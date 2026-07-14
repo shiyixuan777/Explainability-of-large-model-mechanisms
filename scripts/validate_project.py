@@ -11,17 +11,12 @@ REQUIRED_FILES = [
     "requirements.txt",
     "data/facts.csv",
     "reports/final_report.md",
-    "reports/final_report.pdf",
-    "reports/project_presentation.pptx",
     "reports/project_report.md",
     "reports/results_summary.md",
     "reports/submission_manifest.md",
     "reports/reproducibility_checklist.md",
     "reports/final_deliverable_checklist.md",
-    "reports/presentation_outline.md",
     "scripts/prepare_submission.py",
-    "scripts/export_report_pdf.py",
-    "scripts/build_presentation_deck.mjs",
     "figures/probe_sweep.csv",
     "figures/probe_sweep_summary.png",
     "figures/probe_capital_answer.csv",
@@ -99,6 +94,13 @@ def validate_interventions() -> None:
 
     steering = read_csv("figures/steering_capital_probe_layer8.csv")
     check((steering["accuracy_from_logit_sign"] == 0.5).all(), "steering logit-sign accuracy stays at 0.5")
+    check((steering["split"] == "group").all(), "steering uses group held-out split")
+    check((steering["threshold_source"] == "train_midpoint").all(), "steering threshold is fit on train split")
+    alpha0 = steering.loc[steering["alpha"] == 0].iloc[0]
+    check(
+        abs(float(alpha0["accuracy_from_probe_score_threshold"]) - 0.826087) < 0.001,
+        "steering alpha=0 held-out probe accuracy matches focused probe accuracy",
+    )
     score_delta = float(steering["mean_probe_score"].iloc[-1] - steering["mean_probe_score"].iloc[0])
     alpha_delta = float(steering["alpha"].iloc[-1] - steering["alpha"].iloc[0])
     check(abs(score_delta - alpha_delta) < 0.1, "steering probe score moves approximately with alpha")
@@ -120,8 +122,10 @@ def validate_report_docs() -> None:
         ("Steering", "Steering"),
         ("Ablation", "Ablation"),
         ("Activation Patching", "Activation Patching"),
-        ("References section", "参考文献"),
-        ("Personal analysis section", "个人分析"),
+        ("Bao et al. reproduction target", "Bao et al."),
+        ("Capital recall limitation", "capital recall"),
+        ("No output improvement", "without output improvement"),
+        ("Distributed subspace conclusion", "subspace"),
     ]
     for label, term in required_terms:
         check(term.lower() in report_text_lower, f"final report mentions {label}")

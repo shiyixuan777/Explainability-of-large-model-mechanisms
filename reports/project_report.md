@@ -1,69 +1,89 @@
-# 基于线性 Truth Direction 的 GPT-2-small 事实判断机制可解释性研究
+# GPT-2-small 事实真假表征的可读性、可控性与局限
 
 ## 摘要
 
-本项目围绕“大模型机制可解释性”的 Locate、Steer & Improve 和论文复现要求，研究 GPT-2-small 在事实判断任务中是否存在可线性读取、可定位、可干预的 true/false 表征。我们构建了 528 条英文事实判断数据，覆盖 capital、continent、element_symbol、book_author、landmark_country、science、math 七个领域，并使用 TransformerLens 提取每层 residual stream 激活。初始混合领域实验表明，整体 truth/false 表征较弱；进一步按领域和 prompt 扫描后发现，capital fact verification 中存在非常强的线性可分信号，最佳层 AUC 达到 0.953。这说明在结构一致的事实任务中，GPT-2-small 的中后层 residual stream 包含可被线性 probe 读取的真假信息。随后我们补充了 activation patching、probe-direction steering 和 probe-direction ablation：patching 支持后层 residual stream 对 capital recall 具有因果贡献；steering 能稳定移动内部 probe score，但不能直接提升 naive true/false 输出；ablation 显示单一 truth direction 可被移除，但真假信息仍可从冗余子空间中重新读出。
+本项目围绕“大模型机制可解释性”课程要求，研究 GPT-2-small 在事实真假判断任务中是否存在可定位、可干预、可复现的 true/false 内部表征。我们构建了 528 条英文事实判断样本，覆盖 `capital`、`continent`、`element_symbol`、`book_author`、`landmark_country`、`science`、`math` 七个领域，并使用 TransformerLens 提取每层 residual stream 激活。
 
-## 1. 项目目标
+本文的核心结论经过刻意降调：我们没有证明存在一个跨领域稳定、可直接控制输出的全局 truth direction。更准确地说，GPT-2-small 在结构化的 capital fact verification 中存在强线性可读的 true/false 信息，layer 8 AUC 达到 0.953，layer 10 accuracy 达到 0.870；但混合领域上的 truth direction 明显更弱，PCA 二维投影不能清楚分离真假样本，probe-direction steering 只能移动内部 probe score，不能改善 true/false 输出判断。进一步的 probe-direction ablation 显示，移除已发现方向上的 score gap 后，重新训练 probe 仍能恢复 AUC 0.945 以上，说明该信息更像存在于冗余子空间中，而不是一个单一可控按钮。
 
-本项目选择“事实判断”作为具体可解释性现象：给定一句陈述，例如 `The capital of France is Paris.`，模型内部是否能区分该陈述为真或为假？
+因此，本项目支持的 thesis 是：
 
-围绕课程要求，项目被拆成三部分：
+> GPT-2-small 在结构化 capital fact verification 中存在强线性可读的 true/false 信息；但该信息不是跨领域稳定的全局 truth direction，也不是可通过 naive global steering 直接改善输出的单一控制方向。
 
-- Locate：用线性 probe 和分层激活分析定位 true/false 信息出现在哪些层。
-- Steer & Improve：构造 truth direction，在推理阶段修改 residual stream，观察模型输出是否改变。
-- 复现与拓展：复现近期机制可解释性工作中关于“truth/falsehood 在激活空间中具有线性结构”的核心思想，并分析该结构是否跨领域稳定。
+## 1. 研究问题
 
-## 2. 复现对象与本项目对应关系
+我们选择“事实真假判断”作为机制可解释性现象。给定句子：
 
-本项目主要复现和拓展 truth direction 相关工作。核心思想来自 Marks and Tegmark 的 *The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets*。该工作提出用简单 true/false statement 数据集研究 LLM 内部的真假表征，并从三类证据支持 truth direction：线性结构可视化、probe 跨数据集泛化、以及前向传播中的因果干预。
+```text
+The capital of France is Paris.
+```
 
-为了更贴合课程对 2024-2026 年顶会/Arxiv 工作的要求，本项目还对齐 Bao et al. 2025 年 arXiv 论文 *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*。该论文关心三个问题：LLM 是否普遍存在一致的 truth direction、简单 probe 是否足以识别 truth direction、truth direction 是否能跨上下文或任务泛化。本项目在 GPT-2-small 上做了一个小规模可复现实验，重点复现其中的前两个问题，并通过分领域 sweep 观察 truth direction 的稳定性。
+我们关心模型内部是否包含与 true/false 标签相关的可读信息，以及这些信息是否能被因果干预或推理时 steering 控制。
 
-对应关系如下：
+具体问题如下：
 
-| 论文/要求中的思想 | 本项目实现 |
+1. GPT-2-small 哪些层的 residual stream 中存在可由 linear probe 读取的 true/false 信息？
+2. 这种可读性是否跨事实领域和 prompt 形式稳定？
+3. activation patching 能否为相关事实知识召回提供补充因果证据？
+4. probe direction steering 是否能改变内部 probe score，并进一步改善输出行为？
+5. 如果移除一个 probe direction，true/false 信息是否仍能从其它方向读出？
+
+课程要求与本项目对应关系如下：
+
+| 课程要求 | 本项目实现 |
 |---|---|
-| True/false statement datasets | 构建 528 条英文事实判断样本 |
-| Linear truth representation | 每层 residual stream linear probe |
-| Layer localization | `probe_sweep` 和 capital layer probe |
-| Cross-domain consistency | capital、continent、element_symbol、book_author、landmark_country、science、math 分领域比较 |
-| Causal intervention | residual/attention/MLP activation patching |
-| Vector arithmetic | probe-direction steering 和 ablation |
+| Locate | layer-wise linear probe、domain/prompt sweep、PCA、error analysis |
+| Steer & Improve | probe-direction steering；结果显示 internal control without output improvement |
+| 顶会/Arxiv 复现 | 以 Bao et al. 2025 为主复现对象，复现 truth direction probing、跨领域一致性分析和干预式验证思想 |
 
-## 3. 背景方法
+## 2. 背景与复现对象
 
-Transformer 的 residual stream 可以被理解为模型在每一层积累和传递信息的主通道。TransformerLens 提供 hook 机制，可以在模型前向传播时读取或修改这些中间激活。本项目主要使用以下 hook 点：
+### 2.1 Transformer 与 Hook 点
+
+Transformer 的 residual stream 是每层之间传递和累积信息的主通道。对 GPT-2-small 而言，我们主要使用以下 TransformerLens hook 点：
 
 ```text
 blocks.{layer}.hook_resid_post
+blocks.{layer}.hook_attn_out
+blocks.{layer}.hook_mlp_out
 ```
 
-对每个输入 prompt，我们提取最后一个 token 位置的 residual stream 激活，并训练 logistic regression probe 判断该陈述的标签：
+其中 `hook_resid_post` 用于读取每层输出后的 residual activation，`hook_attn_out` 和 `hook_mlp_out` 用于模块级 activation patching。实验默认使用 final token position 的 activation，因为该位置最接近模型在 prompt 之后做预测时可用的上下文表示。
 
-```text
-label = 1: true statement
-label = 0: false statement
-```
+### 2.2 主复现对象：Bao et al. 2025
 
-如果某一层的激活可以被线性 probe 高精度区分 true/false，则说明该层中存在可线性读取的真假相关信息。
+本项目的主复现对象是 Bao et al. 2025 的 *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*。Marks and Tegmark 2023 的 *The Geometry of Truth* 作为背景工作，因为它提出了 true/false 激活空间线性结构这一核心视角，但其年份不属于课程要求的 2024-2026 范围。
 
-## 4. 数据集
+我们复现 Bao et al. 2025 的思路，而不是逐像素复现某个 figure。对应关系如下：
 
-当前数据集位于：
+| Bao et al. 2025 思路 | 本项目实现 | 结果 |
+|---|---|---|
+| 构造 true/false statement datasets | 528 条英文事实判断样本 | balanced true/false，覆盖 7 个领域 |
+| layer-wise truth probing | 对每层 residual stream 训练 linear probe | capital layer 8 AUC 0.953 |
+| consistency/generalization | 比较 domain 与 prompt sweep | mixed-domain 弱，capital 强 |
+| geometry visualization | PCA 可视化 activation | 二维 PCA 不足以解释 probe 可分性 |
+| intervention check | steering 与 ablation | 内部 score 可控，但输出未改善；信息不局限于单方向 |
+
+这个复现结果更偏向“限定条件下复现与反例分析”：我们复现了结构化任务中的强线性可读性，同时观察到跨领域一致性和可控性都有限。
+
+## 3. 数据与实验设置
+
+数据集由 `scripts/build_dataset.py` 生成，保存为：
 
 ```text
 data/facts.csv
 ```
 
-数据规模为 528 条英文事实判断样本，true/false 完全平衡：
+数据规模如下：
 
-```text
-true  = 264
-false = 264
-```
+| 属性 | 数值 |
+|---|---:|
+| 总样本数 | 528 |
+| True 样本 | 264 |
+| False 样本 | 264 |
+| 领域数 | 7 |
 
-领域分布如下：
+领域分布：
 
 | Domain | Rows |
 |---|---:|
@@ -75,313 +95,142 @@ false = 264
 | science | 50 |
 | math | 40 |
 
-每个 `pair_id` 包含一条 true statement 和一条对应的 false statement。实验中使用 group split，保证同一个事实对不会同时出现在训练集和测试集中，从而减少数据泄漏。
+为了避免同一个事实 pair 的 true/false 两个版本同时进入训练集和测试集，probe、steering、ablation 默认使用 `pair_id` 做 group split。这一点很重要，因为否则 probe 可能利用实体或模板重复，而不是泛化到 held-out fact pairs。
 
-## 5. 实验设置
-
-模型：
-
-```text
-gpt2-small
-```
-
-框架：
-
-```text
-TransformerLens
-```
-
-主要 prompt 模板包括：
+主要 prompt 形式包括：
 
 ```text
 Statement: {statement}
 The statement is
 ```
 
+以及：
+
 ```text
 Statement: {statement}
 Answer true or false:
 ```
 
-```text
-Question: Is the following statement true or false?
-{statement}
-Answer:
-```
+## 4. Locate: 线性可读性定位
 
-评价指标：
+### 4.1 分领域与 prompt sweep
 
-- Accuracy：probe 在测试集上的分类准确率。
-- AUC：probe 输出概率对 true/false 的排序能力。
-- Separability AUC：`max(AUC, 1 - AUC)`，用于衡量激活是否可线性分离，即使方向反了也能体现可分性。
+我们首先在不同 domain 与 prompt template 上做 layer-wise probe sweep。每个设置下，对每层 residual stream final-token activation 训练 logistic regression probe，并报告 held-out group split 上的 accuracy、AUC 和 separability AUC。
 
-## 6. Locate 实验结果
-
-### 6.1 混合领域结果
-
-在全部 528 条样本上训练每层 probe 时，最佳结果只有中等强度。以 `question` prompt 为例，最佳 separability AUC 约为 0.653。这说明将所有事实类型混在一起时，GPT-2-small 中不存在非常稳定的通用 truth direction，或者该方向不能被当前 final-token residual probe 稳定读出。
-
-这也是第一轮实验中 AUC 接近随机的原因：不同领域的事实结构差异很大，统一线性边界被稀释。
-
-### 6.2 分领域 sweep 结果
-
-我们进一步运行 `scripts/run_probe_sweep.py`，比较不同领域和 prompt。结果显示，truth/false 可分性具有明显领域差异。
-
-当前最强的若干设置为：
-
-| Domain | Prompt | Best Layer | Accuracy | AUC | Separability AUC |
-|---|---|---:|---:|---:|---:|
-| capital | answer | 8 | 0.826 | 0.953 | 0.953 |
-| capital | statement_is | 6 | 0.804 | 0.940 | 0.940 |
-| capital | question | 7 | 0.804 | 0.932 | 0.932 |
-| continent | statement_is | 11 | 0.808 | 0.846 | 0.846 |
-| landmark_country | statement_is | 9 | 0.778 | 0.815 | 0.815 |
-
-完整结果见：
+输出文件：
 
 ```text
 figures/probe_sweep.csv
 figures/probe_sweep_summary.png
 ```
 
-### 6.3 Capital fact verification 结果
+主要结果：
 
-由于 capital 领域结果最稳定，我们将其作为当前主实验对象。使用 prompt：
+| Domain | Prompt | Best Layer | Accuracy | AUC |
+|---|---|---:|---:|---:|
+| capital | answer | 8 | 0.826 | 0.953 |
+| capital | statement_is | 6 | 0.826 | 0.940 |
+| capital | question | 7 | 0.783 | 0.932 |
+| continent | statement_is | 11 | 0.692 | 0.846 |
+| element_symbol | question | 4 | 0.818 | 0.793 |
+| landmark_country | statement_is | 11 | 0.706 | 0.813 |
+| all | question | 11 | 0.588 | 0.653 |
 
-```text
-Statement: {statement}
-Answer true or false:
+解释上必须谨慎：高 AUC 说明该层 activation 中存在可被监督线性分类器读取的 true/false 相关信息，但不等同于“模型已经在该层形成了完整真假判断机制”。更准确的表述是：
+
+> 第 8-10 层 residual stream 中存在强 true/false linear readability，尤其在结构一致的 capital fact verification 中。
+
+### 4.2 Focused Capital Probe
+
+由于 sweep 显示 capital domain 最稳定，我们进一步聚焦：
+
+```powershell
+python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --domain capital --prompt-template "Statement: {statement}`nAnswer true or false:" --out figures/probe_capital_answer.csv
 ```
 
-各层结果显示，中后层出现强线性可分信号：
+结果文件：
+
+```text
+figures/probe_capital_answer.csv
+figures/probe_capital_answer.png
+```
+
+关键层结果：
 
 | Layer | Accuracy | AUC |
 |---:|---:|---:|
 | 5 | 0.848 | 0.941 |
-| 6 | 0.826 | 0.943 |
-| 7 | 0.848 | 0.938 |
 | 8 | 0.826 | 0.953 |
-| 9 | 0.804 | 0.941 |
 | 10 | 0.870 | 0.947 |
+| 11 | 0.783 | 0.902 |
 
-这表明在 capital fact verification 中，GPT-2-small 的 residual stream 确实包含可线性读取的真假信息。最佳 AUC 出现在第 8 层，最佳 accuracy 出现在第 10 层。考虑 GPT-2-small 共 12 层，这说明真假相关信息主要在中后层形成。
+这说明 capital 任务中，中后层 residual stream 的线性可读性很强。但它仍然是 probe evidence，不是直接 causal evidence。
 
-对应图表：
+### 4.3 PCA 辅助可视化
 
-```text
-figures/probe_capital_answer.png
-```
-
-### 6.4 Activation PCA 可视化
-
-为了给 linear probe 结果提供更直观的辅助证据，我们新增了第 8 层 residual activation 的 PCA 可视化。该实验不训练分类器，而是直接把 capital 样本在第 8 层 final-token residual stream 中的高维激活降到二维，观察 true/false 样本是否出现可见的空间结构。
-
-运行命令：
-
-```powershell
-python -m scripts.run_activation_pca --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/pca_capital_layer8.csv
-```
-
-输出文件：
+我们对 layer 8 capital residual activation 做 PCA：
 
 ```text
 figures/pca_capital_layer8.csv
 figures/pca_capital_layer8.png
 ```
 
-当前 PCA 图中 true/false 样本没有在二维平面上完全分开，这反而提醒我们：第 8 层 AUC=0.953 的可分性主要由高维 probe 方向捕捉，未必会直接出现在解释方差最大的前两个主成分上。绘图时 CSV 保留全部样本，但 PNG 默认裁掉二维坐标两端 1% 极端点，避免个别长实体样本拉伸坐标轴。
+结果：
 
-因此，PCA 不能代替 probe 的定量结论。如果图上 true/false 没有完全分开，也不意味着高维空间不可分；本项目仍以 group split probe AUC 作为主要定位指标，PCA 图只作为报告中的直观补充。
+| Layer | PC1 Explained Variance | PC2 Explained Variance | Rows |
+|---:|---:|---:|---:|
+| 8 | 0.620 | 0.117 | 152 |
 
-### 6.5 样本级错误分析
+二维 PCA 图没有清楚分离 true/false。这不是与 probe AUC 矛盾，而是说明 probe 发现的方向不一定是解释方差最大的无监督主成分。换句话说，真假可读性更像存在于 supervised high-dimensional direction 或子空间中，而不是 PCA 前两个方向中。
 
-为了理解 probe 的失败模式，我们新增了样本级错误分析。该脚本使用与主实验相同的 group split，在第 8 层训练 capital probe，并导出测试集上每条样本的 `prob_true`、预测标签、置信度和是否预测正确。
+### 4.4 Error Analysis
 
-运行命令：
-
-```powershell
-python -m scripts.run_error_analysis --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/error_analysis_capital_layer8.csv
-```
-
-输出文件：
+我们对 layer 8 capital probe 做错误样本分析：
 
 ```text
 figures/error_analysis_capital_layer8.csv
 figures/error_analysis_capital_layer8_errors.csv
 ```
 
-第 8 层测试集共有 46 条样本，其中 38 条预测正确、8 条预测错误，accuracy=0.826，AUC=0.953。错误样例如下：
+测试集结果：
 
-| Statement | Label | Prediction | prob_true |
+| Test Rows | Correct | Wrong | Accuracy |
+|---:|---:|---:|---:|
+| 46 | 38 | 8 | 0.826 |
+
+典型错误包括：
+
+| Statement | Label | Prediction | Prob True |
 |---|---|---|---:|
 | The capital of Laos is Vientiane. | true | false | 0.003 |
 | The capital of Canada is Amman. | false | true | 0.964 |
 | The capital of Chile is Santiago. | true | false | 0.179 |
 | The capital of India is New Delhi. | true | false | 0.217 |
-| The capital of Morocco is Rabat. | true | false | 0.219 |
-| The capital of Nigeria is Mexico City. | false | true | 0.688 |
 
-这个结果说明：probe 的排序能力很强，因此 AUC 很高；但固定 `0.5` 阈值仍会产生偏置，尤其会把一部分真实首都判断成 false。换句话说，当前实验更能证明“第 8 层激活中存在可线性读取的 truth/false 信息”，但不能直接证明一个默认阈值就能稳定作为事实判断器。
+这些错误提醒我们，probe 的高 AUC 不意味着每个事实判断都被稳健掌握。模型可能对部分国家、实体长度、tokenization 或训练语料频率敏感。
 
-## 7. Steering 与 Ablation 结果
+## 5. Activation Patching: Capital Recall 的补充因果实验
 
-我们首先尝试最简单的 mean-difference truth direction：
+这一节必须明确限定：本项目的 activation patching 不是 true/false verification 的直接因果定位，而是对相关 capital fact knowledge recall 的补充因果实验。它回答的是“首都知识召回信息在模型哪些层/模块中起作用”，而不是直接回答“模型如何判断 statement 为 true 或 false”。
 
-```text
-truth_direction = mean(h_true) - mean(h_false)
-```
-
-在 capital 领域第 8 层上进行 alpha sweep，结果如下：
-
-| Alpha | Mean Logit Diff | True Mean | False Mean | Sign Accuracy |
-|---:|---:|---:|---:|---:|
-| -4 | 1.584 | 1.576 | 1.592 | 0.500 |
-| -2 | 1.570 | 1.562 | 1.577 | 0.500 |
-| -1 | 1.562 | 1.554 | 1.570 | 0.500 |
-| 0 | 1.555 | 1.547 | 1.562 | 0.500 |
-| 1 | 1.547 | 1.540 | 1.554 | 0.500 |
-| 2 | 1.539 | 1.532 | 1.546 | 0.500 |
-| 4 | 1.523 | 1.516 | 1.530 | 0.500 |
-
-这个结果说明干预确实改变了 `true` 与 `false` token 的 logit difference，但没有提高基于 logit sign 的判断准确率。更重要的是，true 和 false 样本的 logit diff 几乎一起移动，因此当前 naive steering 更像是在整体改变输出偏置，而不是按样本真假改善判断。
-
-因此目前结论是：
-
-> Linear probe 证明了 capital 任务中存在可读的真假信息，但 mean-difference steering 尚未证明该方向具有直接可控的因果作用。
-
-### 7.1 Probe-direction steering
-
-为了更贴近 Locate 阶段发现的线性边界，我们进一步使用 logistic regression probe 的权重方向作为 steering direction。具体做法是先在第 8 层 capital activations 上训练 probe，再把标准化空间中的线性权重转换回原始 residual stream 坐标，得到单位向量：
-
-```text
-v_probe = normalized(probe_weight_in_activation_space)
-```
-
-然后在第 8 层最后 token 位置执行：
-
-```text
-h = h + alpha * v_probe
-```
-
-实验输出两个指标：
-
-- `accuracy_from_logit_sign`：根据模型输出 `logit(" true") - logit(" false")` 判断。
-- `accuracy_from_probe_score_threshold`：根据内部 probe projection score 和校准阈值判断。
-
-结果如下：
-
-| Alpha | Logit-sign Accuracy | Probe-threshold Accuracy | Mean Probe Score |
-|---:|---:|---:|---:|
-| -8 | 0.500 | 0.500 | -9.353 |
-| -4 | 0.500 | 0.500 | -5.353 |
-| -2 | 0.500 | 0.500 | -3.353 |
-| -1 | 0.500 | 0.507 | -2.353 |
-| 0 | 0.500 | 1.000 | -1.353 |
-| 1 | 0.500 | 0.500 | -0.353 |
-| 2 | 0.500 | 0.500 | 0.647 |
-| 4 | 0.500 | 0.500 | 2.647 |
-| 8 | 0.500 | 0.500 | 6.647 |
-
-这个结果说明 probe direction 确实控制了内部表示的 projection score：alpha 每增加 1，mean probe score 也近似增加 1。然而，因为我们对所有样本统一加入同一个方向，true 和 false 样本会一起移动，导致 calibrated probe accuracy 在 alpha 偏离 0 后反而下降。这是一个重要负结果：
-
-> Probe direction 可以控制内部表示的“真假方向坐标”，但 naive global steering 不能自动 improve true/false 分类；要改善行为，需要输入条件化 steering、ablation 或更精细的 causal intervention。
-
-对应图表：
-
-```text
-figures/steering_capital_probe_layer8.csv
-figures/steering_capital_probe_layer8.png
-figures/steering_capital_probe_layer8_probe_accuracy.png
-```
-
-### 7.2 Probe-direction ablation
-
-为了进一步验证 probe direction 是否确实承载了可读的 true/false 信息，我们做了 ablation 实验。做法是先在训练 split 上学习第 8 层 capital probe direction，然后从 residual activation 中移除该方向上的投影：
-
-```text
-h_ablated = h - strength * (h · v_probe) * v_probe
-```
-
-实验同时报告两类指标：
-
-- Fixed direction：继续使用原来的 probe direction 读出 true/false，观察该方向本身是否被移除。
-- Retrained probe：在 ablated activation 上重新训练一个 probe，观察信息是否还能被其他方向读出。
-
-关键结果如下：
-
-| Strength | Fixed Direction Score Gap | Fixed Direction Accuracy | Retrained Probe AUC |
-|---:|---:|---:|---:|
-| 0.00 | +0.573 | 0.826 | 0.953 |
-| 0.25 | +0.430 | 0.500 | 0.955 |
-| 0.50 | +0.286 | 0.500 | 0.958 |
-| 0.75 | +0.143 | 0.500 | 0.951 |
-| 1.00 | -0.000 | 0.500 | 0.945 |
-| 1.25 | -0.143 | 0.500 | 0.953 |
-| 1.50 | -0.286 | 0.478 | 0.962 |
-
-这个结果说明，沿 `v_probe` 移除投影后，原方向上的 true/false score gap 从 `+0.573` 逐步下降到 0，并在过度 ablation 后反向。这证明我们确实可以用 vector arithmetic 控制该线性方向上的信息。然而，重新训练 probe 后 AUC 仍保持在 0.94 以上，说明 capital true/false 信息并不是只存在于单一方向中，而是可能分布在多个相关方向或子空间中。
-
-因此 ablation 给出的结论比 naive steering 更细：
-
-> 我们可以有效移除一个已发现的 probe direction，但 GPT-2-small 的 capital truth/false 信息具有冗余表示，单方向 ablation 不足以摧毁所有可线性读取的信息。
-
-对应图表：
-
-```text
-figures/ablation_capital_probe_layer8.csv
-figures/ablation_capital_probe_layer8.png
-figures/ablation_capital_probe_layer8_score_gap.png
-```
-
-## 8. Activation Patching 结果
-
-为了补充更直接的因果定位实验，我们新增了 capital recall 形式的 activation patching。这个实验不再让 GPT-2-small 输出 `true` 或 `false`，而是使用更适合自回归语言模型的事实召回 prompt：
-
-```text
-The capital of France is
-```
-
-实验构造 clean/corrupt prompt pair。例如：
+实验 prompt：
 
 ```text
 clean:   The capital of France is
 corrupt: The capital of Germany is
+metric:  logit(" Paris") - logit(" Berlin")
 ```
 
-目标指标为 clean capital token 相对 corrupt capital token 的 logit difference：
+我们在 corrupt prompt 前向传播时，把 clean prompt 的同层同位置 activation patch 进去，并观察目标首都 token logit difference 是否恢复。
+
+输出文件：
 
 ```text
-logit(" Paris") - logit(" Berlin")
+figures/activation_patching_capital_recall.csv
+figures/activation_patching_capital_recall.png
 ```
 
-然后在 corrupt prompt 的前向传播中，将某一层最后 token 位置的 clean activation patch 到 corrupt run 中，观察目标 logit difference 是否恢复。当前实验比较了三类 hook：
-
-```text
-blocks.{layer}.hook_resid_post
-blocks.{layer}.hook_attn_out
-blocks.{layer}.hook_mlp_out
-```
-
-当前实验自动跳过 GPT-2 tokenizer 中不是 single token 的首都名，最终使用 22 对 single-token capital pairs。首先看 residual stream patching：
-
-| Layer | Patched Logit Diff | Mean Recovery |
-|---:|---:|---:|
-| 0 | -0.788 | 0.123 |
-| 1 | -0.764 | 0.078 |
-| 2 | -0.722 | 0.150 |
-| 3 | -0.691 | 0.226 |
-| 4 | -0.730 | -0.018 |
-| 5 | -0.763 | -0.753 |
-| 6 | -0.775 | -1.520 |
-| 7 | -0.757 | -1.450 |
-| 8 | -0.657 | -1.290 |
-| 9 | -0.359 | -1.203 |
-| 10 | -0.154 | -0.813 |
-| 11 | 0.264 | 1.000 |
-
-其中 clean baseline 的平均 logit difference 为 `+0.264`，corrupt baseline 为 `-1.039`。第 11 层 patch 后恢复到 `+0.264`，说明 residual stream 最后一层携带了足以恢复目标首都输出的信息。第 9-10 层 patched logit diff 也明显向 clean 方向移动，但尚未完全恢复。
-
-模块级 patching 进一步显示：
+模块级最佳结果：
 
 | Component | Best Layer | Patched Logit Diff | Mean Recovery | Median Recovery |
 |---|---:|---:|---:|---:|
@@ -389,42 +238,137 @@ blocks.{layer}.hook_mlp_out
 | attn_out | 11 | -0.672 | 1.762 | 1.077 |
 | mlp_out | 7 | -1.022 | 0.388 | 0.074 |
 
-这个结果提供了比线性 probe 更强的因果证据：在 capital recall 任务中，替换关键层 residual stream 会直接改变目标首都 token 的输出 logit。模块对比提示，后层 attention output 对恢复目标首都信息有明显贡献，而 MLP output 的单独 patching 效果较弱。需要注意的是，`attn_out` 的 mean recovery 较高，但平均 patched logit diff 仍未翻正，因此它更适合被解释为“对恢复有强贡献”，而不是“单独足以完成恢复”。整体 causal effect 最清晰地出现在最后层 residual stream。
+解释：
 
-对应结果文件：
+- 在 capital recall 任务中，最后层 residual stream patching 可以恢复到 clean baseline，说明后层 residual stream 对目标首都 token 输出有直接因果作用。
+- `attn_out` layer 11 的 mean recovery 很高，但 patched logit diff 仍为负，说明它可能贡献了强恢复信号，但单独 patch 后还不足以稳定翻转目标 logit。
+- 该结果不能直接外推为 true/false verification 的 causal localization。报告中后续所有相关结论都只把它称作 supplementary causal evidence for capital recall。
+
+## 6. Steering and Ablation: Internal Control without Output Improvement
+
+### 6.1 Held-out Probe-direction Steering
+
+原始版本的 steering 实验有一个口径问题：direction 和 threshold 用全量 capital 数据拟合，再在同一批数据上报告 probe-threshold accuracy，导致 `alpha=0` 的 accuracy 过高。现在脚本已改为 group split：
+
+- train split: 106 rows，用于拟合 `v_probe` 和 `probe_score_threshold`；
+- test split: 46 rows，用于评估 steering 后的 logit-sign accuracy 和 probe-threshold accuracy；
+- threshold source: `train_midpoint`，即 train true/false projection mean 的中点。
+
+实验操作：
 
 ```text
-figures/activation_patching_capital_recall.csv
-figures/activation_patching_capital_recall.png
+h = h + alpha * v_probe
 ```
 
-## 9. 当前结论
+输出文件：
 
-目前最可靠的结论有三点：
+```text
+figures/steering_capital_probe_layer8.csv
+figures/steering_capital_probe_layer8.png
+figures/steering_capital_probe_layer8_accuracy.png
+figures/steering_capital_probe_layer8_probe_accuracy.png
+```
 
-1. 在混合领域事实判断中，GPT-2-small 的 truth/false 线性结构较弱。
-2. 在结构一致的 capital fact verification 中，truth/false 信息可被高精度线性 probe 读取，最佳 AUC 达到 0.953。
-3. 在 capital recall 的 activation patching 中，后层 residual stream patching 可以恢复目标首都 logit，模块级结果显示最后层 attention output 贡献明显，MLP output 单独贡献较弱。
-4. Probe-direction steering 可以控制内部 probe score，但 naive global steering 没有提升 true/false 输出判断，说明可读性不等于直接可改善性。
-5. Probe-direction ablation 可以移除已发现方向上的 score gap，但重新训练 probe 仍能恢复高 AUC，提示 truth/false 信息存在冗余子空间。
+更新后的结果：
 
-## 10. 下一步计划
+| Alpha | Logit-sign Accuracy | Held-out Probe-threshold Accuracy | Mean Probe Score |
+|---:|---:|---:|---:|
+| -8 | 0.500 | 0.500 | -9.560 |
+| -4 | 0.500 | 0.522 | -5.560 |
+| -2 | 0.500 | 0.522 | -3.560 |
+| -1 | 0.500 | 0.522 | -2.560 |
+| 0 | 0.500 | 0.826 | -1.560 |
+| 1 | 0.500 | 0.500 | -0.560 |
+| 2 | 0.500 | 0.500 | 0.440 |
+| 4 | 0.500 | 0.500 | 2.440 |
+| 8 | 0.500 | 0.500 | 6.440 |
 
-后续需要补强课程要求中的因果干预部分：
+现在 `alpha=0` 的 held-out probe-threshold accuracy 为 0.826，与 focused capital probe 的 layer 8 held-out accuracy 对齐。这个结果说明：
 
-1. 将 activation patching 扩展到 head-level attention patching。
-2. 尝试子空间 ablation，例如移除多个 probe/PC directions，而不是单一方向。
-3. 可选模型拓展：在 Qwen2.5-0.5B 或 Qwen2.5-0.5B-Instruct 上复现实验。
+1. 沿 probe direction 加法可以线性移动内部 probe score；
+2. 但所有样本几乎一起平移，所以阈值附近的分类边界很容易被整体推坏；
+3. true/false logit-sign accuracy 始终为 0.500，说明 naive global steering 没有改善输出行为。
 
-## 11. 个人分析
+因此，本节不应被解读为 Improve 成功，而应被解读为：
 
-这组结果说明，“truth direction”不一定是一个跨所有事实领域共享的单一方向。至少在 GPT-2-small 上，更合理的解释是：某些结构一致的任务，例如首都事实判断，会在中后层形成稳定的线性可分表示；而当任务混合了首都、元素符号、书籍作者、数学和科学常识后，统一 probe 的效果明显下降。
+> probe direction is internally steerable, but this steering fails to improve output behavior.
 
-这也提示机制可解释性实验需要非常重视任务定义。如果现象定义过宽，实验可能得到“没有信号”的结论；但通过控制领域和 prompt，可以把模型内部表示中的局部结构暴露出来。后续的关键问题是：这个线性结构只是 probe 可读，还是模型实际用于输出判断的因果机制？这需要 activation patching 和 steering 实验进一步验证。
+### 6.2 Probe-direction Ablation
 
-## 12. 参考文献
+为了检验 true/false 信息是否局限于一个方向，我们从 activation 中移除 probe direction 上的投影：
 
-1. Samuel Marks and Max Tegmark. *The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets*. arXiv:2310.06824. https://arxiv.org/abs/2310.06824
-2. Yuntai Bao, Xuhong Zhang, Tianyu Du, Xinkui Zhao, Zhengwen Feng, Hao Peng, Jianwei Yin. *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*. arXiv:2506.00823. https://arxiv.org/abs/2506.00823
-3. Leonard Bereska and Efstratios Gavves. *Mechanistic Interpretability for AI Safety -- A Review*. arXiv:2404.14082.
-4. *Locate, Steer, and Improve: A Practical Survey of Actionable Mechanistic Interpretability in LLMs*. arXiv 2026.
+```text
+h_ablated = h - strength * (h · v_probe) * v_probe
+```
+
+输出文件：
+
+```text
+figures/ablation_capital_probe_layer8.csv
+figures/ablation_capital_probe_layer8.png
+figures/ablation_capital_probe_layer8_score_gap.png
+```
+
+结果：
+
+| Strength | Fixed Direction Score Gap | Fixed Direction Accuracy | Retrained Probe AUC |
+|---:|---:|---:|---:|
+| 0.00 | 0.573 | 0.826 | 0.953 |
+| 0.25 | 0.430 | 0.500 | 0.955 |
+| 0.50 | 0.286 | 0.500 | 0.958 |
+| 0.75 | 0.143 | 0.500 | 0.951 |
+| 1.00 | -0.000 | 0.500 | 0.945 |
+| 1.25 | -0.143 | 0.500 | 0.953 |
+| 1.50 | -0.286 | 0.478 | 0.962 |
+
+这是本项目最关键的负结果之一。移除当前 probe direction 后，该方向上的 score gap 从 0.573 降到约 0，fixed direction accuracy 退化到 0.500；但如果在 ablated activation 上重新训练 probe，AUC 仍保持在 0.945 以上。
+
+这说明我们发现的不是唯一 truth direction，而是一个线性可读方向。true/false 信息可能分布在多个相关方向或子空间中。该结论比“我找到了 truth direction”更稳，也更符合机制可解释性中对 distributed representation 的谨慎理解。
+
+## 7. 综合讨论
+
+本项目的实验链条可以概括为：
+
+```text
+strong capital linear readability
+-> weak mixed-domain generalization
+-> PCA does not reveal a simple 2D separation
+-> related capital recall can be patched in late residual stream
+-> steering moves internal score without output improvement
+-> ablation removes one direction but not all readable information
+-> true/false information is readable but not a single controllable direction
+```
+
+因此，本文最重要的结论不是“truth direction 可以直接 steering 成功”，而是：
+
+> 可读性强，不代表单方向因果控制强；capital truth/false 信息更像冗余子空间现象，而不是一个全局稳定按钮。
+
+这也解释了为什么 mixed-domain 结果弱而 capital 结果强。truth/false 不是脱离任务内容的抽象二值属性；它依赖事实类型、prompt 形式、实体分布和模型对相关知识的掌握程度。
+
+## 8. 局限
+
+1. 模型只使用 GPT-2-small，尚未扩展到 Qwen2.5-0.5B 或 Qwen2.5-1.5B。
+2. activation patching 针对的是 related capital recall，不是 true/false verification 的直接 patching。
+3. patching 粒度主要是 layer/module，没有做 attention head 或 neuron 级定位。
+4. steering 使用全局固定方向，没有做输入条件化 steering 或多方向 subspace steering。
+5. 数据集为人工构造的小规模事实判断集，虽然可复现，但仍可能存在模板、实体频率和 tokenization 偏差。
+
+## 9. 结论
+
+本项目完成了一个较完整的机制可解释性小闭环：先用 linear probe 定位 true/false 信息，再用 domain/prompt sweep 和 PCA 检验其稳定性与几何结构，随后用 capital recall patching、probe-direction steering 和 ablation 检验其因果与可控性边界。
+
+最终结论如下：
+
+1. GPT-2-small 在结构化 capital fact verification 中存在强线性可读的 true/false 信息，layer 8 AUC 为 0.953。
+2. 这种信号并不构成跨领域稳定的全局 truth direction，mixed-domain separability 明显更弱。
+3. PCA 不能清楚分离 true/false，说明高维 supervised direction 与低维高方差方向不同。
+4. Capital recall patching 为相关事实知识召回提供补充因果证据，但不是 truth verification 的直接因果定位。
+5. Probe-direction steering 可以移动内部 probe score，但 without output improvement。
+6. Probe-direction ablation 表明，true/false 信息不局限于单一方向，更可能存在于 redundant subspace 中。
+
+## 参考文献
+
+1. Yuntai Bao, Xuhong Zhang, Tianyu Du, Xinkui Zhao, Zhengwen Feng, Hao Peng, Jianwei Yin. *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*. arXiv:2506.00823. https://arxiv.org/abs/2506.00823
+2. Leonard Bereska and Efstratios Gavves. *Mechanistic Interpretability for AI Safety -- A Review*. arXiv:2404.14082.
+3. *Locate, Steer, and Improve: A Practical Survey of Actionable Mechanistic Interpretability in LLMs*. arXiv 2026.
+4. Samuel Marks and Max Tegmark. *The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets*. arXiv:2310.06824. https://arxiv.org/abs/2310.06824

@@ -35,6 +35,8 @@ figures/steering_alpha.png
 figures/steering_accuracy.png
 *.pptx.inspect.ndjson
 ~$*.pptx
+reports/*.pdf
+reports/*.pptx
 
 # OS / editor
 .DS_Store

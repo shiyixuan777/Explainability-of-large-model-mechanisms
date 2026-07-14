@@ -75,17 +75,17 @@ Misclassified examples:
 
 ## Probe-Direction Steering
 
-| alpha | logit_sign_accuracy | probe_threshold_accuracy | mean_probe_score |
-| --- | --- | --- | --- |
-| -8.0 | 0.500 | 0.500 | -9.353 |
-| -4.0 | 0.500 | 0.500 | -5.353 |
-| -2.0 | 0.500 | 0.500 | -3.353 |
-| -1.0 | 0.500 | 0.507 | -2.353 |
-| 0.0 | 0.500 | 1.000 | -1.353 |
-| 1.0 | 0.500 | 0.500 | -0.353 |
-| 2.0 | 0.500 | 0.500 | 0.647 |
-| 4.0 | 0.500 | 0.500 | 2.647 |
-| 8.0 | 0.500 | 0.500 | 6.647 |
+| alpha | logit_sign_accuracy | heldout_probe_threshold_accuracy | mean_probe_score | split | threshold_source |
+| --- | --- | --- | --- | --- | --- |
+| -8.0 | 0.500 | 0.500 | -9.560 | group | train_midpoint |
+| -4.0 | 0.500 | 0.522 | -5.560 | group | train_midpoint |
+| -2.0 | 0.500 | 0.522 | -3.560 | group | train_midpoint |
+| -1.0 | 0.500 | 0.522 | -2.560 | group | train_midpoint |
+| 0.0 | 0.500 | 0.826 | -1.560 | group | train_midpoint |
+| 1.0 | 0.500 | 0.500 | -0.560 | group | train_midpoint |
+| 2.0 | 0.500 | 0.500 | 0.440 | group | train_midpoint |
+| 4.0 | 0.500 | 0.500 | 2.440 | group | train_midpoint |
+| 8.0 | 0.500 | 0.500 | 6.440 | group | train_midpoint |
 
 ## Probe-Direction Ablation
 

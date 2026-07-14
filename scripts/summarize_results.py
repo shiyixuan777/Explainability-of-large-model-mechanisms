@@ -179,8 +179,10 @@ def main() -> None:
             {
                 "alpha": fmt(row.alpha, digits=1),
                 "logit_sign_accuracy": fmt(row.accuracy_from_logit_sign),
-                "probe_threshold_accuracy": fmt(row.accuracy_from_probe_score_threshold),
+                "heldout_probe_threshold_accuracy": fmt(row.accuracy_from_probe_score_threshold),
                 "mean_probe_score": fmt(row.mean_probe_score),
+                "split": getattr(row, "split", ""),
+                "threshold_source": getattr(row, "threshold_source", ""),
             }
             for row in steering.itertuples(index=False)
         ]
