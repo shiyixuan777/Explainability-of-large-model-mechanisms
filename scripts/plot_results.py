@@ -17,6 +17,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--probe", default="figures/probe_layers.csv")
     parser.add_argument("--probe-sweep", default="figures/probe_sweep.csv")
     parser.add_argument("--steering", default="figures/steering_alpha.csv")
+    parser.add_argument("--patching", default="figures/activation_patching_capital_recall.csv")
     parser.add_argument("--out-dir", default="figures")
     return parser.parse_args()
 
@@ -82,6 +83,17 @@ def main() -> None:
         plt.title("Best Probe Separability by Domain and Prompt")
         plt.tight_layout()
         plt.savefig(out_dir / "probe_sweep_summary.png", dpi=200)
+
+    patching_path = Path(args.patching)
+    if patching_path.exists():
+        patching = pd.read_csv(patching_path)
+        plt.figure(figsize=(7, 4))
+        sns.lineplot(data=patching, x="layer", y="mean_recovery", marker="o")
+        plt.axhline(0, color="black", linewidth=1)
+        plt.axhline(1, color="black", linewidth=1, linestyle="--")
+        plt.title("Activation Patching Recovery by Layer")
+        plt.tight_layout()
+        plt.savefig(out_dir / output_png_name(patching_path), dpi=200)
 
     print(f"Saved plots to {out_dir}")
 

@@ -32,6 +32,7 @@ python -m scripts.check_env
 python -m scripts.build_dataset
 python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --out figures/probe_layers.csv
 python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --layer 8 --out figures/steering_alpha.csv
+python -m scripts.run_activation_patching --model gpt2-small --out figures/activation_patching_capital_recall.csv
 ```
 
 如果 `transformer-lens` 或 `torch` 安装很慢，可以先只运行：
@@ -63,6 +64,12 @@ python -m scripts.build_dataset
 - 中文/英文迁移对比表
 - 一份包含方法、结果、失败案例和个人分析的报告
 
+当前报告草稿见：
+
+```text
+reports/project_report.md
+```
+
 ## Notes
 
 默认数据集 `data/facts.csv` 包含 528 条英文事实判断样本，true/false 各 264 条，覆盖 capital、continent、element_symbol、book_author、landmark_country、science、math 七个领域。默认模型是 `gpt2-small`，因为它和 TransformerLens 配合最稳定。完成第一版后，可以把模型替换为 `Qwen/Qwen2.5-0.5B` 或 `Qwen/Qwen2.5-1.5B`，但可能需要根据框架支持情况调整 hook 代码。
@@ -72,4 +79,10 @@ python -m scripts.build_dataset
 ```powershell
 python -m scripts.run_probe --domain capital,science
 python -m scripts.run_steering --layer 8 --domain capital,science
+```
+
+运行分领域 probe sweep：
+
+```powershell
+python -m scripts.run_probe_sweep --model gpt2-small --data data/facts.csv --out figures/probe_sweep.csv
 ```

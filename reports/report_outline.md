@@ -2,58 +2,69 @@
 
 ## 1. Introduction
 
-- 研究目标：解释模型如何表示事实判断中的 truth/false 信息
-- 为什么选择事实判断：现象明确、数据易构造、可做因果干预
-- 与机制可解释性三步法的关系：locate, steer, improve
+- Research goal: analyze how a Transformer language model represents truth and falsehood in fact-verification prompts.
+- Chosen phenomenon: capital fact verification, with broader cross-domain comparison.
+- Project framing: Locate key layers, Steer/Improve behavior through activation intervention, and reproduce core ideas from recent mechanistic interpretability work on linear truth representations.
 
 ## 2. Background
 
 - Transformer residual stream
-- Hook 机制
-- Logit Lens
-- Activation Patching
-- Steering Vector / Vector Arithmetic
+- Multi-head attention and MLP blocks
+- Hook mechanisms in TransformerLens
+- Linear probes and logit differences
+- Activation patching
+- Steering vectors and vector arithmetic
 
 ## 3. Reproduction Target
 
-- 复现 truth/false 激活具有线性结构的核心结论
-- 检验该方向是否能通过推理时干预改变输出
+- Reproduce the core claim that truth/falsehood can be linearly readable from model activations in some settings.
+- Compare whether the direction is stable across domains and prompts.
+- Test whether the discovered direction has causal force through steering or patching.
 
 ## 4. Experimental Setup
 
-- 模型：GPT-2-small；扩展可用 Qwen2.5-0.5B
-- 数据集：528 条英文事实判断陈述，true/false 各 264 条
-- 领域：capital、continent、element_symbol、book_author、landmark_country、science、math
-- Hook 点：`blocks.{layer}.hook_resid_post`
-- 指标：accuracy, AUC, logit difference
+- Model: GPT-2-small via TransformerLens.
+- Dataset: 528 English fact-verification statements, balanced between true and false.
+- Domains: capital, continent, element_symbol, book_author, landmark_country, science, math.
+- Hook point: `blocks.{layer}.hook_resid_post`.
+- Primary metrics: accuracy, AUC, separability AUC, logit difference.
 
 ## 5. Locate Results
 
-- 每层 probe 结果
-- 哪些层开始形成 truth/false 可分结构
-- 分领域结果：地理、科学、数学等事实是否有不同层级模式
-- 失败案例分析
+- Mixed-domain probe results.
+- Domain-wise probe sweep.
+- Focused capital-fact probe result.
+- Interpretation of which layers contain the strongest linear signal.
 
 ## 6. Steering Results
 
-- truth direction 构造方式
-- alpha 扫描结果
-- 过强干预带来的副作用
+- Mean-difference truth direction.
+- Alpha sweep.
+- Current negative result: naive steering changes logit scale but does not improve logit-sign accuracy.
 
-## 7. Extension
+## 7. Next Causal Experiments
 
-- 中英文迁移实验
-- 或不同模型对比
+已完成初版 activation patching：
+
+- Capital recall prompt.
+- Patch `hook_resid_post` from clean country prompt into corrupt country prompt.
+- Measure recovery of clean capital vs corrupt capital logit difference.
+
+下一步：
+
+- Probe-direction steering.
+- Optional ablation of truth direction.
+- Patch `attn_out` and `mlp_out` separately.
 
 ## 8. Discussion
 
-- truth direction 是否稳定？
-- 结果是否具有因果解释力？
-- 与原论文结果的一致和不同之处
-- 局限和未来改进
+- Why mixed-domain truth representation is weaker than domain-specific representation.
+- Whether this supports a universal truth direction or a task-local truth direction.
+- Limitations of GPT-2-small and true/false prompting.
+- Next steps with Qwen2.5 or instruction-tuned models.
 
 ## 9. Conclusion
 
-- 总结定位结果
-- 总结干预效果
-- 总结自己的分析和想法
+- Summarize Locate findings.
+- Summarize intervention results and limitations.
+- State what was reproduced and what remains inconclusive.
