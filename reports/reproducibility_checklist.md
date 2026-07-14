@@ -193,6 +193,7 @@ Machine-generated result summary:
 
 ```powershell
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+python -m scripts.export_report_pdf --input reports/final_report.md --out reports/final_report.pdf
 python -m scripts.prepare_submission
 ```
 
@@ -200,6 +201,7 @@ Expected artifact:
 
 ```text
 reports/results_summary.md
+reports/final_report.pdf
 reports/submission_manifest.md
 ```
 

@@ -52,6 +52,7 @@ python -m scripts.run_steering --model gpt2-small --data data/facts.csv --langua
 python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
 python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --steering figures/steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --ablation figures/ablation_capital_probe_layer8.csv
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+python -m scripts.export_report_pdf --input reports/final_report.md --out reports/final_report.pdf
 python -m scripts.prepare_submission
 python -m scripts.validate_project
 ```
@@ -88,6 +89,7 @@ reports/reproducibility_checklist.md
 - 自动结果汇总：`reports/results_summary.md`
 - 一键交付验证：`python -m scripts.validate_project`
 - 正式版项目报告：`reports/final_report.md`
+- 正式版项目报告 PDF：`reports/final_report.pdf`
 - 答辩 PPT 初稿：`reports/project_presentation.pptx`
 - 提交清单：`reports/submission_manifest.md`
 - 项目报告草稿：`reports/project_report.md`
@@ -99,6 +101,7 @@ reports/reproducibility_checklist.md
 
 ```text
 reports/final_report.md
+reports/final_report.pdf
 reports/project_presentation.pptx
 reports/submission_manifest.md
 ```
