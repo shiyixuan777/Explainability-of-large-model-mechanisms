@@ -40,8 +40,9 @@
 
 - Mean-difference truth direction.
 - Probe-direction steering.
+- Probe-direction ablation.
 - Alpha sweep.
-- Current negative result: steering controls internal probe score but does not improve true/false output accuracy under naive global intervention.
+- Current nuanced result: steering controls internal probe score but does not improve true/false output accuracy under naive global intervention; ablation removes the discovered direction but retrained probes reveal redundant information.
 
 ## 7. Next Causal Experiments
 
@@ -54,8 +55,8 @@
 
 下一步：
 
-- Optional ablation of truth direction.
 - Head-level attention patching.
+- Multi-direction or subspace ablation.
 
 ## 8. Discussion
 

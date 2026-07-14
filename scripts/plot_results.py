@@ -18,6 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--probe-sweep", default="figures/probe_sweep.csv")
     parser.add_argument("--steering", default="figures/steering_alpha.csv")
     parser.add_argument("--patching", default="figures/activation_patching_capital_recall.csv")
+    parser.add_argument("--ablation", default="figures/ablation_capital_probe_layer8.csv")
     parser.add_argument("--out-dir", default="figures")
     return parser.parse_args()
 
@@ -116,6 +117,35 @@ def main() -> None:
         plt.title("Activation Patching Recovery by Layer")
         plt.tight_layout()
         plt.savefig(out_dir / output_png_name(patching_path), dpi=200)
+
+    ablation_path = Path(args.ablation)
+    if ablation_path.exists():
+        ablation = pd.read_csv(ablation_path)
+        plt.figure(figsize=(7, 4))
+        sns.lineplot(data=ablation, x="strength", y="separability_auc", marker="o", label="after ablation")
+        if "fixed_direction_separability_auc" in ablation.columns:
+            sns.lineplot(
+                data=ablation,
+                x="strength",
+                y="fixed_direction_separability_auc",
+                marker="o",
+                label="fixed direction",
+            )
+        if "baseline_separability_auc" in ablation.columns:
+            baseline = float(ablation["baseline_separability_auc"].iloc[0])
+            plt.axhline(baseline, color="black", linewidth=1, linestyle="--", label="baseline")
+        plt.ylim(0, 1.05)
+        plt.title("Probe Separability After Direction Ablation")
+        plt.tight_layout()
+        plt.savefig(out_dir / output_png_name(ablation_path), dpi=200)
+
+        if "fixed_direction_score_gap" in ablation.columns:
+            plt.figure(figsize=(7, 4))
+            sns.lineplot(data=ablation, x="strength", y="fixed_direction_score_gap", marker="o")
+            plt.axhline(0, color="black", linewidth=1)
+            plt.title("Fixed Probe-Direction Score Gap After Ablation")
+            plt.tight_layout()
+            plt.savefig(out_dir / output_png_name(ablation_path, "_score_gap"), dpi=200)
 
     print(f"Saved plots to {out_dir}")
 

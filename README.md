@@ -87,6 +87,13 @@ python -m scripts.run_steering --layer 8 --domain capital,science
 python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
 ```
 
+运行 probe-direction ablation：
+
+```powershell
+python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
+python -m scripts.plot_results --ablation figures/ablation_capital_probe_layer8.csv
+```
+
 运行分领域 probe sweep：
 
 ```powershell

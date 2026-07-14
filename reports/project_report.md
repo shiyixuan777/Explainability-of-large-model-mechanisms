@@ -226,6 +226,45 @@ figures/steering_capital_probe_layer8.png
 figures/steering_capital_probe_layer8_probe_accuracy.png
 ```
 
+### 6.2 Probe-direction ablation
+
+为了进一步验证 probe direction 是否确实承载了可读的 true/false 信息，我们做了 ablation 实验。做法是先在训练 split 上学习第 8 层 capital probe direction，然后从 residual activation 中移除该方向上的投影：
+
+```text
+h_ablated = h - strength * (h · v_probe) * v_probe
+```
+
+实验同时报告两类指标：
+
+- Fixed direction：继续使用原来的 probe direction 读出 true/false，观察该方向本身是否被移除。
+- Retrained probe：在 ablated activation 上重新训练一个 probe，观察信息是否还能被其他方向读出。
+
+关键结果如下：
+
+| Strength | Fixed Direction Score Gap | Fixed Direction Accuracy | Retrained Probe AUC |
+|---:|---:|---:|---:|
+| 0.00 | +0.573 | 0.826 | 0.953 |
+| 0.25 | +0.430 | 0.500 | 0.955 |
+| 0.50 | +0.286 | 0.500 | 0.958 |
+| 0.75 | +0.143 | 0.500 | 0.951 |
+| 1.00 | -0.000 | 0.500 | 0.945 |
+| 1.25 | -0.143 | 0.500 | 0.953 |
+| 1.50 | -0.286 | 0.478 | 0.962 |
+
+这个结果说明，沿 `v_probe` 移除投影后，原方向上的 true/false score gap 从 `+0.573` 逐步下降到 0，并在过度 ablation 后反向。这证明我们确实可以用 vector arithmetic 控制该线性方向上的信息。然而，重新训练 probe 后 AUC 仍保持在 0.94 以上，说明 capital true/false 信息并不是只存在于单一方向中，而是可能分布在多个相关方向或子空间中。
+
+因此 ablation 给出的结论比 naive steering 更细：
+
+> 我们可以有效移除一个已发现的 probe direction，但 GPT-2-small 的 capital truth/false 信息具有冗余表示，单方向 ablation 不足以摧毁所有可线性读取的信息。
+
+对应图表：
+
+```text
+figures/ablation_capital_probe_layer8.csv
+figures/ablation_capital_probe_layer8.png
+figures/ablation_capital_probe_layer8_score_gap.png
+```
+
 ## 7. Activation Patching 初步结果
 
 为了补充更直接的因果定位实验，我们新增了 capital recall 形式的 activation patching。这个实验不再让 GPT-2-small 输出 `true` 或 `false`，而是使用更适合自回归语言模型的事实召回 prompt：
@@ -299,13 +338,14 @@ figures/activation_patching_capital_recall.png
 2. 在结构一致的 capital fact verification 中，truth/false 信息可被高精度线性 probe 读取，最佳 AUC 达到 0.953。
 3. 在 capital recall 的 activation patching 中，后层 residual stream patching 可以恢复目标首都 logit，模块级结果显示最后层 attention output 贡献明显，MLP output 单独贡献较弱。
 4. Probe-direction steering 可以控制内部 probe score，但 naive global steering 没有提升 true/false 输出判断，说明可读性不等于直接可改善性。
+5. Probe-direction ablation 可以移除已发现方向上的 score gap，但重新训练 probe 仍能恢复高 AUC，提示 truth/false 信息存在冗余子空间。
 
 ## 9. 下一步计划
 
 后续需要补强课程要求中的因果干预部分：
 
-1. Ablation：从 residual stream 中减去 truth direction，观察 probe separability 或模型输出是否下降。
-2. 将 activation patching 扩展到 head-level attention patching。
+1. 将 activation patching 扩展到 head-level attention patching。
+2. 尝试子空间 ablation，例如移除多个 probe/PC directions，而不是单一方向。
 3. 可选模型拓展：在 Qwen2.5-0.5B 或 Qwen2.5-0.5B-Instruct 上复现实验。
 
 ## 10. 个人分析
