@@ -52,6 +52,7 @@ python -m scripts.run_steering --model gpt2-small --data data/facts.csv --langua
 python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
 python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --steering figures/steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --ablation figures/ablation_capital_probe_layer8.csv
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+python -m scripts.validate_project
 ```
 
 更详细的复现实验清单见：
@@ -84,6 +85,7 @@ reports/reproducibility_checklist.md
 - Probe-direction steering：`figures/steering_capital_probe_layer8*.png`
 - Probe-direction ablation：`figures/ablation_capital_probe_layer8*.png`
 - 自动结果汇总：`reports/results_summary.md`
+- 一键交付验证：`python -m scripts.validate_project`
 - 项目报告草稿：`reports/project_report.md`
 - 复现实验清单：`reports/reproducibility_checklist.md`
 - 最终交付检查表：`reports/final_deliverable_checklist.md`

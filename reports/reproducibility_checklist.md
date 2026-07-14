@@ -200,6 +200,12 @@ Expected artifact:
 reports/results_summary.md
 ```
 
+Project validation:
+
+```powershell
+python -m scripts.validate_project
+```
+
 Final submission helpers:
 
 ```text
