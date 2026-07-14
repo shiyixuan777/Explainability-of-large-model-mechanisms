@@ -30,15 +30,31 @@ python -m venv .venv
 pip install -r requirements.txt
 python -m scripts.check_env
 python -m scripts.build_dataset
-python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --out figures/probe_layers.csv
-python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --layer 8 --out figures/steering_alpha.csv
-python -m scripts.run_activation_patching --model gpt2-small --out figures/activation_patching_capital_recall.csv
 ```
 
 如果 `transformer-lens` 或 `torch` 安装很慢，可以先只运行：
 
 ```powershell
 python -m scripts.build_dataset
+```
+
+## Full Reproduction Pipeline
+
+下面这组命令复现当前报告中的主要结果。第一次加载 `gpt2-small` 时需要下载 Hugging Face 权重，后续会使用本地缓存。
+
+```powershell
+python -m scripts.run_probe_sweep --model gpt2-small --data data/facts.csv --out figures/probe_sweep.csv
+python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --domain capital --prompt-template "Statement: {statement}`nAnswer true or false:" --out figures/probe_capital_answer.csv
+python -m scripts.run_activation_patching --model gpt2-small --out figures/activation_patching_capital_recall.csv --components resid_post,attn_out,mlp_out
+python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
+python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
+python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --steering figures/steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --ablation figures/ablation_capital_probe_layer8.csv
+```
+
+更详细的复现实验清单见：
+
+```text
+reports/reproducibility_checklist.md
 ```
 
 ## Repository Structure
@@ -57,12 +73,13 @@ python -m scripts.build_dataset
 
 ## Expected Deliverables
 
-- 每层 probe accuracy / AUC 曲线
-- Logit Lens 层级曲线
-- Activation patching heatmap
-- Steering alpha-response 曲线
-- 中文/英文迁移对比表
-- 一份包含方法、结果、失败案例和个人分析的报告
+- 每层 probe accuracy / AUC 曲线：`figures/probe_capital_answer.png`
+- 分领域 probe sweep：`figures/probe_sweep_summary.png`
+- 模块级 activation patching：`figures/activation_patching_capital_recall.png`
+- Probe-direction steering：`figures/steering_capital_probe_layer8*.png`
+- Probe-direction ablation：`figures/ablation_capital_probe_layer8*.png`
+- 项目报告草稿：`reports/project_report.md`
+- 复现实验清单：`reports/reproducibility_checklist.md`
 
 当前报告草稿见：
 

@@ -14,7 +14,24 @@
 - Steer & Improve：构造 truth direction，在推理阶段修改 residual stream，观察模型输出是否改变。
 - 复现与拓展：复现近期机制可解释性工作中关于“truth/falsehood 在激活空间中具有线性结构”的核心思想，并分析该结构是否跨领域稳定。
 
-## 2. 背景方法
+## 2. 复现对象与本项目对应关系
+
+本项目主要复现和拓展 truth direction 相关工作。核心思想来自 Marks and Tegmark 的 *The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets*。该工作提出用简单 true/false statement 数据集研究 LLM 内部的真假表征，并从三类证据支持 truth direction：线性结构可视化、probe 跨数据集泛化、以及前向传播中的因果干预。
+
+为了更贴合课程对 2024-2026 年顶会/Arxiv 工作的要求，本项目还对齐 Bao et al. 2025 年 arXiv 论文 *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*。该论文关心三个问题：LLM 是否普遍存在一致的 truth direction、简单 probe 是否足以识别 truth direction、truth direction 是否能跨上下文或任务泛化。本项目在 GPT-2-small 上做了一个小规模可复现实验，重点复现其中的前两个问题，并通过分领域 sweep 观察 truth direction 的稳定性。
+
+对应关系如下：
+
+| 论文/要求中的思想 | 本项目实现 |
+|---|---|
+| True/false statement datasets | 构建 528 条英文事实判断样本 |
+| Linear truth representation | 每层 residual stream linear probe |
+| Layer localization | `probe_sweep` 和 capital layer probe |
+| Cross-domain consistency | capital、continent、element_symbol、book_author、landmark_country、science、math 分领域比较 |
+| Causal intervention | residual/attention/MLP activation patching |
+| Vector arithmetic | probe-direction steering 和 ablation |
+
+## 3. 背景方法
 
 Transformer 的 residual stream 可以被理解为模型在每一层积累和传递信息的主通道。TransformerLens 提供 hook 机制，可以在模型前向传播时读取或修改这些中间激活。本项目主要使用以下 hook 点：
 
@@ -31,7 +48,7 @@ label = 0: false statement
 
 如果某一层的激活可以被线性 probe 高精度区分 true/false，则说明该层中存在可线性读取的真假相关信息。
 
-## 3. 数据集
+## 4. 数据集
 
 当前数据集位于：
 
@@ -60,7 +77,7 @@ false = 264
 
 每个 `pair_id` 包含一条 true statement 和一条对应的 false statement。实验中使用 group split，保证同一个事实对不会同时出现在训练集和测试集中，从而减少数据泄漏。
 
-## 4. 实验设置
+## 5. 实验设置
 
 模型：
 
@@ -98,15 +115,15 @@ Answer:
 - AUC：probe 输出概率对 true/false 的排序能力。
 - Separability AUC：`max(AUC, 1 - AUC)`，用于衡量激活是否可线性分离，即使方向反了也能体现可分性。
 
-## 5. Locate 实验结果
+## 6. Locate 实验结果
 
-### 5.1 混合领域结果
+### 6.1 混合领域结果
 
 在全部 528 条样本上训练每层 probe 时，最佳结果只有中等强度。以 `question` prompt 为例，最佳 separability AUC 约为 0.653。这说明将所有事实类型混在一起时，GPT-2-small 中不存在非常稳定的通用 truth direction，或者该方向不能被当前 final-token residual probe 稳定读出。
 
 这也是第一轮实验中 AUC 接近随机的原因：不同领域的事实结构差异很大，统一线性边界被稀释。
 
-### 5.2 分领域 sweep 结果
+### 6.2 分领域 sweep 结果
 
 我们进一步运行 `scripts/run_probe_sweep.py`，比较不同领域和 prompt。结果显示，truth/false 可分性具有明显领域差异。
 
@@ -127,7 +144,7 @@ figures/probe_sweep.csv
 figures/probe_sweep_summary.png
 ```
 
-### 5.3 Capital fact verification 结果
+### 6.3 Capital fact verification 结果
 
 由于 capital 领域结果最稳定，我们将其作为当前主实验对象。使用 prompt：
 
@@ -155,7 +172,7 @@ Answer true or false:
 figures/probe_capital_answer.png
 ```
 
-## 6. Steering 初步结果
+## 7. Steering 与 Ablation 结果
 
 我们首先尝试最简单的 mean-difference truth direction：
 
@@ -181,7 +198,7 @@ truth_direction = mean(h_true) - mean(h_false)
 
 > Linear probe 证明了 capital 任务中存在可读的真假信息，但 mean-difference steering 尚未证明该方向具有直接可控的因果作用。
 
-### 6.1 Probe-direction steering
+### 7.1 Probe-direction steering
 
 为了更贴近 Locate 阶段发现的线性边界，我们进一步使用 logistic regression probe 的权重方向作为 steering direction。具体做法是先在第 8 层 capital activations 上训练 probe，再把标准化空间中的线性权重转换回原始 residual stream 坐标，得到单位向量：
 
@@ -226,7 +243,7 @@ figures/steering_capital_probe_layer8.png
 figures/steering_capital_probe_layer8_probe_accuracy.png
 ```
 
-### 6.2 Probe-direction ablation
+### 7.2 Probe-direction ablation
 
 为了进一步验证 probe direction 是否确实承载了可读的 true/false 信息，我们做了 ablation 实验。做法是先在训练 split 上学习第 8 层 capital probe direction，然后从 residual activation 中移除该方向上的投影：
 
@@ -265,7 +282,7 @@ figures/ablation_capital_probe_layer8.png
 figures/ablation_capital_probe_layer8_score_gap.png
 ```
 
-## 7. Activation Patching 初步结果
+## 8. Activation Patching 结果
 
 为了补充更直接的因果定位实验，我们新增了 capital recall 形式的 activation patching。这个实验不再让 GPT-2-small 输出 `true` 或 `false`，而是使用更适合自回归语言模型的事实召回 prompt：
 
@@ -330,7 +347,7 @@ figures/activation_patching_capital_recall.csv
 figures/activation_patching_capital_recall.png
 ```
 
-## 8. 当前结论
+## 9. 当前结论
 
 目前最可靠的结论有三点：
 
@@ -340,7 +357,7 @@ figures/activation_patching_capital_recall.png
 4. Probe-direction steering 可以控制内部 probe score，但 naive global steering 没有提升 true/false 输出判断，说明可读性不等于直接可改善性。
 5. Probe-direction ablation 可以移除已发现方向上的 score gap，但重新训练 probe 仍能恢复高 AUC，提示 truth/false 信息存在冗余子空间。
 
-## 9. 下一步计划
+## 10. 下一步计划
 
 后续需要补强课程要求中的因果干预部分：
 
@@ -348,8 +365,15 @@ figures/activation_patching_capital_recall.png
 2. 尝试子空间 ablation，例如移除多个 probe/PC directions，而不是单一方向。
 3. 可选模型拓展：在 Qwen2.5-0.5B 或 Qwen2.5-0.5B-Instruct 上复现实验。
 
-## 10. 个人分析
+## 11. 个人分析
 
 这组结果说明，“truth direction”不一定是一个跨所有事实领域共享的单一方向。至少在 GPT-2-small 上，更合理的解释是：某些结构一致的任务，例如首都事实判断，会在中后层形成稳定的线性可分表示；而当任务混合了首都、元素符号、书籍作者、数学和科学常识后，统一 probe 的效果明显下降。
 
 这也提示机制可解释性实验需要非常重视任务定义。如果现象定义过宽，实验可能得到“没有信号”的结论；但通过控制领域和 prompt，可以把模型内部表示中的局部结构暴露出来。后续的关键问题是：这个线性结构只是 probe 可读，还是模型实际用于输出判断的因果机制？这需要 activation patching 和 steering 实验进一步验证。
+
+## 12. 参考文献
+
+1. Samuel Marks and Max Tegmark. *The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets*. arXiv:2310.06824. https://arxiv.org/abs/2310.06824
+2. Yuntai Bao, Xuhong Zhang, Tianyu Du, Xinkui Zhao, Zhengwen Feng, Hao Peng, Jianwei Yin. *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*. arXiv:2506.00823. https://arxiv.org/abs/2506.00823
+3. Leonard Bereska and Efstratios Gavves. *Mechanistic Interpretability for AI Safety -- A Review*. arXiv:2404.14082.
+4. *Locate, Steer, and Improve: A Practical Survey of Actionable Mechanistic Interpretability in LLMs*. arXiv 2026.
