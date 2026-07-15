@@ -18,7 +18,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--language", default="en")
     parser.add_argument("--domain", default="capital")
     parser.add_argument("--out", default="figures/truth_verification_patching_resid.csv")
+    parser.add_argument("--details-out", default="figures/truth_verification_patching_details.csv")
     parser.add_argument("--max-pairs", type=int, default=76)
+    parser.add_argument(
+        "--components",
+        nargs="+",
+        default=["resid_pre", "attn_out", "mlp_out", "resid_post"],
+        choices=["resid_pre", "attn_out", "mlp_out", "resid_post"],
+    )
     parser.add_argument("--true-token", default=" true")
     parser.add_argument("--false-token", default=" false")
     parser.add_argument(
@@ -76,45 +83,90 @@ def main() -> None:
         raise ValueError("All clean-corrupt truth logit differences are nearly zero.")
 
     rows = []
+    detail_rows = []
+    shuffled_indices = torch.roll(torch.arange(len(pairs), device=clean_tokens.device), shifts=1)
     for layer in range(model.cfg.n_layers):
-        hook_name = f"blocks.{layer}.hook_resid_post"
-        clean_activation = clean_cache[hook_name]
+        for component in args.components:
+            hook_name = f"blocks.{layer}.hook_{component}"
+            clean_activation = clean_cache[hook_name]
 
-        def patch_resid_post(activation, hook, clean_activation=clean_activation):
-            activation[:, -1, :] = clean_activation[:, -1, :]
-            return activation
+            for control, source_activation in [
+                ("matched_clean", clean_activation),
+                ("shuffled_clean", clean_activation[shuffled_indices]),
+            ]:
 
-        with torch.no_grad():
-            patched_logits = model.run_with_hooks(
-                corrupt_tokens,
-                fwd_hooks=[(hook_name, patch_resid_post)],
-            )
-        patched_diff = logit_diff(patched_logits, true_token=true_token, false_token=false_token).detach()
-        recovery = (patched_diff[valid] - corrupt_diff[valid]) / (denominator[valid] + 1e-8)
-        rows.append(
-            {
-                "component": "resid_post",
-                "hook_name": hook_name,
-                "layer": layer,
-                "n_pairs": len(pairs),
-                "n_valid_recovery_pairs": int(valid.sum()),
-                "clean_true_minus_false_logit_diff": float(clean_diff.mean()),
-                "corrupt_true_minus_false_logit_diff": float(corrupt_diff.mean()),
-                "patched_true_minus_false_logit_diff": float(patched_diff.mean()),
-                "mean_recovery": float(recovery.mean()),
-                "median_recovery": float(recovery.median()),
-                "mean_abs_logit_shift": float((patched_diff - corrupt_diff).abs().mean()),
-            }
-        )
-        print(
-            f"layer={layer:02d} patched_diff={patched_diff.mean():+.4f} "
-            f"mean_recovery={recovery.mean():+.4f} abs_shift={(patched_diff - corrupt_diff).abs().mean():.4f}"
-        )
+                def patch_activation(activation, hook, source_activation=source_activation):
+                    patched = activation.clone()
+                    patched[:, -1, :] = source_activation[:, -1, :]
+                    return patched
+
+                with torch.no_grad():
+                    patched_logits = model.run_with_hooks(
+                        corrupt_tokens,
+                        fwd_hooks=[(hook_name, patch_activation)],
+                    )
+                patched_diff = logit_diff(patched_logits, true_token=true_token, false_token=false_token).detach()
+                recovery = (patched_diff[valid] - corrupt_diff[valid]) / (denominator[valid] + 1e-8)
+                abs_shift = (patched_diff - corrupt_diff).abs()
+                rows.append(
+                    {
+                        "component": component,
+                        "control": control,
+                        "hook_name": hook_name,
+                        "layer": layer,
+                        "n_pairs": len(pairs),
+                        "n_valid_recovery_pairs": int(valid.sum()),
+                        "clean_true_minus_false_logit_diff": float(clean_diff.mean()),
+                        "corrupt_true_minus_false_logit_diff": float(corrupt_diff.mean()),
+                        "patched_true_minus_false_logit_diff": float(patched_diff.mean()),
+                        "mean_clean_minus_corrupt_denominator": float(denominator.mean()),
+                        "mean_abs_clean_minus_corrupt_denominator": float(denominator.abs().mean()),
+                        "median_abs_clean_minus_corrupt_denominator": float(denominator.abs().median()),
+                        "small_denominator_rate_abs_lt_0_05": float((denominator.abs() < 0.05).float().mean()),
+                        "mean_recovery": float(recovery.mean()),
+                        "median_recovery": float(recovery.median()),
+                        "mean_abs_logit_shift": float(abs_shift.mean()),
+                        "median_abs_logit_shift": float(abs_shift.median()),
+                    }
+                )
+                for pair_index, pair in pairs.reset_index(drop=True).iterrows():
+                    if bool(valid[pair_index]):
+                        pair_recovery = float(
+                            (patched_diff[pair_index] - corrupt_diff[pair_index])
+                            / (denominator[pair_index] + 1e-8)
+                        )
+                    else:
+                        pair_recovery = float("nan")
+                    detail_rows.append(
+                        {
+                            "pair_id": pair["pair_id"],
+                            "component": component,
+                            "control": control,
+                            "hook_name": hook_name,
+                            "layer": layer,
+                            "clean_diff": float(clean_diff[pair_index]),
+                            "corrupt_diff": float(corrupt_diff[pair_index]),
+                            "denominator": float(denominator[pair_index]),
+                            "patched_diff": float(patched_diff[pair_index]),
+                            "recovery": pair_recovery,
+                            "abs_logit_shift": float(abs_shift[pair_index]),
+                        }
+                    )
+                print(
+                    f"layer={layer:02d} component={component:<10} control={control:<14} "
+                    f"patched_diff={patched_diff.mean():+.4f} "
+                    f"mean_recovery={recovery.mean():+.4f} abs_shift={abs_shift.mean():.4f}"
+                )
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(out_path, index=False)
     print(f"Saved truth verification patching results to {out_path}")
+
+    details_path = Path(args.details_out)
+    details_path.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(detail_rows).to_csv(details_path, index=False)
+    print(f"Saved per-pair truth verification patching details to {details_path}")
 
 
 if __name__ == "__main__":

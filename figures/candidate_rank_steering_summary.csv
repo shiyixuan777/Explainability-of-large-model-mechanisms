@@ -1,0 +1,2 @@
+layer,seed,alpha,position_mode,heldout_countries,candidate_count,mean_baseline_correct_rank,mean_steered_correct_rank,mean_rank_delta,median_rank_delta,rank_improved_count,rank_worsened_count,baseline_top1_accuracy,steered_top1_accuracy,top1_changed_count,mean_correct_avg_logprob_delta,mean_false_avg_logprob_delta,mean_selected_pair_margin_delta
+6,42,4.0,prompt-final-only,24,76,15.041666666666666,14.125,0.9166666666666666,0.0,10,0,0.08333333333333333,0.125,1,0.2813614492524619,0.1459625194854703,0.13539892976699167

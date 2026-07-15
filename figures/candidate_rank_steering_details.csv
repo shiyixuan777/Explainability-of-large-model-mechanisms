@@ -1,0 +1,25 @@
+country,pair_id,correct_capital,false_capital,candidate_count,baseline_correct_rank,steered_correct_rank,rank_delta,baseline_false_rank,steered_false_rank,baseline_top_candidate,steered_top_candidate,baseline_top1_correct,steered_top1_correct,top1_changed,correct_avg_logprob_delta,false_avg_logprob_delta,selected_pair_margin_delta
+Austria,balanced_capital_belgium_austria,Vienna,Brussels,76,32,29,3,44,44,"Washington, D.C.","Washington, D.C.",0,0,0,0.47030210494995117,0.2289142608642578,0.24138784408569336
+Belgium,balanced_capital_belgium_austria,Brussels,Vienna,76,26,20,6,46,46,"Washington, D.C.","Washington, D.C.",0,0,0,0.40412473678588867,0.2287883758544922,0.17533636093139648
+Bolivia,balanced_capital_paraguay_bolivia,Sucre,Asuncion,76,33,32,1,10,10,"Washington, D.C.","Washington, D.C.",0,0,0,0.24552404880523682,0.10937841050326824,0.13614563830196857
+Cambodia,balanced_capital_myanmar_cambodia,Phnom Penh,Naypyidaw,76,2,1,1,11,11,"Washington, D.C.",Phnom Penh,0,1,1,0.10755985337891616,0.06416738033294678,0.04339247304596938
+Costa Rica,balanced_capital_costa_rica_panama,San Jose,Panama City,76,16,16,0,13,13,"Washington, D.C.","Washington, D.C.",0,0,0,0.18862521648406982,0.12008732557296753,0.0685378909111023
+Denmark,balanced_capital_denmark_ireland,Copenhagen,Dublin,76,22,18,4,43,43,"Washington, D.C.","Washington, D.C.",0,0,0,0.47035646438598633,0.17831802368164062,0.2920384407043457
+Greece,balanced_capital_greece_norway,Athens,Oslo,76,7,7,0,74,73,"Washington, D.C.","Washington, D.C.",0,0,0,0.37671566009521484,0.14220428466796875,0.2345113754272461
+Iceland,balanced_capital_united_kingdom_iceland,Reykjavik,London,76,1,1,0,34,35,Reykjavik,Reykjavik,1,1,0,0.12440282886018394,0.04335594177246094,0.08104688708772301
+Indonesia,balanced_capital_indonesia_malaysia,Jakarta,Kuala Lumpur,76,23,22,1,12,12,"Washington, D.C.","Washington, D.C.",0,0,0,0.3807191848754883,0.2544773556292057,0.12624182924628258
+Ireland,balanced_capital_denmark_ireland,Dublin,Copenhagen,76,10,10,0,65,65,"Washington, D.C.","Washington, D.C.",0,0,0,0.41938352584838867,0.14833641052246094,0.27104711532592773
+Israel,balanced_capital_israel_jordan,Jerusalem,Amman,76,18,18,0,9,9,"Washington, D.C.","Washington, D.C.",0,0,0,0.3105592727661133,0.14973118901252747,0.16082808375358582
+Jordan,balanced_capital_israel_jordan,Amman,Jerusalem,76,7,7,0,32,32,"Washington, D.C.","Washington, D.C.",0,0,0,0.18975328654050827,0.17088890075683594,0.018864385783672333
+Malaysia,balanced_capital_indonesia_malaysia,Kuala Lumpur,Jakarta,76,9,8,1,36,36,"Washington, D.C.","Washington, D.C.",0,0,0,0.28901935287285596,0.2361154556274414,0.052903897245414555
+Mongolia,balanced_capital_mongolia_nepal,Ulaanbaatar,Kathmandu,76,1,1,0,8,8,Ulaanbaatar,Ulaanbaatar,1,1,0,0.03519062755221958,0.10041918357213353,-0.06522855601991395
+Myanmar,balanced_capital_myanmar_cambodia,Naypyidaw,Phnom Penh,76,6,6,0,3,3,"Washington, D.C.","Washington, D.C.",0,0,0,0.10743455053307116,0.09055356175667839,0.01688098877639277
+Nepal,balanced_capital_mongolia_nepal,Kathmandu,Ulaanbaatar,76,4,3,1,2,2,"Washington, D.C.","Washington, D.C.",0,0,0,0.1802589892031392,0.03175239784177375,0.14850659136136546
+Norway,balanced_capital_greece_norway,Oslo,Athens,76,37,35,2,40,40,"Washington, D.C.","Washington, D.C.",0,0,0,0.5451831817626953,0.08051013946533203,0.4646730422973633
+Panama,balanced_capital_costa_rica_panama,Panama City,San Jose,76,6,6,0,18,18,"Washington, D.C.","Washington, D.C.",0,0,0,0.14249184727668762,0.15400207042694092,-0.011510223150253296
+Paraguay,balanced_capital_paraguay_bolivia,Asuncion,Sucre,76,12,12,0,33,33,"Washington, D.C.","Washington, D.C.",0,0,0,0.10899910827477743,0.22651219367980957,-0.11751308540503214
+Poland,balanced_capital_switzerland_poland,Warsaw,Bern,76,7,7,0,64,64,"Washington, D.C.","Washington, D.C.",0,0,0,0.3795487880706787,0.1356487274169922,0.24390006065368652
+Russia,balanced_capital_russia_ukraine,Moscow,Kyiv,76,11,11,0,9,9,"Washington, D.C.","Washington, D.C.",0,0,0,0.25670576095581055,0.1772546535357833,0.07945110742002726
+Switzerland,balanced_capital_switzerland_poland,Bern,Warsaw,76,53,51,2,38,38,"Washington, D.C.","Washington, D.C.",0,0,0,0.45110130310058594,0.234222412109375,0.21687889099121094
+Ukraine,balanced_capital_russia_ukraine,Kyiv,Moscow,76,5,5,0,15,15,"Washington, D.C.","Washington, D.C.",0,0,0,0.2005081108363811,0.1400766372680664,0.060431473568314686
+United Kingdom,balanced_capital_united_kingdom_iceland,London,Reykjavik,76,13,13,0,4,4,"Washington, D.C.","Washington, D.C.",0,0,0,0.3682069778442383,0.05738517577992752,0.31082180206431076

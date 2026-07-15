@@ -1,0 +1,8 @@
+analysis,rows,blocks,removed_blocks,removed_block_count,layer,heldout_rows,heldout_blocks,accuracy,auc,direction,alpha,position_mode,heldout_countries,mean_delta_avg_token_margin,pairwise_avg_accuracy,sign_flips
+dataset,140.0,35.0,balanced_capital_ghana_south_africa;balanced_capital_israel_jordan;balanced_capital_paraguay_bolivia,3.0,,,,,,,,,,,,
+residual_probe,,,,,6.0,44.0,11.0,0.7954545454545454,0.8636363636363636,,,,,,,
+completion_total,,,,,,44.0,11.0,0.9090909090909091,0.9586776859504131,,,,,,,
+completion_avg_token,,,,,,44.0,11.0,0.8181818181818182,0.9132231404958678,,,,,,,
+prompt_final_steering,,,,,6.0,,11.0,,,learned_probe,4.0,prompt-final-only,22.0,0.11981907982463422,0.8636363636363636,1.0
+prompt_final_steering,,,,,6.0,,11.0,,,random_direction,4.0,prompt-final-only,22.0,-0.03815342377107076,0.8181818181818182,0.0
+prompt_final_steering,,,,,6.0,,11.0,,,label_permutation,4.0,prompt-final-only,22.0,-0.004974222296644257,0.8181818181818182,0.0

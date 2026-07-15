@@ -1,7 +1,7 @@
 [project]
 name = "mechanistic-interpretability-truth-direction"
 version = "0.1.0"
-description = "A two-week mechanistic interpretability project on truth directions and activation steering."
+description = "A mechanistic interpretability project on fact-pair label signals, completion compatibility, and intervention limits."
 requires-python = ">=3.10"
 
 [tool.ruff]

@@ -1,0 +1,141 @@
+language,domain,pair_id,statement,label
+en,capital_balanced,balanced_capital_france_germany,The capital of France is Paris.,1
+en,capital_balanced,balanced_capital_france_germany,The capital of France is Berlin.,0
+en,capital_balanced,balanced_capital_france_germany,The capital of Germany is Berlin.,1
+en,capital_balanced,balanced_capital_france_germany,The capital of Germany is Paris.,0
+en,capital_balanced,balanced_capital_italy_spain,The capital of Italy is Rome.,1
+en,capital_balanced,balanced_capital_italy_spain,The capital of Italy is Madrid.,0
+en,capital_balanced,balanced_capital_italy_spain,The capital of Spain is Madrid.,1
+en,capital_balanced,balanced_capital_italy_spain,The capital of Spain is Rome.,0
+en,capital_balanced,balanced_capital_portugal_netherlands,The capital of Portugal is Lisbon.,1
+en,capital_balanced,balanced_capital_portugal_netherlands,The capital of Portugal is Amsterdam.,0
+en,capital_balanced,balanced_capital_portugal_netherlands,The capital of Netherlands is Amsterdam.,1
+en,capital_balanced,balanced_capital_portugal_netherlands,The capital of Netherlands is Lisbon.,0
+en,capital_balanced,balanced_capital_belgium_austria,The capital of Belgium is Brussels.,1
+en,capital_balanced,balanced_capital_belgium_austria,The capital of Belgium is Vienna.,0
+en,capital_balanced,balanced_capital_belgium_austria,The capital of Austria is Vienna.,1
+en,capital_balanced,balanced_capital_belgium_austria,The capital of Austria is Brussels.,0
+en,capital_balanced,balanced_capital_switzerland_poland,The capital of Switzerland is Bern.,1
+en,capital_balanced,balanced_capital_switzerland_poland,The capital of Switzerland is Warsaw.,0
+en,capital_balanced,balanced_capital_switzerland_poland,The capital of Poland is Warsaw.,1
+en,capital_balanced,balanced_capital_switzerland_poland,The capital of Poland is Bern.,0
+en,capital_balanced,balanced_capital_czech_republic_hungary,The capital of Czech Republic is Prague.,1
+en,capital_balanced,balanced_capital_czech_republic_hungary,The capital of Czech Republic is Budapest.,0
+en,capital_balanced,balanced_capital_czech_republic_hungary,The capital of Hungary is Budapest.,1
+en,capital_balanced,balanced_capital_czech_republic_hungary,The capital of Hungary is Prague.,0
+en,capital_balanced,balanced_capital_greece_norway,The capital of Greece is Athens.,1
+en,capital_balanced,balanced_capital_greece_norway,The capital of Greece is Oslo.,0
+en,capital_balanced,balanced_capital_greece_norway,The capital of Norway is Oslo.,1
+en,capital_balanced,balanced_capital_greece_norway,The capital of Norway is Athens.,0
+en,capital_balanced,balanced_capital_sweden_finland,The capital of Sweden is Stockholm.,1
+en,capital_balanced,balanced_capital_sweden_finland,The capital of Sweden is Helsinki.,0
+en,capital_balanced,balanced_capital_sweden_finland,The capital of Finland is Helsinki.,1
+en,capital_balanced,balanced_capital_sweden_finland,The capital of Finland is Stockholm.,0
+en,capital_balanced,balanced_capital_denmark_ireland,The capital of Denmark is Copenhagen.,1
+en,capital_balanced,balanced_capital_denmark_ireland,The capital of Denmark is Dublin.,0
+en,capital_balanced,balanced_capital_denmark_ireland,The capital of Ireland is Dublin.,1
+en,capital_balanced,balanced_capital_denmark_ireland,The capital of Ireland is Copenhagen.,0
+en,capital_balanced,balanced_capital_united_kingdom_iceland,The capital of United Kingdom is London.,1
+en,capital_balanced,balanced_capital_united_kingdom_iceland,The capital of United Kingdom is Reykjavik.,0
+en,capital_balanced,balanced_capital_united_kingdom_iceland,The capital of Iceland is Reykjavik.,1
+en,capital_balanced,balanced_capital_united_kingdom_iceland,The capital of Iceland is London.,0
+en,capital_balanced,balanced_capital_russia_ukraine,The capital of Russia is Moscow.,1
+en,capital_balanced,balanced_capital_russia_ukraine,The capital of Russia is Kyiv.,0
+en,capital_balanced,balanced_capital_russia_ukraine,The capital of Ukraine is Kyiv.,1
+en,capital_balanced,balanced_capital_russia_ukraine,The capital of Ukraine is Moscow.,0
+en,capital_balanced,balanced_capital_turkey_egypt,The capital of Turkey is Ankara.,1
+en,capital_balanced,balanced_capital_turkey_egypt,The capital of Turkey is Cairo.,0
+en,capital_balanced,balanced_capital_turkey_egypt,The capital of Egypt is Cairo.,1
+en,capital_balanced,balanced_capital_turkey_egypt,The capital of Egypt is Ankara.,0
+en,capital_balanced,balanced_capital_morocco_kenya,The capital of Morocco is Rabat.,1
+en,capital_balanced,balanced_capital_morocco_kenya,The capital of Morocco is Nairobi.,0
+en,capital_balanced,balanced_capital_morocco_kenya,The capital of Kenya is Nairobi.,1
+en,capital_balanced,balanced_capital_morocco_kenya,The capital of Kenya is Rabat.,0
+en,capital_balanced,balanced_capital_ethiopia_nigeria,The capital of Ethiopia is Addis Ababa.,1
+en,capital_balanced,balanced_capital_ethiopia_nigeria,The capital of Ethiopia is Abuja.,0
+en,capital_balanced,balanced_capital_ethiopia_nigeria,The capital of Nigeria is Abuja.,1
+en,capital_balanced,balanced_capital_ethiopia_nigeria,The capital of Nigeria is Addis Ababa.,0
+en,capital_balanced,balanced_capital_india_china,The capital of India is New Delhi.,1
+en,capital_balanced,balanced_capital_india_china,The capital of India is Beijing.,0
+en,capital_balanced,balanced_capital_india_china,The capital of China is Beijing.,1
+en,capital_balanced,balanced_capital_india_china,The capital of China is New Delhi.,0
+en,capital_balanced,balanced_capital_japan_south_korea,The capital of Japan is Tokyo.,1
+en,capital_balanced,balanced_capital_japan_south_korea,The capital of Japan is Seoul.,0
+en,capital_balanced,balanced_capital_japan_south_korea,The capital of South Korea is Seoul.,1
+en,capital_balanced,balanced_capital_japan_south_korea,The capital of South Korea is Tokyo.,0
+en,capital_balanced,balanced_capital_thailand_vietnam,The capital of Thailand is Bangkok.,1
+en,capital_balanced,balanced_capital_thailand_vietnam,The capital of Thailand is Hanoi.,0
+en,capital_balanced,balanced_capital_thailand_vietnam,The capital of Vietnam is Hanoi.,1
+en,capital_balanced,balanced_capital_thailand_vietnam,The capital of Vietnam is Bangkok.,0
+en,capital_balanced,balanced_capital_indonesia_malaysia,The capital of Indonesia is Jakarta.,1
+en,capital_balanced,balanced_capital_indonesia_malaysia,The capital of Indonesia is Kuala Lumpur.,0
+en,capital_balanced,balanced_capital_indonesia_malaysia,The capital of Malaysia is Kuala Lumpur.,1
+en,capital_balanced,balanced_capital_indonesia_malaysia,The capital of Malaysia is Jakarta.,0
+en,capital_balanced,balanced_capital_singapore_philippines,The capital of Singapore is Singapore.,1
+en,capital_balanced,balanced_capital_singapore_philippines,The capital of Singapore is Manila.,0
+en,capital_balanced,balanced_capital_singapore_philippines,The capital of Philippines is Manila.,1
+en,capital_balanced,balanced_capital_singapore_philippines,The capital of Philippines is Singapore.,0
+en,capital_balanced,balanced_capital_australia_new_zealand,The capital of Australia is Canberra.,1
+en,capital_balanced,balanced_capital_australia_new_zealand,The capital of Australia is Wellington.,0
+en,capital_balanced,balanced_capital_australia_new_zealand,The capital of New Zealand is Wellington.,1
+en,capital_balanced,balanced_capital_australia_new_zealand,The capital of New Zealand is Canberra.,0
+en,capital_balanced,balanced_capital_canada_united_states,The capital of Canada is Ottawa.,1
+en,capital_balanced,balanced_capital_canada_united_states,"The capital of Canada is Washington, D.C..",0
+en,capital_balanced,balanced_capital_canada_united_states,"The capital of United States is Washington, D.C..",1
+en,capital_balanced,balanced_capital_canada_united_states,The capital of United States is Ottawa.,0
+en,capital_balanced,balanced_capital_mexico_brazil,The capital of Mexico is Mexico City.,1
+en,capital_balanced,balanced_capital_mexico_brazil,The capital of Mexico is Brasilia.,0
+en,capital_balanced,balanced_capital_mexico_brazil,The capital of Brazil is Brasilia.,1
+en,capital_balanced,balanced_capital_mexico_brazil,The capital of Brazil is Mexico City.,0
+en,capital_balanced,balanced_capital_argentina_chile,The capital of Argentina is Buenos Aires.,1
+en,capital_balanced,balanced_capital_argentina_chile,The capital of Argentina is Santiago.,0
+en,capital_balanced,balanced_capital_argentina_chile,The capital of Chile is Santiago.,1
+en,capital_balanced,balanced_capital_argentina_chile,The capital of Chile is Buenos Aires.,0
+en,capital_balanced,balanced_capital_peru_colombia,The capital of Peru is Lima.,1
+en,capital_balanced,balanced_capital_peru_colombia,The capital of Peru is Bogota.,0
+en,capital_balanced,balanced_capital_peru_colombia,The capital of Colombia is Bogota.,1
+en,capital_balanced,balanced_capital_peru_colombia,The capital of Colombia is Lima.,0
+en,capital_balanced,balanced_capital_venezuela_uruguay,The capital of Venezuela is Caracas.,1
+en,capital_balanced,balanced_capital_venezuela_uruguay,The capital of Venezuela is Montevideo.,0
+en,capital_balanced,balanced_capital_venezuela_uruguay,The capital of Uruguay is Montevideo.,1
+en,capital_balanced,balanced_capital_venezuela_uruguay,The capital of Uruguay is Caracas.,0
+en,capital_balanced,balanced_capital_ecuador_saudi_arabia,The capital of Ecuador is Quito.,1
+en,capital_balanced,balanced_capital_ecuador_saudi_arabia,The capital of Ecuador is Riyadh.,0
+en,capital_balanced,balanced_capital_ecuador_saudi_arabia,The capital of Saudi Arabia is Riyadh.,1
+en,capital_balanced,balanced_capital_ecuador_saudi_arabia,The capital of Saudi Arabia is Quito.,0
+en,capital_balanced,balanced_capital_iran_iraq,The capital of Iran is Tehran.,1
+en,capital_balanced,balanced_capital_iran_iraq,The capital of Iran is Baghdad.,0
+en,capital_balanced,balanced_capital_iran_iraq,The capital of Iraq is Baghdad.,1
+en,capital_balanced,balanced_capital_iran_iraq,The capital of Iraq is Tehran.,0
+en,capital_balanced,balanced_capital_lebanon_pakistan,The capital of Lebanon is Beirut.,1
+en,capital_balanced,balanced_capital_lebanon_pakistan,The capital of Lebanon is Islamabad.,0
+en,capital_balanced,balanced_capital_lebanon_pakistan,The capital of Pakistan is Islamabad.,1
+en,capital_balanced,balanced_capital_lebanon_pakistan,The capital of Pakistan is Beirut.,0
+en,capital_balanced,balanced_capital_afghanistan_kazakhstan,The capital of Afghanistan is Kabul.,1
+en,capital_balanced,balanced_capital_afghanistan_kazakhstan,The capital of Afghanistan is Astana.,0
+en,capital_balanced,balanced_capital_afghanistan_kazakhstan,The capital of Kazakhstan is Astana.,1
+en,capital_balanced,balanced_capital_afghanistan_kazakhstan,The capital of Kazakhstan is Kabul.,0
+en,capital_balanced,balanced_capital_mongolia_nepal,The capital of Mongolia is Ulaanbaatar.,1
+en,capital_balanced,balanced_capital_mongolia_nepal,The capital of Mongolia is Kathmandu.,0
+en,capital_balanced,balanced_capital_mongolia_nepal,The capital of Nepal is Kathmandu.,1
+en,capital_balanced,balanced_capital_mongolia_nepal,The capital of Nepal is Ulaanbaatar.,0
+en,capital_balanced,balanced_capital_bangladesh_sri_lanka,The capital of Bangladesh is Dhaka.,1
+en,capital_balanced,balanced_capital_bangladesh_sri_lanka,The capital of Bangladesh is Sri Jayawardenepura Kotte.,0
+en,capital_balanced,balanced_capital_bangladesh_sri_lanka,The capital of Sri Lanka is Sri Jayawardenepura Kotte.,1
+en,capital_balanced,balanced_capital_bangladesh_sri_lanka,The capital of Sri Lanka is Dhaka.,0
+en,capital_balanced,balanced_capital_myanmar_cambodia,The capital of Myanmar is Naypyidaw.,1
+en,capital_balanced,balanced_capital_myanmar_cambodia,The capital of Myanmar is Phnom Penh.,0
+en,capital_balanced,balanced_capital_myanmar_cambodia,The capital of Cambodia is Phnom Penh.,1
+en,capital_balanced,balanced_capital_myanmar_cambodia,The capital of Cambodia is Naypyidaw.,0
+en,capital_balanced,balanced_capital_laos_cuba,The capital of Laos is Vientiane.,1
+en,capital_balanced,balanced_capital_laos_cuba,The capital of Laos is Havana.,0
+en,capital_balanced,balanced_capital_laos_cuba,The capital of Cuba is Havana.,1
+en,capital_balanced,balanced_capital_laos_cuba,The capital of Cuba is Vientiane.,0
+en,capital_balanced,balanced_capital_jamaica_dominican_republic,The capital of Jamaica is Kingston.,1
+en,capital_balanced,balanced_capital_jamaica_dominican_republic,The capital of Jamaica is Santo Domingo.,0
+en,capital_balanced,balanced_capital_jamaica_dominican_republic,The capital of Dominican Republic is Santo Domingo.,1
+en,capital_balanced,balanced_capital_jamaica_dominican_republic,The capital of Dominican Republic is Kingston.,0
+en,capital_balanced,balanced_capital_costa_rica_panama,The capital of Costa Rica is San Jose.,1
+en,capital_balanced,balanced_capital_costa_rica_panama,The capital of Costa Rica is Panama City.,0
+en,capital_balanced,balanced_capital_costa_rica_panama,The capital of Panama is Panama City.,1
+en,capital_balanced,balanced_capital_costa_rica_panama,The capital of Panama is San Jose.,0

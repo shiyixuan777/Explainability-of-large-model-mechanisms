@@ -1,0 +1,5 @@
+domain,baseline,seed,split,train_rows,test_rows,accuracy,auc,separability_auc
+all,numeric_surface,42,group,368,160,0.48125,0.45312499999999994,0.546875
+all,bag_of_words,42,group,368,160,0.28125,0.19234375,0.80765625
+capital,numeric_surface,42,group,106,46,0.4782608695652174,0.45085066162570886,0.5491493383742911
+capital,bag_of_words,42,group,106,46,0.17391304347826086,0.06710775047258978,0.9328922495274102

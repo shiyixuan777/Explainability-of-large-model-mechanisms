@@ -14,7 +14,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="gpt2-small")
     parser.add_argument("--data", default="data/facts.csv")
-    parser.add_argument("--out", default="figures/probe_layers.csv")
+    parser.add_argument("--out", default="figures/probe_results.csv")
     parser.add_argument("--language", default="en")
     parser.add_argument("--domain", default=None, help="Comma-separated domain filter, e.g. capital,science")
     parser.add_argument("--seed", type=int, default=42)

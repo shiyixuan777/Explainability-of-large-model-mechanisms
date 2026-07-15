@@ -1,0 +1,3 @@
+domain,baseline,seed,split,train_rows,test_rows,accuracy,auc,separability_auc
+capital_balanced,numeric_surface,42,group,104,48,0.5,0.5,0.5
+capital_balanced,bag_of_words,42,group,104,48,0.5,0.5,0.5

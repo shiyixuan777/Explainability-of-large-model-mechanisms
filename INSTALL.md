@@ -46,7 +46,8 @@ python -m scripts.check_env
 
 ```powershell
 python -m scripts.build_dataset
-python -m scripts.run_probe --model gpt2-small
+python -m scripts.build_balanced_capital_dataset
+python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --domain capital --prompt-template "Statement: {statement}`nAnswer true or false:" --out figures/probe_capital_answer.csv
 ```
 
 第一次运行会下载模型权重，需要稳定网络。`gpt2-small` 体积较小，适合先跑通全流程。

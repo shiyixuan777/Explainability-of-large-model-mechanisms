@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="gpt2-small")
     parser.add_argument("--data", default="data/facts.csv")
     parser.add_argument("--layer", type=int, default=8)
-    parser.add_argument("--out", default="figures/steering_alpha.csv")
+    parser.add_argument("--out", default="figures/steering_results.csv")
     parser.add_argument("--language", default="en")
     parser.add_argument("--domain", default=None, help="Comma-separated domain filter, e.g. capital,science")
     parser.add_argument("--direction-method", choices=["mean_diff", "probe"], default="mean_diff")
