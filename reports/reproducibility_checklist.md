@@ -186,8 +186,8 @@ figures/surface_baselines_capital_balanced.png
 Key expected result:
 
 ```text
-numeric surface baseline is weak on capital: separability AUC around 0.549
-bag-of-words baseline exposes lexical artifacts: capital separability AUC around 0.933
+numeric surface baseline is weak on capital: direction-agnostic AUC around 0.549
+bag-of-words baseline exposes lexical artifacts: capital direction-agnostic AUC around 0.933
 on the balanced capital dataset, both numeric surface and bag-of-words baselines are exactly random
 ```
 

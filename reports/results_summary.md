@@ -3,9 +3,11 @@
 This file is generated from CSV artifacts by `python -m scripts.summarize_results`.
 Use it as a consistency check for the report tables.
 
+`direction_agnostic_auc = max(AUC, 1 - AUC)`. It diagnoses whether scores have a strong label-ranking relation regardless of sign; it is not a claim that the train-time label direction generalizes as a classifier.
+
 ## Probe Sweep: Top Settings
 
-| domain | prompt | layer | accuracy | auc | separability_auc |
+| domain | prompt | layer | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- | --- |
 | capital | answer | 8 | 0.826 | 0.953 | 0.953 |
 | capital | statement_is | 6 | 0.804 | 0.940 | 0.940 |
@@ -22,7 +24,7 @@ Use it as a consistency check for the report tables.
 
 Top layers by AUC:
 
-| layer | accuracy | auc | separability_auc |
+| layer | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- |
 | 8 | 0.826 | 0.953 | 0.953 |
 | 10 | 0.870 | 0.947 | 0.947 |
@@ -32,7 +34,7 @@ Top layers by AUC:
 
 Top layers by accuracy:
 
-| layer | accuracy | auc | separability_auc |
+| layer | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- |
 | 10 | 0.870 | 0.947 | 0.947 |
 | 5 | 0.848 | 0.941 | 0.941 |
@@ -51,7 +53,7 @@ Top layers by accuracy:
 
 ## Lexically Balanced Capital Probe
 
-| layer | accuracy | auc | separability_auc |
+| layer | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- |
 | 6 | 0.625 | 0.809 | 0.809 |
 | 8 | 0.625 | 0.802 | 0.802 |
@@ -62,7 +64,7 @@ Top layers by accuracy:
 
 ## Lexically Balanced Surface Baselines
 
-| domain | baseline | accuracy | auc | separability_auc |
+| domain | baseline | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
 | capital_balanced | numeric_surface | 0.500 | 0.500 | 0.500 |
 | capital_balanced | bag_of_words | 0.500 | 0.500 | 0.500 |
@@ -79,7 +81,7 @@ Top layers by accuracy:
 
 ## Capital Completion Margin Baseline
 
-| analysis | group | rows | blocks | accuracy | auc | auc_ci_low | auc_ci_high | separability_auc | mean_margin |
+| analysis | group | rows | blocks | accuracy | auc | auc_ci_low | auc_ci_high | direction_agnostic_auc | mean_margin |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | completion_total | heldout_rows | 48 | 12 | 0.750 | 0.861 | 0.753 | 0.955 | 0.861 | 2.821 |
 | completion_avg_token | heldout_rows | 48 | 12 | 0.625 | 0.786 | 0.674 | 0.891 | 0.786 | 2.079 |
@@ -112,7 +114,7 @@ Top layers by accuracy:
 
 ## Surface Baselines
 
-| domain | baseline | accuracy | auc | separability_auc |
+| domain | baseline | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
 | all | numeric_surface | 0.481 | 0.453 | 0.547 |
 | all | bag_of_words | 0.281 | 0.192 | 0.808 |
@@ -121,7 +123,7 @@ Top layers by accuracy:
 
 ## Cross-Domain Direction Transfer
 
-| source | target | accuracy | auc | separability_auc |
+| source | target | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
 | continent | capital | 0.638 | 0.766 | 0.766 |
 | landmark_country | capital | 0.539 | 0.735 | 0.735 |
@@ -341,7 +343,7 @@ Misclassified examples:
 
 ## Iterative Direction Ablation
 
-| control | directions_removed | accuracy | auc | separability_auc |
+| control | directions_removed | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
 | learned_iterative | 0 | 0.826 | 0.953 | 0.953 |
 | learned_iterative | 1 | 0.826 | 0.945 | 0.945 |
@@ -367,7 +369,7 @@ Misclassified examples:
 
 ## Lexically Balanced Iterative Direction Ablation
 
-| control | directions_removed | accuracy | auc | separability_auc |
+| control | directions_removed | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
 | learned_iterative | 0 | 0.625 | 0.809 | 0.809 |
 | learned_iterative | 1 | 0.604 | 0.786 | 0.786 |

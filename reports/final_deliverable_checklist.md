@@ -30,7 +30,7 @@ reports/final_report.md
 
 ## Claims To Keep
 
-1. 原始 capital residual probe 很强，layer 8 AUC 约 0.953；但 bag-of-words separability AUC 约 0.933，因此原始结果不能直接解释为 truth direction。
+1. 原始 capital residual probe 很强，layer 8 AUC 约 0.953；但 bag-of-words 方向无关 AUC 约 0.933，因此原始结果不能直接解释为 truth direction。方向无关 AUC 只诊断分数与标签的强排序关系，不表示标签方向能稳定泛化。
 2. 词汇平衡 capital 数据集使 numeric surface 与 BOW baseline 都降为 0.500；在这个设置下，layer 6 residual probe AUC 约 0.809，layer 8 AUC 约 0.802。
 3. 多 seed 检查显示 balanced layer 6 mean AUC 约 0.813，layer 8 mean AUC 约 0.804，说明该信号不是 seed=42 的孤立现象。
 4. Completion margin 的 total logprob AUC 为 0.861，但 avg-token AUC 为 0.786，且与 residual probe 的 bootstrap interval 高度重叠；它只能作为补全兼容度线索，而不是事实知识证明。
@@ -52,7 +52,7 @@ reports/final_report.md
 2. 不写“steering 改善了模型事实判断”；最多说它弱移动 correct-vs-selected-wrong completion scoring margin，并带来很小的 choice-level change。
 3. 不把 completion total logprob 高 AUC 当作强证据，因为它受 completion token count 影响。
 4. 不把 cross-domain transfer 的负结果写成已经证明不存在统一方向；当前只能说没有提供支持。
-5. 不把 patching recovery 写成完整机制定位；目前缺少 head/MLP/path-level decomposition。
+5. 不把 patching recovery 写成完整机制定位；本文完成的是 layer-position level localization，目前仍缺少 head/MLP/path-level decomposition。
 6. 不把 null distribution 写成严格显著性检验；它是 sampled controls，经验 p 值受采样数量限制。
 
 ## Final Commands

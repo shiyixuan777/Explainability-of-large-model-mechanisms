@@ -55,6 +55,8 @@ def main() -> None:
         "This file is generated from CSV artifacts by `python -m scripts.summarize_results`.",
         "Use it as a consistency check for the report tables.",
         "",
+        "`direction_agnostic_auc = max(AUC, 1 - AUC)`. It diagnoses whether scores have a strong label-ranking relation regardless of sign; it is not a claim that the train-time label direction generalizes as a classifier.",
+        "",
     ]
 
     sweep = read_csv(figures_dir / "probe_sweep.csv")
@@ -73,7 +75,7 @@ def main() -> None:
                 "layer": int(row.layer),
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in best.itertuples(index=False)
         ]
@@ -88,7 +90,7 @@ def main() -> None:
                 "layer": int(row.layer),
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in top_auc.itertuples(index=False)
         ]
@@ -97,7 +99,7 @@ def main() -> None:
                 "layer": int(row.layer),
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in top_acc.itertuples(index=False)
         ]
@@ -152,7 +154,7 @@ def main() -> None:
                 "layer": int(row.layer),
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in top_balanced.itertuples(index=False)
         ]
@@ -165,7 +167,7 @@ def main() -> None:
                 "baseline": row.baseline,
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in balanced_surface.itertuples(index=False)
         ]
@@ -215,7 +217,7 @@ def main() -> None:
                 "auc": fmt(row.auc),
                 "auc_ci_low": fmt(getattr(row, "auc_ci_low", 0.0)),
                 "auc_ci_high": fmt(getattr(row, "auc_ci_high", 0.0)),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
                 "mean_margin": fmt(row.mean_margin),
             }
             for row in selected.itertuples(index=False)
@@ -267,7 +269,7 @@ def main() -> None:
                 "baseline": row.baseline,
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in surface.itertuples(index=False)
         ]
@@ -284,7 +286,7 @@ def main() -> None:
                     "target": row.target_domain,
                     "accuracy": fmt(row.accuracy),
                     "auc": fmt(row.auc),
-                    "separability_auc": fmt(row.separability_auc),
+                    "direction_agnostic_auc": fmt(row.separability_auc),
                 }
                 for row in best_cross.itertuples(index=False)
             ]
@@ -676,7 +678,7 @@ def main() -> None:
                 "directions_removed": int(row.directions_removed),
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in key_steps.itertuples(index=False)
         ]
@@ -693,7 +695,7 @@ def main() -> None:
                 "directions_removed": int(row.directions_removed),
                 "accuracy": fmt(row.accuracy),
                 "auc": fmt(row.auc),
-                "separability_auc": fmt(row.separability_auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
             }
             for row in key_steps.itertuples(index=False)
         ]

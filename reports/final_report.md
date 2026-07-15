@@ -4,7 +4,7 @@
 
 本文研究一个容易被过度解释的问题：GPT-2-small 的 residual stream 中，是否存在可线性读出的事实配对标签相关信号？如果存在，它更像抽象事实表征，还是更像数据构造、实体熟悉度、补全兼容度等混合因素形成的 verification-associated direction？
 
-实验从首都事实开始。原始 capital 数据上，final-token residual probe 的 layer 8 AUC 达到 0.953；但 bag-of-words surface baseline 的 separability AUC 也达到 0.933，说明原始高分受到明显词汇分布伪线索影响。为排除最直接的 unigram 边际频率线索，本文构造词汇平衡 capital 数据集：每个二国 block 中，两个国家名和两个首都名都同时出现在 true 与 false 句子里。此时 bag-of-words 和 numeric surface baseline 都降为 0.500，而 residual probe 仍在 layer 6 保留 0.809 AUC，多 seed mean AUC 为 0.813。
+实验从首都事实开始。原始 capital 数据上，final-token residual probe 的 layer 8 AUC 达到 0.953；但 bag-of-words surface baseline 的方向无关 AUC 也达到 0.933，说明原始高分受到明显词汇分布伪线索影响。为排除最直接的 unigram 边际频率线索，本文构造词汇平衡 capital 数据集：每个二国 block 中，两个国家名和两个首都名都同时出现在 true 与 false 句子里。此时 bag-of-words 和 numeric surface baseline 都降为 0.500，而 residual probe 仍在 layer 6 保留 0.809 AUC，多 seed mean AUC 为 0.813。
 
 这说明简单词袋线索不是全部解释，但也不等于发现 truth direction。completion margin 实验显示，同一 held-out split 上，total logprob AUC 为 0.861；但按 completion token 数归一化后，avg-token AUC 降到 0.786，低于 residual probe 的 0.809，且 block bootstrap CI 高度重叠。因此，completion margin 更适合作为 completion-compatibility-related signal，而不是事实知识的直接度量。
 
@@ -31,12 +31,12 @@ probe AUC 高只能说明“某个方向能读出标签”，并不能说明模�
 
 本文不是完整复现 Bao et al. 的全部设置，而是做一个小模型受控复现与扩展：
 
-| Bao et al. 关注点 | 本文对应实验 | 结论关系 |
-|---|---|---|
-| hidden state 中能否训练 truthfulness probe | GPT-2-small final-token `resid_post` probe | 复现线性可读现象，但只限人工事实验证数据 |
-| truth direction 是否跨任务泛化 | domain transfer 与 direction cosine | 未提供统一方向证据；地理相关任务有局部共享结构 |
-| probe 能否用于下游行为 | completion-margin steering、output readout baseline | 能弱移动补全评分，不能改善 pairwise choice |
-| truth direction 是否容易被误读 | surface baseline、balanced dataset、completion margin | 强化 confound 诊断，说明高 AUC 很容易来自数据结构 |
+| 类型 | 研究问题 | 本文对应实验 | 结论关系 |
+|---|---|---|---|
+| Bao et al. 对照 | hidden state 中能否训练 truthfulness probe | GPT-2-small final-token `resid_post` probe | 复现线性可读现象，但只限人工事实验证数据 |
+| Bao et al. 对照 | truth direction 是否跨任务泛化 | domain transfer 与 direction cosine | 未提供统一方向证据；地理相关任务有局部共享结构 |
+| Bao et al. 对照 | probe 能否用于下游行为 | completion-margin steering、output readout baseline | 能弱移动补全评分，不能改善 pairwise choice |
+| 本文扩展 | 高 probe AUC 是否受数据伪线索影响 | surface baseline、balanced dataset、completion margin | 强化 confound 诊断，说明高 AUC 很容易来自数据结构 |
 
 没有复现的部分包括原论文完整 logical transformation、QA、ICL、external knowledge 数据、多模型比较和 selective QA 应用。因此，本文的复现定位是：在 GPT-2-small 上复现 truth-direction generalization 的核心问题意识，并通过更强的 surface/balanced/steering 控制实验检查其解释边界。
 
@@ -69,16 +69,16 @@ seed sensitivity 显示 layer 8 在六个 group split 上 mean AUC 为 0.899，�
 
 但 surface baseline 暴露了核心 confound：
 
-| Dataset | Baseline | Accuracy | AUC | Separability AUC |
+| Dataset | Baseline | Accuracy | AUC | Direction-agnostic AUC |
 |---|---|---:|---:|---:|
 | original capital | numeric_surface | 0.500 | 0.500 | 0.500 |
 | original capital | bag-of-words | 0.065 | 0.067 | 0.933 |
 
-bag-of-words 的 AUC 方向几乎反转，但 separability AUC 仍为 0.933，说明原始数据标签与词汇分布之间存在强线性结构。这个结果足以说明原始 0.953 AUC 不能直接解释为抽象事实表征。
+这里的 direction-agnostic AUC 定义为 `max(AUC, 1-AUC)`，只用于诊断预测分数与标签之间是否存在强排序关系，不表示标签方向能从训练集稳定泛化到测试集。bag-of-words 的 AUC 方向几乎反转，但方向无关 AUC 仍为 0.933，说明原始数据标签与词汇分布之间存在强线性结构。这个结果足以说明原始 0.953 AUC 不能直接解释为抽象事实表征。
 
 在词汇平衡数据上，surface baseline 被压到随机：
 
-| Dataset | Baseline | Accuracy | AUC | Separability AUC |
+| Dataset | Baseline | Accuracy | AUC | Direction-agnostic AUC |
 |---|---|---:|---:|---:|
 | capital_balanced | numeric_surface | 0.500 | 0.500 | 0.500 |
 | capital_balanced | bag-of-words | 0.500 | 0.500 | 0.500 |
@@ -93,7 +93,7 @@ bag-of-words 的 AUC 方向几乎反转，但 separability AUC 仍为 0.933，�
 
 balanced probe seed sensitivity 中，layer 6 mean AUC 为 0.813，layer 8 mean AUC 为 0.804。也就是说，排除 unigram 边际频率后，中层 residual state 仍保留非平凡标签信号。但它仍可能来自 subject-object compatibility、实体熟悉度、句子概率或关系模板，而不是抽象 truth representation。
 
-从定位角度看，本文完成的是 representation-level layer localization：信号主要在 final-token residual state 的中层到后层可读。当前 patching 对 attention/MLP 的结果不够强，尚不能定位到具体 head、MLP 或 token-position path。
+从定位角度看，本文完成了 layer-position level localization：标签信号在 balanced layer 6 的 prompt-final residual state 上可读，且该位置的单点干预足以移动后续 completion margin。当前仍未定位负责生成或传递该效应的具体 attention head、MLP 与下游 computation path。
 
 ## 5. Completion Margin：剩余信号是否对应模型补全偏好
 
@@ -126,7 +126,7 @@ total logprob 看起来强于 residual probe，但 held-out 中有 24 行 correc
 
 ## 6. 是否跨领域稳定
 
-原始多领域实验未提供统一 truth direction 证据。probe sweep 中，不同 domain 的最佳层和 AUC 差异很大；direction cosine 的平均跨域相似度为 0.077，整体接近 0。domain transfer 只有地理相关任务之间存在局部共享，例如 continent -> capital separability AUC 为 0.766，landmark_country -> capital 为 0.735。
+原始多领域实验未提供统一 truth direction 证据。probe sweep 中，不同 domain 的最佳层和 AUC 差异很大；direction cosine 的平均跨域相似度为 0.077，整体接近 0。domain transfer 只有地理相关任务之间存在局部共享，例如 continent -> capital direction-agnostic AUC 为 0.766，landmark_country -> capital 为 0.735。
 
 这应解释为 exploratory evidence：当前跨领域实验没有提供支持统一 truth direction 的证据，但也不能写成“已经证明跨领域方向不稳定”。不同 domain 的样本量、负样本构造、prompt 形式都不完全一致，仍可能存在模板和实体类型 confound。
 
