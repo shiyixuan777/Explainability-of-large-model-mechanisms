@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import numpy as np
 import torch
@@ -21,7 +21,7 @@ def probe_direction(activations: torch.Tensor, labels: np.ndarray) -> torch.Tens
     y = labels.astype(int)
     clf = make_pipeline(
         StandardScaler(),
-        LogisticRegression(max_iter=2000, class_weight="balanced"),
+        LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42),
     )
     clf.fit(x, y)
     scaler = clf.named_steps["standardscaler"]
@@ -61,7 +61,7 @@ def evaluate_layer_probe(
 
     clf = make_pipeline(
         StandardScaler(),
-        LogisticRegression(max_iter=2000, class_weight="balanced"),
+        LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42),
     )
     clf.fit(x_train, y_train)
 

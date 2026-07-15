@@ -29,7 +29,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--iterative-ablation", default="figures/iterative_ablation_capital_layer8.csv")
     parser.add_argument("--knowledge-summary", default="figures/capital_knowledge_margin_summary.csv")
     parser.add_argument("--knowledge-details", default="figures/capital_knowledge_margin_details.csv")
-    parser.add_argument("--completion-steering", default="figures/completion_margin_steering_summary.csv")
+    parser.add_argument("--completion-steering", default="figures/completion_margin_steering_position_prompt_final_summary.csv")
     parser.add_argument("--completion-steering-decomposition", default="figures/completion_margin_steering_decomposition.csv")
     parser.add_argument("--completion-steering-paired", default="figures/completion_margin_steering_paired_bootstrap.csv")
     parser.add_argument("--unembedding-projection-summary", default="figures/unembedding_projection_baseline_summary.csv")

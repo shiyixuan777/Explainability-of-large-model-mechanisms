@@ -24,7 +24,7 @@
 
 本文参考 Bao et al. [1] 的 *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*。该工作关注 truthfulness probes 是否能跨任务、逻辑变换、问答形式和知识源泛化，并提醒 truth direction 的解释需要经过迁移与行为检验。本文不是完整复现其全部实验，而是在 GPT-2-small [2] 上做受控小模型复现与扩展。
 
-方法上，本文使用 TransformerLens [3] hook 机制提取 residual stream activation，并借鉴 logit lens [4]、activation patching / causal tracing [5,6]、linear probing [7] 和推理时 activation steering 的基本流程。与完整 circuit 级工作相比，本文只做到 layer-level readout、position-specific intervention 和方向级干预，还没有展开 head/MLP/path-level 的机制分解。
+方法上，本文使用 TransformerLens [3] hook 机制提取 residual stream activation，并借鉴 logit lens [4]、activation patching / causal tracing [5,6]、truth geometry / linear probing [7,8] 和 activation engineering [9] 的基本流程。与完整 circuit 级工作相比，本文只做到 layer-level readout、position-specific intervention 和方向级干预，还没有展开 head/MLP/path-level 的机制分解。
 
 | 类型 | 研究问题 | 本文对应实验 | 结论关系 |
 |---|---|---|---|
@@ -58,12 +58,13 @@ Germany - Paris   false
 |---|---|
 | 模型 | GPT-2-small |
 | checkpoint | TransformerLens/Hugging Face 的 `gpt2-small` 预训练权重 |
-| 框架 | TransformerLens；默认 `HookedTransformer.from_pretrained(model_name)`，未手动指定 dtype/device |
+| 框架 | TransformerLens；`HookedTransformer.from_pretrained(model_name, device="cpu", dtype=torch.float32)` |
 | 主要 activation | final-token `resid_post` |
 | 数据划分 | `GroupShuffleSplit(test_size=0.3, random_state=42)`；按 `pair_id` 分组 |
 | balanced group key | `capital_balanced` 中一个 `pair_id` 对应完整四行二国二首都 block |
-| probe | `StandardScaler()` + `LogisticRegression(max_iter=2000, class_weight="balanced")` |
+| probe | `StandardScaler()` + `LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42)` |
 | 标准化 | scaler 只在训练集拟合，再应用到 held-out split |
+| probe score | AUC 使用 `predict_proba(... )[:, 1]`；accuracy 使用 0.5 概率阈值 |
 | 主要层 | 原始 capital 使用 layer 8；词汇平衡主线使用 layer 6 |
 | 干预位置 | prompt-final residual state；另比较 all positions 和 completion-internal-only |
 | steering direction | 由训练集 probe 权重转换回原 activation basis 后做 L2 归一化 |
@@ -72,6 +73,8 @@ Germany - Paris   false
 | bootstrap | 以 `pair_id` block 为采样单位，主实验 2000 次；随机种子为 42 |
 | controls | L2-normalized Gaussian random directions、label-permutation probe directions |
 | 软件环境 | 在 Windows + Python 虚拟环境中运行；完整依赖见 `requirements.txt`，实际版本以本地环境为准 |
+
+Layer 6 是在主 split 的 balanced probe sweep 中选定的，随后固定用于 completion-margin steering、sampled null controls、position decomposition 和 repeated-split experiments。因此，主 split 上 layer-specific 结果带有探索性选择成分；repeated split experiments 用于检查固定该层后 effect 是否仍能跨多个 group split 重复出现。alpha sweep 预先使用对称集合 `{-4, -2, -1, 0, 1, 2, 4}`，`alpha=4` 作为正向端点用于 null-control 比较。当前 bootstrap/null CI 没有把 layer 选择的不确定性纳入区间。
 
 ### 3.3 指标
 
@@ -150,7 +153,7 @@ The capital of France is Berlin
 
 如图 4 所示，learned direction 的 alpha 曲线方向稳定：正向 alpha 提高 avg-token margin，负向 alpha 降低该 margin。
 
-![Completion-margin steering alpha curve](../figures/completion_margin_steering_summary.png)
+![Completion-margin steering alpha curve](../figures/completion_margin_steering_position_prompt_final_summary.png)
 
 **图 4　completion-margin steering alpha 曲线。** 主线方向为 balanced layer 6 probe direction，干预位置为 bare completion prompt 的 prompt-final residual state。
 
@@ -187,7 +190,7 @@ sampled null distribution 设置为 prompt-final-only、alpha=+4、held-out coun
 
 这些 repeated splits 共享同一个数据池，训练和测试国家集合会部分重叠，因此 10/10 为正主要说明结果不是某个单一 seed 或划分的偶然现象，不能等同于 10 个相互独立实验构成的正式假设检验。
 
-选择层面改善明显更弱。当前主 split 的 pairwise preference accuracy 没有改变，sign flip 为 0。repeated splits 中 baseline pairwise accuracy 为 0.700，steered 后为 0.725，平均只提升 +0.025；6 个 sign flips 均为 wrong -> correct，但总量很小。candidate-set rank 检查把候选从一个选定错误首都扩展到 76 个首都候选：正确首都平均 rank 从 15.04 改善到 14.13，top-1 accuracy 只从 0.083 到 0.125。
+选择层面改善明显更弱。当前主 split 的 pairwise preference accuracy 没有改变，sign flip 为 0。repeated splits 中 baseline pairwise accuracy 为 0.700，steered 后为 0.725，平均只提升 +0.025；在全部 repeated-split 测试出现次数中，共观察到 6 次 wrong -> correct flip 和 0 次 correct -> wrong flip。由于不同 split 的测试集合可能重叠，这些是 6 次翻转评估事件，不一定对应 6 个不同国家。candidate-set rank 检查把候选从一个选定错误首都扩展到 76 个首都候选：正确首都平均 rank 从 15.04 改善到 14.13，top-1 accuracy 只从 0.083 到 0.125。
 
 ### 4.6 效果主要来自 prompt-final position
 
@@ -238,6 +241,8 @@ ablation 表明 learned direction 与可分性相关但不充分。原始 capita
 5. Jesse Vig, Sebastian Gehrmann, Yonatan Belinkov, Sharon Qian, Daniel Nevo, Yaron Singer, and Stuart Shieber. 2020. *Investigating Gender Bias in Language Models Using Causal Mediation Analysis*. NeurIPS.
 6. Kevin Meng, David Bau, Alex Andonian, and Yonatan Belinkov. 2022. *Locating and Editing Factual Associations in GPT*. NeurIPS.
 7. Collin Burns, Haotian Ye, Dan Klein, and Jacob Steinhardt. 2022. *Discovering Latent Knowledge in Language Models Without Supervision*. arXiv:2212.03827.
-8. Nelson Elhage, Neel Nanda, Catherine Olsson, Tom Henighan, Nicholas Joseph, Ben Mann, Amanda Askell, Yuntao Bai, Anna Chen, Tom Conerly, Nova DasSarma, Dawn Drain, Deep Ganguli, Zac Hatfield-Dodds, Danny Hernandez, Andy Jones, Jackson Kernion, Liane Lovitt, Kamal Ndousse, Dario Amodei, Tom Brown, Jack Clark, Jared Kaplan, Sam McCandlish, and Chris Olah. 2021. *A Mathematical Framework for Transformer Circuits*. Transformer Circuits Thread.
-9. Daking Rai, Yilun Zhou, Shi Feng, Abulhair Saparov, and Ziyu Yao. 2024. *A Practical Review of Mechanistic Interpretability for Transformer-Based Language Models*. arXiv:2407.02646.
-10. Hengyuan Zhang, Zhihao Zhang, Mingyang Wang, Zunhai Su, Yiwei Wang, Qianli Wang, Shuzhou Yuan, Ercong Nie, Xufeng Duan, Feijiang Han, Qibo Xue, Zeping Yu, Chenming Shang, Xiao Liang, Jing Xiong, Hui Shen, Chaofan Tao, Zhengwu Liu, Senjie Jin, Zhiheng Xi, Dongdong Zhang, Sophia Ananiadou, Tao Gui, Ruobing Xie, Hayden Kwok-Hay So, Hinrich Schütze, Xuanjing Huang, Qi Zhang, and Ngai Wong. 2026. *Locate, Steer, and Improve: A Practical Survey of Actionable Mechanistic Interpretability in Large Language Models*. arXiv:2601.14004.
+8. Samuel Marks and Max Tegmark. 2024. *The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets*. Conference on Language Modeling. arXiv:2310.06824.
+9. Alexander Matt Turner, Lisa Thiergart, Gavin Leech, David Udell, Juan J. Vazquez, Ulisse Mini, and Monte MacDiarmid. 2024. *Steering Language Models With Activation Engineering*. arXiv:2308.10248.
+10. Nelson Elhage, Neel Nanda, Catherine Olsson, Tom Henighan, Nicholas Joseph, Ben Mann, Amanda Askell, Yuntao Bai, Anna Chen, Tom Conerly, Nova DasSarma, Dawn Drain, Deep Ganguli, Zac Hatfield-Dodds, Danny Hernandez, Andy Jones, Jackson Kernion, Liane Lovitt, Kamal Ndousse, Dario Amodei, Tom Brown, Jack Clark, Jared Kaplan, Sam McCandlish, and Chris Olah. 2021. *A Mathematical Framework for Transformer Circuits*. Transformer Circuits Thread.
+11. Daking Rai, Yilun Zhou, Shi Feng, Abulhair Saparov, and Ziyu Yao. 2024. *A Practical Review of Mechanistic Interpretability for Transformer-Based Language Models*. arXiv:2407.02646.
+12. Hengyuan Zhang, Zhihao Zhang, Mingyang Wang, Zunhai Su, Yiwei Wang, Qianli Wang, Shuzhou Yuan, Ercong Nie, Xufeng Duan, Feijiang Han, Qibo Xue, Zeping Yu, Chenming Shang, Xiao Liang, Jing Xiong, Hui Shen, Chaofan Tao, Zhengwu Liu, Senjie Jin, Zhiheng Xi, Dongdong Zhang, Sophia Ananiadou, Tao Gui, Ruobing Xie, Hayden Kwok-Hay So, Hinrich Schütze, Xuanjing Huang, Qi Zhang, and Ngai Wong. 2026. *Locate, Steer, and Improve: A Practical Survey of Actionable Mechanistic Interpretability in Large Language Models*. arXiv:2601.14004.

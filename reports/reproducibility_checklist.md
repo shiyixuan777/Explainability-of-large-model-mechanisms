@@ -11,14 +11,14 @@ OS: Windows 11 10.0.26200
 Python: 3.13.7
 PyTorch: 2.12.1+cpu
 Transformers: 5.13.0
-TransformerLens: installed in the active environment
+TransformerLens: 3.5.1
 scikit-learn: 1.9.0
 NumPy: 2.5.1
 Pandas: 3.0.3
 Device: CPU
 ```
 
-GPU is not required for reproducing the small GPT-2 experiments, but CPU runs are slower. The first model-loading command downloads `gpt2-small` from Hugging Face and needs network access plus local cache space for the model weights.
+GPU is not required for reproducing the small GPT-2 experiments, but CPU runs are slower. The first model-loading command downloads `gpt2-small` from Hugging Face and needs network access plus local cache space for the model weights. On the tested CPU environment, the balanced prompt-final steering command is the slowest Quick Start step and takes roughly a few minutes; the full runbook can take substantially longer because it includes exploratory diagnostics and repeated splits.
 
 ```powershell
 python -m venv .venv
@@ -38,11 +38,12 @@ python -m scripts.build_balanced_capital_dataset --out data/capital_balanced.csv
 python -m scripts.run_probe --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --prompt-template "Statement: {statement}`nAnswer true or false:" --seed 42 --out figures/probe_capital_balanced.csv
 python -m scripts.run_surface_baselines --data data/capital_balanced.csv --language en --domains capital_balanced --seed 42 --out figures/surface_baselines_capital_balanced.csv
 python -m scripts.run_capital_knowledge_margin --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --bootstrap-samples 2000 --out-details figures/capital_knowledge_margin_details.csv --out-summary figures/capital_knowledge_margin_summary.csv
-python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_details.csv --out-summary figures/completion_margin_steering_summary.csv
+python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_position_prompt_final_details.csv --out-summary figures/completion_margin_steering_position_prompt_final_summary.csv
 python -m scripts.run_completion_margin_null_distribution --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --alpha 4 --random-directions 50 --permutation-directions 20 --out-details figures/completion_margin_steering_null_distribution.csv --out-summary figures/completion_margin_steering_null_summary.csv
 python -m scripts.run_repeated_split_completion_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seeds 0 1 2 3 4 5 6 7 8 9 --alpha 4 --random-directions 10 --permutation-directions 5 --position-mode prompt-final-only --out-details figures/repeated_split_completion_steering_details.csv --out-summary figures/repeated_split_completion_steering_summary.csv
 python -m scripts.plot_results
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+python -m scripts.validate_project
 python -m compileall scripts src
 ```
 
@@ -399,25 +400,25 @@ This is an oracle diagnostic, not a deployable improve result.
 ## Improve Diagnostic: Balanced Completion-Margin Steering
 
 ```powershell
-python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_details.csv --out-summary figures/completion_margin_steering_summary.csv
+python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_position_prompt_final_details.csv --out-summary figures/completion_margin_steering_position_prompt_final_summary.csv
 ```
 
 Expected artifacts:
 
 ```text
-figures/completion_margin_steering_details.csv
-figures/completion_margin_steering_summary.csv
-figures/completion_margin_steering_summary.png
-figures/completion_margin_steering_summary_pairwise_accuracy.png
+figures/completion_margin_steering_position_prompt_final_details.csv
+figures/completion_margin_steering_position_prompt_final_summary.csv
+figures/completion_margin_steering_position_prompt_final_summary.png
+figures/completion_margin_steering_position_prompt_final_summary_pairwise_accuracy.png
 ```
 
 Key expected result:
 
 ```text
-learned_probe alpha=+4 shifts held-out avg-token completion margin by about +0.133
-learned_probe alpha=-4 shifts held-out avg-token completion margin by about -0.126
-random_direction alpha=+4 shifts held-out avg-token completion margin by about -0.032
-label_permutation alpha=+4 shifts held-out avg-token completion margin by about -0.026
+learned_probe alpha=+4 shifts held-out avg-token completion margin by about +0.135
+learned_probe alpha=-4 shifts held-out avg-token completion margin by about -0.130
+random_direction alpha=+4 shifts held-out avg-token completion margin by about -0.030
+label_permutation alpha=+4 shifts held-out avg-token completion margin by about -0.022
 held-out pairwise avg-token preference accuracy remains 0.625 across the sweep
 held-out block exact accuracy remains 0.250 across the sweep
 This is weak behavioral influence on completion margin, not stable behavioral improvement.
@@ -426,7 +427,7 @@ This is weak behavioral influence on completion margin, not stable behavioral im
 ## Completion Steering Diagnostics
 
 ```powershell
-python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --bootstrap-samples 1000 --alphas -4 0 4 --out-details figures/completion_margin_steering_position_prompt_final_details.csv --out-summary figures/completion_margin_steering_position_prompt_final_summary.csv
+python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode all --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_details.csv --out-summary figures/completion_margin_steering_summary.csv
 python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode completion-internal-only --bootstrap-samples 1000 --alphas -4 0 4 --out-details figures/completion_margin_steering_position_completion_internal_details.csv --out-summary figures/completion_margin_steering_position_completion_internal_summary.csv
 python -m scripts.run_completion_margin_null_distribution --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --alpha 4 --random-directions 50 --permutation-directions 20 --out-details figures/completion_margin_steering_null_distribution.csv --out-summary figures/completion_margin_steering_null_summary.csv
 python -m scripts.run_repeated_split_completion_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seeds 0 1 2 3 4 5 6 7 8 9 --alpha 4 --random-directions 10 --permutation-directions 5 --position-mode prompt-final-only --out-details figures/repeated_split_completion_steering_details.csv --out-summary figures/repeated_split_completion_steering_summary.csv
@@ -588,9 +589,10 @@ The learned-vs-random gap is from one split only and should not be read as a sta
 ## Plotting and Summary
 
 ```powershell
-python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --probe-seeds figures/probe_seed_sensitivity_capital.csv --readout figures/output_readout_baselines.csv --surface figures/surface_baselines.csv --domain-transfer figures/domain_transfer_layer8.csv --domain-cosine figures/domain_direction_cosine_layer8.csv --steering figures/steering_capital_probe_layer8.csv --oracle-steering figures/oracle_steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --truth-patching figures/truth_verification_patching_resid.csv --ablation figures/ablation_capital_probe_layer8.csv --iterative-ablation figures/iterative_ablation_capital_layer8.csv --completion-steering figures/completion_margin_steering_summary.csv --completion-steering-null figures/completion_margin_steering_null_distribution.csv
-python -m scripts.plot_results --probe figures/probe_capital_balanced.csv --probe-seeds figures/probe_seed_sensitivity_capital_balanced.csv --surface figures/surface_baselines_capital_balanced.csv --ablation figures/ablation_capital_balanced_layer6.csv --iterative-ablation figures/iterative_ablation_capital_balanced_layer6.csv --knowledge-summary figures/capital_knowledge_margin_summary.csv --knowledge-details figures/capital_knowledge_margin_details.csv --completion-steering figures/completion_margin_steering_summary.csv --completion-steering-null figures/completion_margin_steering_null_distribution.csv
+python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --probe-seeds figures/probe_seed_sensitivity_capital.csv --readout figures/output_readout_baselines.csv --surface figures/surface_baselines.csv --domain-transfer figures/domain_transfer_layer8.csv --domain-cosine figures/domain_direction_cosine_layer8.csv --steering figures/steering_capital_probe_layer8.csv --oracle-steering figures/oracle_steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --truth-patching figures/truth_verification_patching_resid.csv --ablation figures/ablation_capital_probe_layer8.csv --iterative-ablation figures/iterative_ablation_capital_layer8.csv --completion-steering figures/completion_margin_steering_position_prompt_final_summary.csv --completion-steering-null figures/completion_margin_steering_null_distribution.csv
+python -m scripts.plot_results --probe figures/probe_capital_balanced.csv --probe-seeds figures/probe_seed_sensitivity_capital_balanced.csv --surface figures/surface_baselines_capital_balanced.csv --ablation figures/ablation_capital_balanced_layer6.csv --iterative-ablation figures/iterative_ablation_capital_balanced_layer6.csv --knowledge-summary figures/capital_knowledge_margin_summary.csv --knowledge-details figures/capital_knowledge_margin_details.csv --completion-steering figures/completion_margin_steering_position_prompt_final_summary.csv --completion-steering-null figures/completion_margin_steering_null_distribution.csv
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+python -m scripts.validate_project
 python -m compileall scripts src
 ```
 
@@ -601,4 +603,4 @@ reports/final_report.md
 reports/results_summary.md
 ```
 
-Expected validation result: `compileall` completes without syntax errors. Exact numerical values should be checked in `reports/results_summary.md`; this checklist only records commands, output files, and coarse sanity checks.
+Expected validation result: `scripts.validate_project` reports required files, report images, core CSV columns, and the balanced dataset shape as valid; `compileall` completes without syntax errors. Exact numerical values should be checked in `reports/results_summary.md`; this checklist only records commands, output files, and coarse sanity checks.

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 from pathlib import Path
@@ -49,7 +49,7 @@ def parse_args() -> argparse.Namespace:
 def fit_probe(train_x: torch.Tensor, train_y: np.ndarray):
     clf = make_pipeline(
         StandardScaler(),
-        LogisticRegression(max_iter=2000, class_weight="balanced"),
+        LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42),
     )
     clf.fit(train_x.numpy(), train_y)
     return clf

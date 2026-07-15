@@ -8,7 +8,7 @@ import torch
 def load_hooked_transformer(model_name: str):
     from transformer_lens import HookedTransformer
 
-    return HookedTransformer.from_pretrained(model_name)
+    return HookedTransformer.from_pretrained(model_name, device="cpu", dtype=torch.float32)
 
 
 def make_prompts(statements: Iterable[str], template: str) -> list[str]:

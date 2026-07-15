@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 from pathlib import Path
@@ -43,7 +43,7 @@ def evaluate_numeric_features(train_df, test_df, train_y, test_y) -> dict[str, f
     test_x = surface_features(test_df["statement"])
     clf = make_pipeline(
         StandardScaler(),
-        LogisticRegression(max_iter=2000, class_weight="balanced"),
+        LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42),
     )
     clf.fit(train_x, train_y)
     probs = clf.predict_proba(test_x)[:, 1]
@@ -59,7 +59,7 @@ def evaluate_numeric_features(train_df, test_df, train_y, test_y) -> dict[str, f
 def evaluate_bow(train_df, test_df, train_y, test_y) -> dict[str, float]:
     clf = make_pipeline(
         CountVectorizer(lowercase=True, ngram_range=(1, 2), min_df=1),
-        LogisticRegression(max_iter=2000, class_weight="balanced"),
+        LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42),
     )
     clf.fit(train_df["statement"], train_y)
     probs = clf.predict_proba(test_df["statement"])[:, 1]

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 from pathlib import Path
@@ -48,7 +48,7 @@ def fit_probe_and_evaluate(
 ) -> dict[str, float]:
     clf = make_pipeline(
         StandardScaler(),
-        LogisticRegression(max_iter=2000, class_weight="balanced"),
+        LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42),
     )
     clf.fit(train_activations.numpy(), train_labels)
     probs = clf.predict_proba(test_activations.numpy())[:, 1]

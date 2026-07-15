@@ -46,7 +46,7 @@ def fmt_label(value: object) -> str:
     return str(value).lower()
 
 
-def git_metadata() -> tuple[str, str]:
+def git_metadata() -> str:
     try:
         commit = subprocess.check_output(
             ["git", "rev-parse", "--short", "HEAD"],
@@ -56,23 +56,14 @@ def git_metadata() -> tuple[str, str]:
     except Exception:
         commit = "unavailable"
 
-    try:
-        subprocess.check_call(
-            ["git", "diff", "--quiet"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        dirty = "no"
-    except Exception:
-        dirty = "yes"
-    return commit, dirty
+    return commit
 
 
 def main() -> None:
     args = parse_args()
     figures_dir = Path(args.figures_dir)
     out_path = Path(args.out)
-    commit, dirty = git_metadata()
+    commit = git_metadata()
 
     lines: list[str] = [
         "# Results Summary",
@@ -81,14 +72,97 @@ def main() -> None:
         "Use it as a compact table index for the report results.",
         "",
         f"Generated at: {datetime.now().isoformat(timespec='seconds')}",
-        f"Git commit: {commit}",
-        f"Working tree dirty: {dirty}",
-        f"Source directory: {Path.cwd()}",
+        f"Git commit at generation: {commit}",
+        "Source directory: project root",
         "Script: `scripts/summarize_results.py`",
         "",
         "`direction_agnostic_auc = max(AUC, 1 - AUC)`. It diagnoses whether scores have a strong label-ranking relation regardless of sign; it is not a claim that the train-time label direction generalizes as a classifier.",
         "",
+        "`learned_percentile = 1.0` means no sampled null direction exceeded the learned effect in the sampled set; it is not a population percentile estimate. `mean_rank_delta > 0` means the correct candidate moved toward rank 1. Repeated-split flip counts are evaluation occurrences across overlapping splits, not necessarily unique countries.",
+        "",
     ]
+
+    core_rows: list[dict[str, object]] = []
+    original_probe_for_core = read_csv(figures_dir / "probe_capital_answer.csv")
+    surface_for_core = read_csv(figures_dir / "surface_baselines.csv")
+    if original_probe_for_core is not None and surface_for_core is not None:
+        layer8 = original_probe_for_core[original_probe_for_core["layer"] == 8]
+        bow = surface_for_core[
+            (surface_for_core["domain"] == "capital") & (surface_for_core["baseline"] == "bag_of_words")
+        ]
+        if not layer8.empty and not bow.empty:
+            core_rows.append(
+                {
+                    "claim": "Original lexical confound",
+                    "key_result": (
+                        f"layer 8 residual AUC {fmt(layer8.iloc[0]['auc'])}; "
+                        f"BOW direction-agnostic AUC {fmt(bow.iloc[0]['separability_auc'])}"
+                    ),
+                }
+            )
+    balanced_probe_for_core = read_csv(figures_dir / "probe_capital_balanced.csv")
+    if balanced_probe_for_core is not None:
+        layer6 = balanced_probe_for_core[balanced_probe_for_core["layer"] == 6]
+        if not layer6.empty:
+            core_rows.append({"claim": "Balanced readout", "key_result": f"layer 6 AUC {fmt(layer6.iloc[0]['auc'])}"})
+    prompt_final_for_core = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_summary.csv")
+    if prompt_final_for_core is not None:
+        row = prompt_final_for_core[
+            (prompt_final_for_core["split"] == "heldout_countries")
+            & (prompt_final_for_core["direction_type"] == "learned_probe")
+            & (prompt_final_for_core["alpha"] == 4.0)
+        ]
+        if not row.empty:
+            core_rows.append(
+                {
+                    "claim": "Score intervention",
+                    "key_result": f"prompt-final delta {fmt(row.iloc[0]['mean_delta_avg_token_margin'])}",
+                }
+            )
+    repeated_for_core = read_csv(figures_dir / "repeated_split_completion_steering_summary.csv")
+    if repeated_for_core is not None:
+        aggregate = repeated_for_core[repeated_for_core["seed"].astype(str) == "aggregate"]
+        split_rows_for_core = repeated_for_core[repeated_for_core["seed"].astype(str) != "aggregate"]
+        if not aggregate.empty:
+            row = aggregate.iloc[0]
+            positive_splits = int((split_rows_for_core["learned_delta"] > 0).sum()) if not split_rows_for_core.empty else 0
+            split_count = len(split_rows_for_core)
+            core_rows.append(
+                {
+                    "claim": "Repeated split stability",
+                    "key_result": f"{positive_splits}/{split_count} positive; mean {fmt(row.learned_delta)}",
+                }
+            )
+            core_rows.append(
+                {
+                    "claim": "Choice effect",
+                    "key_result": (
+                        f"pairwise change {fmt(row.pairwise_accuracy_change)}; "
+                        f"wrong->correct events {int(row.wrong_to_correct_flips)}"
+                    ),
+                }
+            )
+    rank_for_core = read_csv(figures_dir / "candidate_rank_steering_summary.csv")
+    if rank_for_core is not None and not rank_for_core.empty:
+        row = rank_for_core.iloc[0]
+        core_rows.append(
+            {
+                "claim": "Candidate-set top-1",
+                "key_result": f"{fmt(row.baseline_top1_accuracy)} -> {fmt(row.steered_top1_accuracy)}",
+            }
+        )
+    balanced_ablation_for_core = read_csv(figures_dir / "ablation_capital_balanced_layer6.csv")
+    if balanced_ablation_for_core is not None:
+        strength1 = balanced_ablation_for_core[balanced_ablation_for_core["strength"] == 1.0]
+        if not strength1.empty:
+            core_rows.append(
+                {
+                    "claim": "Mechanism boundary",
+                    "key_result": f"single-direction ablation retrained AUC {fmt(strength1.iloc[0]['auc'])}",
+                }
+            )
+    if core_rows:
+        lines += ["## Core Result Index", "", markdown_table(core_rows), ""]
 
     sweep = read_csv(figures_dir / "probe_sweep.csv")
     if sweep is not None:
@@ -264,6 +338,8 @@ def main() -> None:
             markdown_table(rows),
             "",
         ]
+
+    lines += ["## Exploratory and Supplementary Diagnostics", ""]
 
     pca = read_csv(figures_dir / "pca_capital_layer8.csv")
     if pca is not None:
@@ -444,7 +520,9 @@ def main() -> None:
         ]
         lines += ["## Oracle Conditional Steering", "", markdown_table(rows), ""]
 
-    completion_steering = read_csv(figures_dir / "completion_margin_steering_summary.csv")
+    lines += ["## Main Balanced Steering Results", ""]
+
+    completion_steering = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_summary.csv")
     if completion_steering is not None:
         heldout = completion_steering[
             (completion_steering["split"] == "heldout_countries")
@@ -461,7 +539,7 @@ def main() -> None:
             }
             for row in heldout.itertuples(index=False)
         ]
-        lines += ["## Balanced Completion-Margin Steering", "", markdown_table(rows), ""]
+        lines += ["## Balanced Prompt-Final Completion-Margin Steering", "", markdown_table(rows), ""]
 
     completion_decomposition = read_csv(figures_dir / "completion_margin_steering_decomposition.csv")
     if completion_decomposition is not None:

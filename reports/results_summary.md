@@ -3,13 +3,26 @@
 This file is generated from CSV artifacts by `python -m scripts.summarize_results`.
 Use it as a compact table index for the report results.
 
-Generated at: 2026-07-15T23:42:04
-Git commit: c7ecbdf
-Working tree dirty: yes
-Source directory: D:\可解释性
+Generated at: 2026-07-16T00:03:24
+Git commit at generation: 9e1b8d1
+Source directory: project root
 Script: `scripts/summarize_results.py`
 
 `direction_agnostic_auc = max(AUC, 1 - AUC)`. It diagnoses whether scores have a strong label-ranking relation regardless of sign; it is not a claim that the train-time label direction generalizes as a classifier.
+
+`learned_percentile = 1.0` means no sampled null direction exceeded the learned effect in the sampled set; it is not a population percentile estimate. `mean_rank_delta > 0` means the correct candidate moved toward rank 1. Repeated-split flip counts are evaluation occurrences across overlapping splits, not necessarily unique countries.
+
+## Core Result Index
+
+| claim | key_result |
+| --- | --- |
+| Original lexical confound | layer 8 residual AUC 0.953; BOW direction-agnostic AUC 0.933 |
+| Balanced readout | layer 6 AUC 0.809 |
+| Score intervention | prompt-final delta 0.135 |
+| Repeated split stability | 10/10 positive; mean 0.116 |
+| Choice effect | pairwise change 0.025; wrong->correct events 6 |
+| Candidate-set top-1 | 0.083 -> 0.125 |
+| Mechanism boundary | single-direction ablation retrained AUC 0.786 |
 
 ## Probe Sweep: Top Settings
 
@@ -102,6 +115,8 @@ Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` ar
 | completion_total | heldout_low_avg_token_margin | 24 | 11 | 0.667 | 0.750 | 0.437 | 0.970 | 0.750 | completion_total_margin | 1.353 |
 | completion_avg_token | heldout_low_avg_token_margin | 24 | 11 | 0.250 | 0.271 | 0.000 | 0.563 | 0.729 | completion_avg_token_margin | -0.767 |
 | residual_probe | heldout_low_avg_token_margin | 24 | 11 | 0.667 | 0.847 | 0.681 | 1.000 | 0.847 | completion_avg_token_margin | -0.767 |
+
+## Exploratory and Supplementary Diagnostics
 
 ## Activation PCA
 
@@ -217,25 +232,27 @@ Misclassified examples:
 | 4.0 | 0.500 | 1.000 | -0.057 | 4.286 | oracle_label_conditioned |
 | 8.0 | 0.500 | 1.000 | -0.088 | 8.286 | oracle_label_conditioned |
 
-## Balanced Completion-Margin Steering
+## Main Balanced Steering Results
+
+## Balanced Prompt-Final Completion-Margin Steering
 
 | direction | alpha | mean_delta_avg_token_margin | delta_ci | pairwise_avg_accuracy | block_exact_accuracy |
 | --- | --- | --- | --- | --- | --- |
-| label_permutation | -4.0 | 0.027 | [0.018, 0.040] | 0.625 | 0.250 |
-| label_permutation | -2.0 | 0.014 | [0.009, 0.020] | 0.625 | 0.250 |
-| label_permutation | 0.0 | 0.000 | [0.000, 0.000] | 0.625 | 0.250 |
-| label_permutation | 2.0 | -0.013 | [-0.019, -0.008] | 0.625 | 0.250 |
-| label_permutation | 4.0 | -0.026 | [-0.037, -0.016] | 0.625 | 0.250 |
-| learned_probe | -4.0 | -0.126 | [-0.190, -0.067] | 0.625 | 0.250 |
-| learned_probe | -2.0 | -0.064 | [-0.096, -0.034] | 0.625 | 0.250 |
+| learned_probe | -4.0 | -0.130 | [-0.191, -0.072] | 0.625 | 0.250 |
+| learned_probe | -2.0 | -0.066 | [-0.096, -0.036] | 0.625 | 0.250 |
 | learned_probe | 0.0 | 0.000 | [0.000, 0.000] | 0.625 | 0.250 |
-| learned_probe | 2.0 | 0.066 | [0.036, 0.097] | 0.625 | 0.250 |
-| learned_probe | 4.0 | 0.133 | [0.073, 0.197] | 0.625 | 0.250 |
-| random_direction | -4.0 | 0.033 | [0.019, 0.045] | 0.625 | 0.250 |
-| random_direction | -2.0 | 0.016 | [0.009, 0.022] | 0.625 | 0.250 |
+| learned_probe | 2.0 | 0.067 | [0.038, 0.098] | 0.625 | 0.250 |
+| learned_probe | 4.0 | 0.135 | [0.077, 0.198] | 0.625 | 0.250 |
+| random_direction | -4.0 | 0.029 | [0.017, 0.041] | 0.625 | 0.250 |
+| random_direction | -2.0 | 0.015 | [0.008, 0.021] | 0.625 | 0.250 |
 | random_direction | 0.0 | 0.000 | [0.000, 0.000] | 0.625 | 0.250 |
-| random_direction | 2.0 | -0.016 | [-0.022, -0.009] | 0.625 | 0.250 |
-| random_direction | 4.0 | -0.032 | [-0.044, -0.018] | 0.625 | 0.250 |
+| random_direction | 2.0 | -0.015 | [-0.021, -0.008] | 0.625 | 0.250 |
+| random_direction | 4.0 | -0.030 | [-0.042, -0.017] | 0.625 | 0.250 |
+| label_permutation | -4.0 | 0.023 | [0.013, 0.035] | 0.625 | 0.250 |
+| label_permutation | -2.0 | 0.012 | [0.007, 0.018] | 0.625 | 0.250 |
+| label_permutation | 0.0 | 0.000 | [0.000, 0.000] | 0.625 | 0.250 |
+| label_permutation | 2.0 | -0.011 | [-0.017, -0.006] | 0.625 | 0.250 |
+| label_permutation | 4.0 | -0.022 | [-0.034, -0.013] | 0.625 | 0.250 |
 
 ## Balanced Completion-Margin Steering Decomposition
 
