@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import subprocess
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -44,16 +46,45 @@ def fmt_label(value: object) -> str:
     return str(value).lower()
 
 
+def git_metadata() -> tuple[str, str]:
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except Exception:
+        commit = "unavailable"
+
+    try:
+        subprocess.check_call(
+            ["git", "diff", "--quiet"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        dirty = "no"
+    except Exception:
+        dirty = "yes"
+    return commit, dirty
+
+
 def main() -> None:
     args = parse_args()
     figures_dir = Path(args.figures_dir)
     out_path = Path(args.out)
+    commit, dirty = git_metadata()
 
     lines: list[str] = [
         "# Results Summary",
         "",
         "This file is generated from CSV artifacts by `python -m scripts.summarize_results`.",
-        "Use it as a consistency check for the report tables.",
+        "Use it as a compact table index for the report results.",
+        "",
+        f"Generated at: {datetime.now().isoformat(timespec='seconds')}",
+        f"Git commit: {commit}",
+        f"Working tree dirty: {dirty}",
+        f"Source directory: {Path.cwd()}",
+        "Script: `scripts/summarize_results.py`",
         "",
         "`direction_agnostic_auc = max(AUC, 1 - AUC)`. It diagnoses whether scores have a strong label-ranking relation regardless of sign; it is not a claim that the train-time label direction generalizes as a classifier.",
         "",
@@ -218,11 +249,21 @@ def main() -> None:
                 "auc_ci_low": fmt(getattr(row, "auc_ci_low", 0.0)),
                 "auc_ci_high": fmt(getattr(row, "auc_ci_high", 0.0)),
                 "direction_agnostic_auc": fmt(row.separability_auc),
-                "mean_margin": fmt(row.mean_margin),
+                "grouping_margin_column": getattr(row, "margin_column", ""),
+                "grouping_margin_mean": fmt(row.mean_margin),
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["## Capital Completion Margin Baseline", "", markdown_table(rows), ""]
+        lines += [
+            "## Capital Completion Margin Baseline",
+            "",
+            "`grouping_margin_mean` is the mean of the margin column used to define or summarize the row group; for `residual_probe` rows it is not the mean probe score.",
+            "",
+            "Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` are exploratory, post-hoc subsets defined by avg-token margin and are not used for confirmatory claims.",
+            "",
+            markdown_table(rows),
+            "",
+        ]
 
     pca = read_csv(figures_dir / "pca_capital_layer8.csv")
     if pca is not None:
@@ -255,7 +296,7 @@ def main() -> None:
                     "accuracy": fmt(row.accuracy_from_logit_sign),
                     "auc": fmt(row.auc),
                     "predicted_true_rate": fmt(row.predicted_true_rate),
-                    "mean_margin": fmt(row.mean_true_minus_false_logit_diff),
+                    "mean_logit_margin": fmt(row.mean_true_minus_false_logit_diff),
                 }
                 for row in best.itertuples(index=False)
             ]

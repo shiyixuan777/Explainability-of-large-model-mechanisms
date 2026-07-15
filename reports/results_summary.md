@@ -1,7 +1,13 @@
 # Results Summary
 
 This file is generated from CSV artifacts by `python -m scripts.summarize_results`.
-Use it as a consistency check for the report tables.
+Use it as a compact table index for the report results.
+
+Generated at: 2026-07-15T23:42:04
+Git commit: c7ecbdf
+Working tree dirty: yes
+Source directory: D:\可解释性
+Script: `scripts/summarize_results.py`
 
 `direction_agnostic_auc = max(AUC, 1 - AUC)`. It diagnoses whether scores have a strong label-ranking relation regardless of sign; it is not a claim that the train-time label direction generalizes as a classifier.
 
@@ -81,17 +87,21 @@ Top layers by accuracy:
 
 ## Capital Completion Margin Baseline
 
-| analysis | group | rows | blocks | accuracy | auc | auc_ci_low | auc_ci_high | direction_agnostic_auc | mean_margin |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| completion_total | heldout_rows | 48 | 12 | 0.750 | 0.861 | 0.753 | 0.955 | 0.861 | 2.821 |
-| completion_avg_token | heldout_rows | 48 | 12 | 0.625 | 0.786 | 0.674 | 0.891 | 0.786 | 2.079 |
-| residual_probe | heldout_rows | 48 | 12 | 0.625 | 0.809 | 0.708 | 0.922 | 0.809 | 2.079 |
-| completion_total | heldout_high_avg_token_margin | 24 | 11 | 0.833 | 0.944 | 0.750 | 1.000 | 0.944 | 4.289 |
-| completion_avg_token | heldout_high_avg_token_margin | 24 | 11 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 4.925 |
-| residual_probe | heldout_high_avg_token_margin | 24 | 11 | 0.583 | 0.764 | 0.579 | 0.929 | 0.764 | 4.925 |
-| completion_total | heldout_low_avg_token_margin | 24 | 11 | 0.667 | 0.750 | 0.437 | 0.970 | 0.750 | 1.353 |
-| completion_avg_token | heldout_low_avg_token_margin | 24 | 11 | 0.250 | 0.271 | 0.000 | 0.563 | 0.729 | -0.767 |
-| residual_probe | heldout_low_avg_token_margin | 24 | 11 | 0.667 | 0.847 | 0.681 | 1.000 | 0.847 | -0.767 |
+`grouping_margin_mean` is the mean of the margin column used to define or summarize the row group; for `residual_probe` rows it is not the mean probe score.
+
+Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` are exploratory, post-hoc subsets defined by avg-token margin and are not used for confirmatory claims.
+
+| analysis | group | rows | blocks | accuracy | auc | auc_ci_low | auc_ci_high | direction_agnostic_auc | grouping_margin_column | grouping_margin_mean |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| completion_total | heldout_rows | 48 | 12 | 0.750 | 0.861 | 0.753 | 0.955 | 0.861 | completion_total_margin | 2.821 |
+| completion_avg_token | heldout_rows | 48 | 12 | 0.625 | 0.786 | 0.674 | 0.891 | 0.786 | completion_avg_token_margin | 2.079 |
+| residual_probe | heldout_rows | 48 | 12 | 0.625 | 0.809 | 0.708 | 0.922 | 0.809 | completion_avg_token_margin | 2.079 |
+| completion_total | heldout_high_avg_token_margin | 24 | 11 | 0.833 | 0.944 | 0.750 | 1.000 | 0.944 | completion_total_margin | 4.289 |
+| completion_avg_token | heldout_high_avg_token_margin | 24 | 11 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | completion_avg_token_margin | 4.925 |
+| residual_probe | heldout_high_avg_token_margin | 24 | 11 | 0.583 | 0.764 | 0.579 | 0.929 | 0.764 | completion_avg_token_margin | 4.925 |
+| completion_total | heldout_low_avg_token_margin | 24 | 11 | 0.667 | 0.750 | 0.437 | 0.970 | 0.750 | completion_total_margin | 1.353 |
+| completion_avg_token | heldout_low_avg_token_margin | 24 | 11 | 0.250 | 0.271 | 0.000 | 0.563 | 0.729 | completion_avg_token_margin | -0.767 |
+| residual_probe | heldout_low_avg_token_margin | 24 | 11 | 0.667 | 0.847 | 0.681 | 1.000 | 0.847 | completion_avg_token_margin | -0.767 |
 
 ## Activation PCA
 
@@ -101,7 +111,7 @@ Top layers by accuracy:
 
 ## Output Readout Baselines
 
-| domain | verbalizer | prompt | shots | accuracy | auc | predicted_true_rate | mean_margin |
+| domain | verbalizer | prompt | shots | accuracy | auc | predicted_true_rate | mean_logit_margin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | all | yes_no | answer_yes_no | 0 | 0.502 | 0.542 | 0.009 | -1.995 |
 | all | correct_incorrect | statement_correct | 0 | 0.500 | 0.509 | 1.000 | 2.056 |

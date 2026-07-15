@@ -1,17 +1,52 @@
-# Reproducibility Checklist
+﻿# Reproducibility Checklist
 
-This checklist records the commands and expected artifacts needed to reproduce the current Markdown report.
+This checklist records the commands and expected artifacts needed to reproduce the current Markdown report. It is a runbook, not the main result interpretation; exact numerical tables are centralized in `reports/results_summary.md`.
 
 ## Environment
+
+Tested environment:
+
+```text
+OS: Windows 11 10.0.26200
+Python: 3.13.7
+PyTorch: 2.12.1+cpu
+Transformers: 5.13.0
+TransformerLens: installed in the active environment
+scikit-learn: 1.9.0
+NumPy: 2.5.1
+Pandas: 3.0.3
+Device: CPU
+```
+
+GPU is not required for reproducing the small GPT-2 experiments, but CPU runs are slower. The first model-loading command downloads `gpt2-small` from Hugging Face and needs network access plus local cache space for the model weights.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-python -m scripts.check_env
 ```
 
-Expected result: required packages are marked `OK`.
+Expected result: dependencies install successfully and the dataset-building commands below can be run from the activated environment.
+
+## Quick Start
+
+These commands reproduce the main balanced-data evidence chain used in the final report. The full command list below keeps the auxiliary diagnostics and earlier exploratory experiments.
+
+```powershell
+python -m scripts.build_dataset
+python -m scripts.build_balanced_capital_dataset --out data/capital_balanced.csv
+python -m scripts.run_probe --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --prompt-template "Statement: {statement}`nAnswer true or false:" --seed 42 --out figures/probe_capital_balanced.csv
+python -m scripts.run_surface_baselines --data data/capital_balanced.csv --language en --domains capital_balanced --seed 42 --out figures/surface_baselines_capital_balanced.csv
+python -m scripts.run_capital_knowledge_margin --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --bootstrap-samples 2000 --out-details figures/capital_knowledge_margin_details.csv --out-summary figures/capital_knowledge_margin_summary.csv
+python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_details.csv --out-summary figures/completion_margin_steering_summary.csv
+python -m scripts.run_completion_margin_null_distribution --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --alpha 4 --random-directions 50 --permutation-directions 20 --out-details figures/completion_margin_steering_null_distribution.csv --out-summary figures/completion_margin_steering_null_summary.csv
+python -m scripts.run_repeated_split_completion_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seeds 0 1 2 3 4 5 6 7 8 9 --alpha 4 --random-directions 10 --permutation-directions 5 --position-mode prompt-final-only --out-details figures/repeated_split_completion_steering_details.csv --out-summary figures/repeated_split_completion_steering_summary.csv
+python -m scripts.plot_results
+python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
+python -m compileall scripts src
+```
+
+Main sanity checks: balanced surface baselines should be near random; balanced layer 6 probe AUC should be around 0.81; prompt-final learned steering should produce a positive avg-token completion-margin shift larger than the sampled random/permutation controls.
 
 ## Dataset
 
@@ -44,7 +79,7 @@ blocks: 38
 ## Locate: Probe Sweep
 
 ```powershell
-python -m scripts.run_probe_sweep --model gpt2-small --data data/facts.csv --out figures/probe_sweep.csv
+python -m scripts.run_probe_sweep --model gpt2-small --data data/facts.csv --seed 42 --out figures/probe_sweep.csv
 ```
 
 Expected artifacts:
@@ -64,7 +99,7 @@ mixed-domain settings: clearly weaker than capital
 ## Locate: Focused Capital Probe
 
 ```powershell
-python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --domain capital --prompt-template "Statement: {statement}`nAnswer true or false:" --out figures/probe_capital_answer.csv
+python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --domain capital --prompt-template "Statement: {statement}`nAnswer true or false:" --seed 42 --out figures/probe_capital_answer.csv
 ```
 
 Expected artifacts:
@@ -126,7 +161,7 @@ The 2D PCA projection does not cleanly separate true/false.
 ## Locate: Error Analysis
 
 ```powershell
-python -m scripts.run_error_analysis --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --out figures/error_analysis_capital_layer8.csv
+python -m scripts.run_error_analysis --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --seed 42 --out figures/error_analysis_capital_layer8.csv
 ```
 
 Expected artifacts:
@@ -146,7 +181,7 @@ layer 8 test accuracy around 0.826
 ## Locate: Cross-Domain Direction Consistency
 
 ```powershell
-python -m scripts.run_domain_consistency --model gpt2-small --data data/facts.csv --language en --layer 8 --out-transfer figures/domain_transfer_layer8.csv --out-cosine figures/domain_direction_cosine_layer8.csv
+python -m scripts.run_domain_consistency --model gpt2-small --data data/facts.csv --language en --layer 8 --seed 42 --out-transfer figures/domain_transfer_layer8.csv --out-cosine figures/domain_direction_cosine_layer8.csv
 ```
 
 Expected artifacts:
@@ -170,8 +205,8 @@ the best cross transfer is continent -> capital with AUC around 0.766
 ## Surface Baselines
 
 ```powershell
-python -m scripts.run_surface_baselines --data data/facts.csv --language en --domains all capital --out figures/surface_baselines.csv
-python -m scripts.run_surface_baselines --data data/capital_balanced.csv --language en --domains capital_balanced --out figures/surface_baselines_capital_balanced.csv
+python -m scripts.run_surface_baselines --data data/facts.csv --language en --domains all capital --seed 42 --out figures/surface_baselines.csv
+python -m scripts.run_surface_baselines --data data/capital_balanced.csv --language en --domains capital_balanced --seed 42 --out figures/surface_baselines_capital_balanced.csv
 ```
 
 Expected artifacts:
@@ -194,7 +229,7 @@ on the balanced capital dataset, both numeric surface and bag-of-words baselines
 ## Lexically Balanced Capital Probe
 
 ```powershell
-python -m scripts.run_probe --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --prompt-template "Statement: {statement}`nAnswer true or false:" --out figures/probe_capital_balanced.csv
+python -m scripts.run_probe --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --prompt-template "Statement: {statement}`nAnswer true or false:" --seed 42 --out figures/probe_capital_balanced.csv
 python -m scripts.run_probe_seed_sensitivity --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layers 4 6 8 10 11 --seeds 0 1 2 3 4 42 --out figures/probe_seed_sensitivity_capital_balanced.csv
 ```
 
@@ -220,7 +255,7 @@ layer 8 mean AUC across seeds is around 0.804
 ## Completion Margin: Capital Completion Compatibility
 
 ```powershell
-python -m scripts.run_capital_knowledge_margin --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --bootstrap-samples 2000 --out-details figures/capital_knowledge_margin_details.csv --out-summary figures/capital_knowledge_margin_summary.csv
+python -m scripts.run_capital_knowledge_margin --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --bootstrap-samples 2000 --out-details figures/capital_knowledge_margin_details.csv --out-summary figures/capital_knowledge_margin_summary.csv
 ```
 
 Expected artifacts:
@@ -317,7 +352,7 @@ about 72.4% of denominator magnitudes are below 0.05
 ## Steering: Held-out Probe Direction
 
 ```powershell
-python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
+python -m scripts.run_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --seed 42 --alphas -8 -4 -2 -1 0 1 2 4 8 --out figures/steering_capital_probe_layer8.csv
 ```
 
 Expected artifacts:
@@ -342,7 +377,7 @@ This is an early diagnostic on original capital layer 8, not strong causal evide
 ## Improve Diagnostic: Oracle Conditional Steering
 
 ```powershell
-python -m scripts.run_oracle_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --alphas 0 0.5 1 2 4 8 --out figures/oracle_steering_capital_probe_layer8.csv
+python -m scripts.run_oracle_steering --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --seed 42 --alphas 0 0.5 1 2 4 8 --out figures/oracle_steering_capital_probe_layer8.csv
 ```
 
 Expected artifacts:
@@ -364,7 +399,7 @@ This is an oracle diagnostic, not a deployable improve result.
 ## Improve Diagnostic: Balanced Completion-Margin Steering
 
 ```powershell
-python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_details.csv --out-summary figures/completion_margin_steering_summary.csv
+python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --bootstrap-samples 2000 --alphas -4 -2 -1 0 1 2 4 --out-details figures/completion_margin_steering_details.csv --out-summary figures/completion_margin_steering_summary.csv
 ```
 
 Expected artifacts:
@@ -391,16 +426,16 @@ This is weak behavioral influence on completion margin, not stable behavioral im
 ## Completion Steering Diagnostics
 
 ```powershell
-python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --position-mode prompt-final-only --bootstrap-samples 1000 --alphas -4 0 4 --out-details figures/completion_margin_steering_position_prompt_final_details.csv --out-summary figures/completion_margin_steering_position_prompt_final_summary.csv
-python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --position-mode completion-internal-only --bootstrap-samples 1000 --alphas -4 0 4 --out-details figures/completion_margin_steering_position_completion_internal_details.csv --out-summary figures/completion_margin_steering_position_completion_internal_summary.csv
-python -m scripts.run_completion_margin_null_distribution --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --position-mode prompt-final-only --alpha 4 --random-directions 50 --permutation-directions 20 --out-details figures/completion_margin_steering_null_distribution.csv --out-summary figures/completion_margin_steering_null_summary.csv
+python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --bootstrap-samples 1000 --alphas -4 0 4 --out-details figures/completion_margin_steering_position_prompt_final_details.csv --out-summary figures/completion_margin_steering_position_prompt_final_summary.csv
+python -m scripts.run_completion_margin_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode completion-internal-only --bootstrap-samples 1000 --alphas -4 0 4 --out-details figures/completion_margin_steering_position_completion_internal_details.csv --out-summary figures/completion_margin_steering_position_completion_internal_summary.csv
+python -m scripts.run_completion_margin_null_distribution --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --position-mode prompt-final-only --alpha 4 --random-directions 50 --permutation-directions 20 --out-details figures/completion_margin_steering_null_distribution.csv --out-summary figures/completion_margin_steering_null_summary.csv
 python -m scripts.run_repeated_split_completion_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seeds 0 1 2 3 4 5 6 7 8 9 --alpha 4 --random-directions 10 --permutation-directions 5 --position-mode prompt-final-only --out-details figures/repeated_split_completion_steering_details.csv --out-summary figures/repeated_split_completion_steering_summary.csv
 python -m scripts.run_ambiguous_fact_sensitivity --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --alpha 4 --position-mode prompt-final-only --out-data data/capital_balanced_no_ambiguous.csv --out-details figures/ambiguous_fact_sensitivity_details.csv --out-summary figures/ambiguous_fact_sensitivity_summary.csv
 python -m scripts.run_candidate_rank_steering --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --alpha 4 --position-mode prompt-final-only --out-details figures/candidate_rank_steering_details.csv --out-summary figures/candidate_rank_steering_summary.csv
-python -m scripts.analyze_completion_steering_diagnostics --details figures/completion_margin_steering_details.csv --bootstrap-samples 5000 --out-decomposition figures/completion_margin_steering_decomposition.csv --out-paired figures/completion_margin_steering_paired_bootstrap.csv
-python -m scripts.analyze_completion_steering_diagnostics --details figures/completion_margin_steering_position_prompt_final_details.csv --bootstrap-samples 3000 --out-decomposition figures/completion_margin_steering_position_prompt_final_decomposition.csv --out-paired figures/completion_margin_steering_position_prompt_final_paired_bootstrap.csv
-python -m scripts.analyze_completion_steering_diagnostics --details figures/completion_margin_steering_position_completion_internal_details.csv --bootstrap-samples 3000 --out-decomposition figures/completion_margin_steering_position_completion_internal_decomposition.csv --out-paired figures/completion_margin_steering_position_completion_internal_paired_bootstrap.csv
-python -m scripts.run_unembedding_projection_baseline --model gpt2-small --data data/capital_balanced.csv --details figures/completion_margin_steering_details.csv --language en --domain capital_balanced --layer 6 --out-details figures/unembedding_projection_baseline_details.csv --out-summary figures/unembedding_projection_baseline_summary.csv
+python -m scripts.analyze_completion_steering_diagnostics --details figures/completion_margin_steering_details.csv --seed 42 --bootstrap-samples 5000 --out-decomposition figures/completion_margin_steering_decomposition.csv --out-paired figures/completion_margin_steering_paired_bootstrap.csv
+python -m scripts.analyze_completion_steering_diagnostics --details figures/completion_margin_steering_position_prompt_final_details.csv --seed 42 --bootstrap-samples 3000 --out-decomposition figures/completion_margin_steering_position_prompt_final_decomposition.csv --out-paired figures/completion_margin_steering_position_prompt_final_paired_bootstrap.csv
+python -m scripts.analyze_completion_steering_diagnostics --details figures/completion_margin_steering_position_completion_internal_details.csv --seed 42 --bootstrap-samples 3000 --out-decomposition figures/completion_margin_steering_position_completion_internal_decomposition.csv --out-paired figures/completion_margin_steering_position_completion_internal_paired_bootstrap.csv
+python -m scripts.run_unembedding_projection_baseline --model gpt2-small --data data/capital_balanced.csv --details figures/completion_margin_steering_details.csv --language en --domain capital_balanced --layer 6 --seed 42 --out-details figures/unembedding_projection_baseline_details.csv --out-summary figures/unembedding_projection_baseline_summary.csv
 ```
 
 Expected artifacts:
@@ -468,7 +503,7 @@ static unembedding projection has low fit for learned alpha=+4 on held-out examp
 ## Ablation: Probe Direction Removal
 
 ```powershell
-python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --out figures/ablation_capital_probe_layer8.csv
+python -m scripts.run_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --direction-method probe --seed 42 --out figures/ablation_capital_probe_layer8.csv
 ```
 
 Expected artifacts:
@@ -489,7 +524,7 @@ retrained probe AUC remains above 0.94 after one-direction ablation
 ## Ablation: Lexically Balanced Probe Direction Removal
 
 ```powershell
-python -m scripts.run_ablation --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --direction-method probe --out figures/ablation_capital_balanced_layer6.csv
+python -m scripts.run_ablation --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --direction-method probe --seed 42 --out figures/ablation_capital_balanced_layer6.csv
 ```
 
 Expected artifacts:
@@ -510,7 +545,7 @@ balanced retrained probe AUC remains around 0.786 after one-direction ablation
 ## Ablation: Iterative Direction Removal
 
 ```powershell
-python -m scripts.run_iterative_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --max-directions 16 --out figures/iterative_ablation_capital_layer8.csv
+python -m scripts.run_iterative_ablation --model gpt2-small --data data/facts.csv --language en --domain capital --layer 8 --seed 42 --max-directions 16 --out figures/iterative_ablation_capital_layer8.csv
 ```
 
 Expected artifacts:
@@ -531,7 +566,7 @@ label-permutation control: AUC remains around 0.953 after 16 directions
 ## Ablation: Lexically Balanced Iterative Direction Removal
 
 ```powershell
-python -m scripts.run_iterative_ablation --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --max-directions 16 --out figures/iterative_ablation_capital_balanced_layer6.csv
+python -m scripts.run_iterative_ablation --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --layer 6 --seed 42 --max-directions 16 --out figures/iterative_ablation_capital_balanced_layer6.csv
 ```
 
 Expected artifacts:
@@ -550,14 +585,12 @@ balanced label-permutation control: AUC remains around 0.783 after 16 directions
 The learned-vs-random gap is from one split only and should not be read as a stable effect without paired bootstrap or repeated splits.
 ```
 
-## Plotting, Summary, and Validation
+## Plotting and Summary
 
 ```powershell
 python -m scripts.plot_results --probe figures/probe_capital_answer.csv --probe-sweep figures/probe_sweep.csv --probe-seeds figures/probe_seed_sensitivity_capital.csv --readout figures/output_readout_baselines.csv --surface figures/surface_baselines.csv --domain-transfer figures/domain_transfer_layer8.csv --domain-cosine figures/domain_direction_cosine_layer8.csv --steering figures/steering_capital_probe_layer8.csv --oracle-steering figures/oracle_steering_capital_probe_layer8.csv --patching figures/activation_patching_capital_recall.csv --truth-patching figures/truth_verification_patching_resid.csv --ablation figures/ablation_capital_probe_layer8.csv --iterative-ablation figures/iterative_ablation_capital_layer8.csv --completion-steering figures/completion_margin_steering_summary.csv --completion-steering-null figures/completion_margin_steering_null_distribution.csv
 python -m scripts.plot_results --probe figures/probe_capital_balanced.csv --probe-seeds figures/probe_seed_sensitivity_capital_balanced.csv --surface figures/surface_baselines_capital_balanced.csv --ablation figures/ablation_capital_balanced_layer6.csv --iterative-ablation figures/iterative_ablation_capital_balanced_layer6.csv --knowledge-summary figures/capital_knowledge_margin_summary.csv --knowledge-details figures/capital_knowledge_margin_details.csv --completion-steering figures/completion_margin_steering_summary.csv --completion-steering-null figures/completion_margin_steering_null_distribution.csv
 python -m scripts.summarize_results --figures-dir figures --out reports/results_summary.md
-python -m scripts.prepare_submission
-python -m scripts.validate_project
 python -m compileall scripts src
 ```
 
@@ -566,5 +599,6 @@ Expected artifacts:
 ```text
 reports/final_report.md
 reports/results_summary.md
-reports/submission_manifest.md
 ```
+
+Expected validation result: `compileall` completes without syntax errors. Exact numerical values should be checked in `reports/results_summary.md`; this checklist only records commands, output files, and coarse sanity checks.
