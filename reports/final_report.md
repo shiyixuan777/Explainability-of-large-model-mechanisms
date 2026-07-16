@@ -65,6 +65,7 @@ Germany - Paris   false
 | probe | `StandardScaler()` + `LogisticRegression(C=1.0, penalty="l2", solver="lbfgs", fit_intercept=True, max_iter=2000, class_weight="balanced", random_state=42)` |
 | 标准化 | scaler 只在训练集拟合，再应用到 held-out split |
 | probe score | AUC 使用 `predict_proba(... )[:, 1]`；accuracy 使用 0.5 概率阈值 |
+| surface baselines | numeric baseline 使用字符数、词数、逗号/数字/大写字母/句点计数；BOW baseline 使用 lowercase unigram+bigram `CountVectorizer` + logistic regression，并采用同样的 group split |
 | 主要层 | 原始 capital 使用 layer 8；词汇平衡主线使用 layer 6 |
 | 干预位置 | prompt-final residual state；另比较 all positions 和 completion-internal-only |
 | steering direction | 由训练集 probe 权重转换回原 activation basis 后做 L2 归一化 |
@@ -232,7 +233,7 @@ ablation 表明 learned direction 与可分性相关但不充分。原始 capita
 
 当前工作的主要限制包括：模型只使用 GPT-2-small；主线数据是人工构造首都事实；负样本来自选定错误首都，而不是开放生成；head/MLP/path-level circuit 尚未定位；repeated splits 不是相互独立实验；sampled null distribution 的经验 p 值受方向数量限制。steering alpha 以 L2-normalized direction 的欧氏尺度定义，尚未根据 residual-stream RMS、activation norm 或训练分布中的 projection standard deviation 校准，因此当前结果能说明该方向具有干预效力，但不能充分判断 `alpha=4` 是否处在自然 activation 分布内；Gaussian random controls 做了 L2 norm matching，但没有匹配 residual activation 的协方差结构。
 
-此外，probe 在 residual dimension 高于训练样本数的高维小样本条件下拟合；虽然使用了 L2 正则化、group split 和多 seed 检查，但本文未系统评估不同 split 所得 direction 本身的几何稳定性。词汇平衡与线性 BOW baseline 主要排除了实体 unigram 边际频率和加性词袋线索，不能排除非线性的 country-capital interaction、实体熟悉度或其他语义兼容度因素。后续工作应优先做更接近 Bao et al. 的 QA / logical transformation 复现，以及 final layernorm、后续层、attention head 和 MLP 的路径级因果分解。
+此外，probe 在 residual dimension 高于训练样本数的高维小样本条件下拟合；虽然使用了 L2 正则化、group split 和多 seed 检查，但本文未系统评估不同 split 所得 direction 本身的几何稳定性。词汇平衡与线性 unigram/bigram BOW baseline 主要排除了实体边际频率和线性 n-gram 线索，不能排除非线性的 country-capital interaction、实体熟悉度或其他语义兼容度因素。后续工作应优先做更接近 Bao et al. 的 QA / logical transformation 复现，以及 final layernorm、后续层、attention head 和 MLP 的路径级因果分解。
 
 ## 6. Conclusion
 

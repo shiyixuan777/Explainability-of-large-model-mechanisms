@@ -52,6 +52,14 @@ REQUIRED_CSV_COLUMNS = {
 }
 
 
+MARKDOWN_FILES = [
+    "README.md",
+    "reports/final_report.md",
+    "reports/reproducibility_checklist.md",
+    "reports/results_summary.md",
+]
+
+
 def fail(message: str) -> None:
     print(f"FAIL: {message}")
     raise SystemExit(1)
@@ -73,6 +81,59 @@ def check_report_images() -> None:
         target = (report.parent / link).resolve()
         if not target.exists():
             fail(f"report image link does not exist: {link}")
+
+
+def _is_external_link(link: str) -> bool:
+    return bool(re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", link))
+
+
+def check_markdown_links() -> None:
+    for relative_path in MARKDOWN_FILES:
+        path = ROOT / relative_path
+        text = path.read_text(encoding="utf-8")
+        links = re.findall(r"(?<!!)\[[^\]]+\]\(([^)]+)\)", text)
+        for raw_link in links:
+            link = raw_link.strip()
+            if not link or link.startswith("#") or _is_external_link(link):
+                continue
+            file_part = link.split("#", 1)[0]
+            if not file_part:
+                continue
+            target = (path.parent / file_part).resolve()
+            if not target.exists():
+                fail(f"{relative_path} has a missing Markdown link target: {raw_link}")
+
+
+def check_runbook_artifacts() -> None:
+    runbook = ROOT / "reports/reproducibility_checklist.md"
+    text = runbook.read_text(encoding="utf-8")
+    artifact_paths = re.findall(r"^(?:data|figures|reports)/[^\s`]+$", text, flags=re.MULTILINE)
+    if len(artifact_paths) < 40:
+        fail(f"expected many runbook artifact paths, found {len(artifact_paths)}")
+    missing: list[str] = []
+    for artifact in artifact_paths:
+        if "*" in artifact:
+            if not list(ROOT.glob(artifact)):
+                missing.append(artifact)
+        elif not (ROOT / artifact).exists():
+            missing.append(artifact)
+    if missing:
+        fail("runbook expected artifacts do not exist: " + ", ".join(sorted(missing)))
+
+
+def check_runbook_commands() -> None:
+    runbook = ROOT / "reports/reproducibility_checklist.md"
+    text = runbook.read_text(encoding="utf-8")
+    modules = sorted(set(re.findall(r"python -m (scripts\.[A-Za-z0-9_]+)", text)))
+    if len(modules) < 10:
+        fail(f"expected many runbook script commands, found {len(modules)}")
+    missing = []
+    for module in modules:
+        module_path = ROOT / (module.replace(".", "/") + ".py")
+        if not module_path.exists():
+            missing.append(module)
+    if missing:
+        fail("runbook references missing script modules: " + ", ".join(missing))
 
 
 def check_balanced_dataset() -> None:
@@ -104,6 +165,9 @@ def check_csv_columns() -> None:
 def main() -> None:
     check_required_files()
     check_report_images()
+    check_markdown_links()
+    check_runbook_artifacts()
+    check_runbook_commands()
     check_balanced_dataset()
     check_csv_columns()
     print("Project validation passed.")
