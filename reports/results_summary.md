@@ -3,9 +3,9 @@
 本文件由 `python -m scripts.summarize_results` 根据 CSV 结果自动生成。
 它用于作为报告结果的紧凑表格索引。
 
-生成时间：2026-07-16T10:21:29
-生成时 Git commit：ca2803c
-生成时工作树是否有未提交修改：yes
+生成时间：2026-07-16T10:22:17
+生成时 Git commit：3db24d6
+生成时工作树是否有未提交修改：no
 源目录：项目根目录
 生成脚本：`scripts/summarize_results.py`
 
