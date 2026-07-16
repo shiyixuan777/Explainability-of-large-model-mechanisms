@@ -3,12 +3,6 @@
 本文件由 `python -m scripts.summarize_results` 根据 CSV 结果自动生成。
 它用于作为报告结果的紧凑表格索引。
 
-生成时间：2026-07-16T10:22:17
-生成时 Git commit：3db24d6
-生成时工作树是否有未提交修改：no
-源目录：项目根目录
-生成脚本：`scripts/summarize_results.py`
-
 `direction_agnostic_auc = max(AUC, 1 - AUC)`。它诊断预测分数与标签之间是否存在强排序关系，而不关心方向符号；它不表示训练时学到的标签方向一定能作为分类器稳定泛化。
 
 `learned_percentile = 1.0` 表示在当前采样集合中没有零分布方向超过学习方向效果；它不是总体分位数估计。`mean_rank_delta > 0` 表示正确候选向 rank 1 移动。重复划分中的翻转计数是跨重叠划分的评价事件，不一定对应互不重复的国家。
