@@ -47,5 +47,5 @@ src/        数据、模型 hook、probe 与 steering 工具函数
 ## 实验主线
 
 1. **Locate**：用 residual probe、surface baseline、domain transfer 和 patching 分析标签信号出现的层、位置与跨域边界。
-2. **Steer & Improve**：用 prompt-final completion-margin steering、position decomposition、sampled null distribution、repeated split 和 candidate-rank 检查推理时干预效果。
+2. **Steer & Improve**：用 prompt-final completion-margin steering、position decomposition、sampled null distribution、repeated split 和 candidate-rank 检查推理时干预效果及 Improve 的边界。
 3. **复现与扩展**：参考 truth direction 泛化相关工作，在 GPT-2-small 上做小模型受控复现，并加入词汇平衡、长度归一化 completion margin、随机方向/乱标签方向等控制。

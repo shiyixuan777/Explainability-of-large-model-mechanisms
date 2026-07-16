@@ -149,7 +149,7 @@ The capital of France is Berlin
 
 主线干预使用 balanced layer 6 标签相关方向，并在 bare completion prompt 的 prompt-final residual state 上加上 `alpha * direction`。该方向先在 statement true/false prompt 上训练，再迁移到首都补全 prompt，因此这是一个 cross-format transfer 设置。
 
-当前主 split 的 prompt-final-only 结果如下。`alpha=+4` 时，learned direction 将 held-out avg-token margin 推动 +0.135；`alpha=-4` 时，margin shift 为 -0.130。random direction 和 label-permutation direction 在 `alpha=+4` 时分别为 -0.031 和 -0.024。
+当前主 split 的 prompt-final-only 结果如下。`alpha=+4` 时，learned direction 将 held-out avg-token margin 推动 +0.135；`alpha=-4` 时，margin shift 为 -0.130。random direction 和 label-permutation direction 在 `alpha=+4` 时分别为 -0.030 和 -0.022。
 
 如图 4 所示，learned direction 的 alpha 曲线方向稳定：正向 alpha 提高 avg-token margin，负向 alpha 降低该 margin。
 
@@ -157,7 +157,7 @@ The capital of France is Berlin
 
 **图 4　completion-margin steering alpha 曲线。** 主线方向为 balanced layer 6 probe direction，干预位置为 bare completion prompt 的 prompt-final residual state。
 
-paired block bootstrap 直接比较同一批 held-out block：learned - random 的 estimate 为 +0.166，95% paired block CI 为 [0.096, 0.239]；learned - label permutation 的 estimate 为 +0.159，CI 为 [0.090, 0.232]。
+paired block bootstrap 直接比较同一批 held-out block：learned - random 的 estimate 为 +0.165，95% paired block CI 为 [0.096, 0.239]；learned - label permutation 的 estimate 为 +0.158，CI 为 [0.090, 0.232]。
 
 sampled null distribution 设置为 prompt-final-only、alpha=+4、held-out countries。learned effect 超过全部 50 条随机方向和全部 20 条乱标签方向；经验 p 值的分辨率分别约为 1/51 和 1/21，因此只能解释为 sampled controls 下的强对照结果，而不是精确显著性估计。
 
@@ -208,7 +208,7 @@ position decomposition 比较 all positions、prompt-final-only 和 completion-i
 
 **图 7　position decomposition。** 当前干预效果主要来自 bare completion prompt 的 layer 6 final position，而不是 completion 内部多位置注入。
 
-decomposition 进一步说明该方向不是纯粹事实纠错。当前主 split、alpha=+4 时，correct completion avg-token logprob 上升 +0.280，false completion 也上升 +0.147，margin 增加 +0.133。共享提升分量约为 +0.214，大于正确—错误差异分量 +0.133。该方向更像一个较大的 capital-completion promotion component，叠加一个较小的配对兼容度分量。
+prompt-final decomposition 进一步说明该方向不是纯粹事实纠错。当前主 split、alpha=+4 时，correct completion avg-token logprob 上升 +0.281，false completion 也上升 +0.146，margin 增加 +0.135。共享提升分量约为 +0.214，大于正确—错误差异分量 +0.135。该方向更像一个较大的 capital-completion promotion component，叠加一个较小的配对兼容度分量。
 
 ### 4.7 Ablation 与 sensitivity
 
@@ -230,7 +230,7 @@ ablation 表明 learned direction 与可分性相关但不充分。原始 capita
 
 本文从一个高 probe AUC 的事实验证现象出发，展示了机制可解释性中一个常见风险：线性可读信号很容易被误读为抽象 truth representation。通过词汇平衡、completion margin、prompt-final steering、random/permutation controls、repeated splits 和 ablation，本文将结论收束为一个较窄但更可靠的表述：GPT-2-small 在词汇平衡首都事实中存在一个可读、可弱干预的事实配对标签信号，它主要影响补全评分，而不是稳定的事实选择行为。
 
-对课程项目要求而言，本文完成了 Locate、Steer & Improve 和论文复现/扩展三部分：Locate 给出 balanced layer 6 的 readout localization，并通过 cross-format prompt-final steering 提供 position-specific intervention evidence；Steer & Improve 展示了评分层面干预效应与选择层面边界；复现部分围绕 Bao et al. [1] 的 truth direction 泛化问题意识，在小模型上复现线性可读现象并补充了 confound 与控制实验。
+对课程项目要求而言，本文完成了 Locate 与 Steer，并对 Improve 进行了系统检验：干预能够稳定移动补全评分，但只产生很弱的选择层面改善。论文复现/扩展部分围绕 Bao et al. [1] 的 truth direction 泛化问题意识，在小模型上复现线性可读现象并补充了 confound 与控制实验。
 
 ## 7. References
 

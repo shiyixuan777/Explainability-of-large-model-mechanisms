@@ -3,8 +3,9 @@
 This file is generated from CSV artifacts by `python -m scripts.summarize_results`.
 Use it as a compact table index for the report results.
 
-Generated at: 2026-07-16T00:03:24
-Git commit at generation: 9e1b8d1
+Generated at: 2026-07-16T08:54:15
+Git commit at generation: c4f8584
+Working tree dirty at generation: yes
 Source directory: project root
 Script: `scripts/summarize_results.py`
 
@@ -118,13 +119,13 @@ Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` ar
 
 ## Exploratory and Supplementary Diagnostics
 
-## Activation PCA
+### Activation PCA
 
 | layer | pc1_explained_variance | pc2_explained_variance | rows |
 | --- | --- | --- | --- |
 | 8 | 0.620 | 0.117 | 152 |
 
-## Output Readout Baselines
+### Output Readout Baselines
 
 | domain | verbalizer | prompt | shots | accuracy | auc | predicted_true_rate | mean_logit_margin |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -137,7 +138,7 @@ Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` ar
 | capital | lower_true_false | answer_true_false | 2 | 0.500 | 0.486 | 1.000 | 1.607 |
 | capital | title_true_false | answer_True_False | 0 | 0.500 | 0.530 | 1.000 | 1.510 |
 
-## Surface Baselines
+### Surface Baselines
 
 | domain | baseline | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
@@ -146,7 +147,7 @@ Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` ar
 | capital | numeric_surface | 0.478 | 0.451 | 0.549 |
 | capital | bag_of_words | 0.174 | 0.067 | 0.933 |
 
-## Cross-Domain Direction Transfer
+### Cross-Domain Direction Transfer
 
 | source | target | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
@@ -161,13 +162,13 @@ Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` ar
 | science | book_author | 0.567 | 0.572 | 0.572 |
 | capital | element_symbol | 0.512 | 0.571 | 0.571 |
 
-## Domain Direction Cosine Summary
+### Domain Direction Cosine Summary
 
 | mean_cross_domain_cosine | min_cross_domain_cosine | max_cross_domain_cosine |
 | --- | --- | --- |
 | 0.077 | -0.043 | 0.301 |
 
-## Error Analysis
+### Error Analysis
 
 | test_rows | correct | wrong | accuracy |
 | --- | --- | --- | --- |
@@ -186,7 +187,7 @@ Misclassified examples:
 | The capital of Kenya is Nairobi. | true | false | 0.347 |
 | The capital of Nepal is Kathmandu. | true | false | 0.472 |
 
-## Activation Patching: Best Layer by Component
+### Activation Patching: Best Layer by Component
 
 | component | layer | mean_recovery | median_recovery | patched_logit_diff |
 | --- | --- | --- | --- | --- |
@@ -194,7 +195,7 @@ Misclassified examples:
 | resid_post | 11 | 1.000 | 1.000 | 0.264 |
 | mlp_out | 7 | 0.388 | 0.074 | -1.022 |
 
-## Truth Verification Patching
+### Truth Verification Patching
 
 | component | layer | mean_recovery | median_recovery | patched_logit_diff | mean_abs_logit_shift | mean_abs_denominator |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -207,7 +208,7 @@ Misclassified examples:
 | resid_pre | 9 | 0.568 | 0.541 | 1.536 | 0.052 | 0.076 |
 | mlp_out | 1 | 0.330 | 0.155 | 1.521 | 0.014 | 0.076 |
 
-## Probe-Direction Steering
+### Probe-Direction Steering
 
 | alpha | logit_sign_accuracy | heldout_probe_threshold_accuracy | mean_probe_score | split | threshold_source |
 | --- | --- | --- | --- | --- | --- |
@@ -221,7 +222,7 @@ Misclassified examples:
 | 4.0 | 0.500 | 0.500 | 2.440 | group | train_midpoint |
 | 8.0 | 0.500 | 0.500 | 6.440 | group | train_midpoint |
 
-## Oracle Conditional Steering
+### Oracle Conditional Steering
 
 | alpha | logit_sign_accuracy | probe_threshold_accuracy | mean_logit_correct_margin | mean_probe_correct_margin | mode |
 | --- | --- | --- | --- | --- | --- |
@@ -234,7 +235,7 @@ Misclassified examples:
 
 ## Main Balanced Steering Results
 
-## Balanced Prompt-Final Completion-Margin Steering
+### Balanced Prompt-Final Completion-Margin Steering
 
 | direction | alpha | mean_delta_avg_token_margin | delta_ci | pairwise_avg_accuracy | block_exact_accuracy |
 | --- | --- | --- | --- | --- | --- |
@@ -254,30 +255,30 @@ Misclassified examples:
 | label_permutation | 2.0 | -0.011 | [-0.017, -0.006] | 0.625 | 0.250 |
 | label_permutation | 4.0 | -0.022 | [-0.034, -0.013] | 0.625 | 0.250 |
 
-## Balanced Completion-Margin Steering Decomposition
+### Prompt-Final Completion-Margin Steering Decomposition
 
 | direction | alpha | delta_correct_logprob | delta_false_logprob | delta_margin | delta_margin_std | baseline_correct_shift | baseline_wrong_shift | baseline_correct_minus_wrong | baseline_diff_ci | sign_flips | baseline_delta_corr |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| label_permutation | -4.0 | 0.074 | 0.047 | 0.027 | 0.045 | 0.029 | 0.025 | 0.003 | [-0.032, 0.039] | 0 | 0.311 |
+| label_permutation | -4.0 | 0.073 | 0.049 | 0.023 | 0.045 | 0.021 | 0.026 | -0.005 | [-0.038, 0.029] | 0 | 0.249 |
 | label_permutation | 0.0 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | [0.000, 0.000] | 0 | nan |
-| label_permutation | 4.0 | -0.075 | -0.049 | -0.026 | 0.047 | -0.029 | -0.021 | -0.008 | [-0.042, 0.029] | 0 | -0.362 |
-| learned_probe | -4.0 | -0.287 | -0.160 | -0.126 | 0.131 | -0.137 | -0.109 | -0.028 | [-0.131, 0.082] | 0 | -0.115 |
+| label_permutation | 4.0 | -0.072 | -0.050 | -0.022 | 0.046 | -0.021 | -0.025 | 0.004 | [-0.029, 0.038] | 0 | -0.278 |
+| learned_probe | -4.0 | -0.287 | -0.157 | -0.130 | 0.131 | -0.126 | -0.136 | 0.010 | [-0.087, 0.117] | 0 | -0.030 |
 | learned_probe | 0.0 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | [0.000, 0.000] | 0 | nan |
-| learned_probe | 4.0 | 0.280 | 0.147 | 0.133 | 0.135 | 0.144 | 0.114 | 0.030 | [-0.077, 0.136] | 0 | 0.080 |
-| random_direction | -4.0 | 0.005 | -0.028 | 0.033 | 0.056 | 0.030 | 0.038 | -0.008 | [-0.057, 0.042] | 0 | 0.184 |
+| learned_probe | 4.0 | 0.281 | 0.146 | 0.135 | 0.133 | 0.132 | 0.140 | -0.008 | [-0.110, 0.084] | 0 | 0.001 |
+| random_direction | -4.0 | 0.004 | -0.025 | 0.029 | 0.050 | 0.029 | 0.030 | -0.002 | [-0.045, 0.039] | 0 | 0.281 |
 | random_direction | 0.0 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | [0.000, 0.000] | 0 | nan |
-| random_direction | 4.0 | -0.012 | 0.020 | -0.032 | 0.054 | -0.029 | -0.036 | 0.007 | [-0.044, 0.054] | 0 | -0.191 |
+| random_direction | 4.0 | -0.010 | 0.019 | -0.030 | 0.049 | -0.028 | -0.031 | 0.003 | [-0.038, 0.043] | 0 | -0.263 |
 
-## Completion Steering Paired Bootstrap
+### Prompt-Final Completion Steering Paired Bootstrap
 
 | metric | comparison | estimate | ci | ci_unit |
 | --- | --- | --- | --- | --- |
-| delta_avg_token_margin_alpha_4 | learned_probe_minus_random_direction | 0.165 | [0.094, 0.239] | pair_id_block |
-| delta_avg_token_margin_alpha_4 | learned_probe_minus_label_permutation | 0.159 | [0.092, 0.233] | pair_id_block |
-| slope_delta_avg_token_margin_-4_to_4 | learned_probe_minus_random_direction | 0.040 | [0.024, 0.059] | pair_id_block |
-| slope_delta_avg_token_margin_-4_to_4 | learned_probe_minus_label_permutation | 0.039 | [0.023, 0.058] | pair_id_block |
+| delta_avg_token_margin_alpha_4 | learned_probe_minus_random_direction | 0.165 | [0.096, 0.239] | pair_id_block |
+| delta_avg_token_margin_alpha_4 | learned_probe_minus_label_permutation | 0.158 | [0.090, 0.232] | pair_id_block |
+| slope_delta_avg_token_margin_-4_to_4 | learned_probe_minus_random_direction | 0.040 | [0.024, 0.058] | pair_id_block |
+| slope_delta_avg_token_margin_-4_to_4 | learned_probe_minus_label_permutation | 0.039 | [0.023, 0.057] | pair_id_block |
 
-## Completion Steering Position Decomposition
+### Completion Steering Position Decomposition
 
 | position_mode | alpha | mean_delta_avg_token_margin | pairwise_avg_accuracy | block_exact_accuracy |
 | --- | --- | --- | --- | --- |
@@ -291,7 +292,7 @@ Misclassified examples:
 | completion-internal-only | 0.0 | 0.000 | 0.625 | 0.250 |
 | completion-internal-only | 4.0 | -0.002 | 0.625 | 0.250 |
 
-## Position Decomposition Paired Bootstrap
+### Position Decomposition Paired Bootstrap
 
 | position_mode | metric | comparison | estimate | ci |
 | --- | --- | --- | --- | --- |
@@ -304,7 +305,7 @@ Misclassified examples:
 | completion-internal-only | slope_delta_avg_token_margin_-4_to_4 | learned_probe_minus_random_direction | 0.000 | [-0.001, 0.001] |
 | completion-internal-only | slope_delta_avg_token_margin_-4_to_4 | learned_probe_minus_label_permutation | 0.000 | [-0.001, 0.002] |
 
-## Completion Steering Null Distribution
+### Completion Steering Null Distribution
 
 | control_type | directions | mean_delta | null_95_interval | learned_effect | learned_percentile | empirical_p_ge_learned |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -312,13 +313,13 @@ Misclassified examples:
 | learned_probe | 1 | 0.135 | [0.135, 0.135] | 0.135 | 1.000 |  |
 | random_direction | 50 | 0.009 | [-0.065, 0.091] | 0.135 | 1.000 | 0.020 |
 
-## Repeated Split Completion Steering
+### Repeated Split Completion Steering
 
 | scope | splits | learned_delta | learned_delta_std | learned_delta_range | learned_minus_random_mean | learned_minus_permutation_mean | learned_gt_all_random_splits | learned_gt_all_permutation_splits | baseline_pairwise_accuracy | mean_pairwise_accuracy | pairwise_accuracy_change | total_sign_flips | wrong_to_correct_flips | correct_to_wrong_flips |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | aggregate | 10 | 0.116 | 0.023 | [0.085, 0.150] | 0.125 | 0.119 | 10 | 10 | 0.700 | 0.725 | 0.025 | 6 | 6 | 0 |
 
-## Ambiguous-Fact Sensitivity
+### Ambiguous-Fact Sensitivity
 
 | analysis | blocks | heldout_blocks | auc | delta | pairwise_accuracy | sign_flips |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -330,13 +331,13 @@ Misclassified examples:
 | prompt_final_steering:random_direction |  | 11 |  | -0.038 | 0.818 | 0 |
 | prompt_final_steering:label_permutation |  | 11 |  | -0.005 | 0.818 | 0 |
 
-## Candidate-Set Rank Steering
+### Candidate-Set Rank Steering
 
 | heldout_countries | candidate_count | mean_rank_delta | rank_improved_count | rank_worsened_count | baseline_top1_accuracy | steered_top1_accuracy | top1_changed_count | selected_pair_margin_delta |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 24 | 76 | 0.917 | 10 | 0 | 0.083 | 0.125 | 1 | 0.135 |
 
-## Unembedding Projection Baseline
+### Unembedding Projection Baseline
 
 | direction | observed_mean | predicted_mean | observed_abs_mean | predicted_abs_mean | mean_abs_residual | corr | corr_squared |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -344,7 +345,7 @@ Misclassified examples:
 | learned_probe | 0.133 | 0.000 | 0.153 | 0.621 | 0.669 | -0.188 | 0.035 |
 | random_direction | -0.032 | 0.000 | 0.047 | 0.598 | 0.577 | 0.627 | 0.393 |
 
-## Probe-Direction Ablation
+### Probe-Direction Ablation
 
 | strength | fixed_direction_score_gap | fixed_direction_accuracy | retrained_probe_auc |
 | --- | --- | --- | --- |
@@ -356,7 +357,7 @@ Misclassified examples:
 | 1.25 | -0.143 | 0.500 | 0.953 |
 | 1.50 | -0.286 | 0.478 | 0.962 |
 
-## Lexically Balanced Probe-Direction Ablation
+### Lexically Balanced Probe-Direction Ablation
 
 | strength | fixed_direction_score_gap | fixed_direction_accuracy | retrained_probe_auc |
 | --- | --- | --- | --- |
@@ -368,7 +369,7 @@ Misclassified examples:
 | 1.25 | -0.043 | 0.500 | 0.792 |
 | 1.50 | -0.087 | 0.500 | 0.793 |
 
-## Iterative Direction Ablation
+### Iterative Direction Ablation
 
 | control | directions_removed | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |
@@ -394,7 +395,7 @@ Misclassified examples:
 | label_permutation | 12 | 0.848 | 0.945 | 0.945 |
 | label_permutation | 16 | 0.848 | 0.953 | 0.953 |
 
-## Lexically Balanced Iterative Direction Ablation
+### Lexically Balanced Iterative Direction Ablation
 
 | control | directions_removed | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- |

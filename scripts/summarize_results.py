@@ -46,7 +46,7 @@ def fmt_label(value: object) -> str:
     return str(value).lower()
 
 
-def git_metadata() -> str:
+def git_metadata() -> tuple[str, str]:
     try:
         commit = subprocess.check_output(
             ["git", "rev-parse", "--short", "HEAD"],
@@ -56,14 +56,23 @@ def git_metadata() -> str:
     except Exception:
         commit = "unavailable"
 
-    return commit
+    try:
+        subprocess.check_call(
+            ["git", "diff", "--quiet"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        dirty = "no"
+    except Exception:
+        dirty = "yes"
+    return commit, dirty
 
 
 def main() -> None:
     args = parse_args()
     figures_dir = Path(args.figures_dir)
     out_path = Path(args.out)
-    commit = git_metadata()
+    commit, dirty = git_metadata()
 
     lines: list[str] = [
         "# Results Summary",
@@ -73,6 +82,7 @@ def main() -> None:
         "",
         f"Generated at: {datetime.now().isoformat(timespec='seconds')}",
         f"Git commit at generation: {commit}",
+        f"Working tree dirty at generation: {dirty}",
         "Source directory: project root",
         "Script: `scripts/summarize_results.py`",
         "",
@@ -351,7 +361,7 @@ def main() -> None:
                 "rows": len(pca),
             }
         ]
-        lines += ["## Activation PCA", "", markdown_table(rows), ""]
+        lines += ["### Activation PCA", "", markdown_table(rows), ""]
 
     readout = read_csv(figures_dir / "output_readout_baselines.csv")
     if readout is not None:
@@ -376,7 +386,7 @@ def main() -> None:
                 }
                 for row in best.itertuples(index=False)
             ]
-            lines += ["## Output Readout Baselines", "", markdown_table(rows), ""]
+            lines += ["### Output Readout Baselines", "", markdown_table(rows), ""]
 
     surface = read_csv(figures_dir / "surface_baselines.csv")
     if surface is not None:
@@ -390,7 +400,7 @@ def main() -> None:
             }
             for row in surface.itertuples(index=False)
         ]
-        lines += ["## Surface Baselines", "", markdown_table(rows), ""]
+        lines += ["### Surface Baselines", "", markdown_table(rows), ""]
 
     transfer = read_csv(figures_dir / "domain_transfer_layer8.csv")
     if transfer is not None:
@@ -407,7 +417,7 @@ def main() -> None:
                 }
                 for row in best_cross.itertuples(index=False)
             ]
-            lines += ["## Cross-Domain Direction Transfer", "", markdown_table(rows), ""]
+            lines += ["### Cross-Domain Direction Transfer", "", markdown_table(rows), ""]
 
     cosine = read_csv(figures_dir / "domain_direction_cosine_layer8.csv")
     if cosine is not None:
@@ -420,7 +430,7 @@ def main() -> None:
                     "max_cross_domain_cosine": fmt(cross["cosine_similarity"].max()),
                 }
             ]
-            lines += ["## Domain Direction Cosine Summary", "", markdown_table(rows), ""]
+            lines += ["### Domain Direction Cosine Summary", "", markdown_table(rows), ""]
 
     errors = read_csv(figures_dir / "error_analysis_capital_layer8.csv")
     if errors is not None:
@@ -435,7 +445,7 @@ def main() -> None:
                 "accuracy": fmt(correct / total),
             }
         ]
-        lines += ["## Error Analysis", "", markdown_table(rows), ""]
+        lines += ["### Error Analysis", "", markdown_table(rows), ""]
 
         error_rows = errors.loc[~errors["correct"]].sort_values("confidence", ascending=False).head(8)
         examples = [
@@ -467,7 +477,7 @@ def main() -> None:
             }
             for row in best.itertuples(index=False)
         ]
-        lines += ["## Activation Patching: Best Layer by Component", "", markdown_table(rows), ""]
+        lines += ["### Activation Patching: Best Layer by Component", "", markdown_table(rows), ""]
 
     truth_patching = read_csv(figures_dir / "truth_verification_patching_resid.csv")
     if truth_patching is not None:
@@ -488,7 +498,7 @@ def main() -> None:
             }
             for row in best.itertuples(index=False)
         ]
-        lines += ["## Truth Verification Patching", "", markdown_table(rows), ""]
+        lines += ["### Truth Verification Patching", "", markdown_table(rows), ""]
 
     steering = read_csv(figures_dir / "steering_capital_probe_layer8.csv")
     if steering is not None:
@@ -503,7 +513,7 @@ def main() -> None:
             }
             for row in steering.itertuples(index=False)
         ]
-        lines += ["## Probe-Direction Steering", "", markdown_table(rows), ""]
+        lines += ["### Probe-Direction Steering", "", markdown_table(rows), ""]
 
     oracle = read_csv(figures_dir / "oracle_steering_capital_probe_layer8.csv")
     if oracle is not None:
@@ -518,7 +528,7 @@ def main() -> None:
             }
             for row in oracle.itertuples(index=False)
         ]
-        lines += ["## Oracle Conditional Steering", "", markdown_table(rows), ""]
+        lines += ["### Oracle Conditional Steering", "", markdown_table(rows), ""]
 
     lines += ["## Main Balanced Steering Results", ""]
 
@@ -539,9 +549,9 @@ def main() -> None:
             }
             for row in heldout.itertuples(index=False)
         ]
-        lines += ["## Balanced Prompt-Final Completion-Margin Steering", "", markdown_table(rows), ""]
+        lines += ["### Balanced Prompt-Final Completion-Margin Steering", "", markdown_table(rows), ""]
 
-    completion_decomposition = read_csv(figures_dir / "completion_margin_steering_decomposition.csv")
+    completion_decomposition = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_decomposition.csv")
     if completion_decomposition is not None:
         selected = completion_decomposition[
             (completion_decomposition["split"] == "heldout_countries")
@@ -567,9 +577,9 @@ def main() -> None:
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["## Balanced Completion-Margin Steering Decomposition", "", markdown_table(rows), ""]
+        lines += ["### Prompt-Final Completion-Margin Steering Decomposition", "", markdown_table(rows), ""]
 
-    completion_paired = read_csv(figures_dir / "completion_margin_steering_paired_bootstrap.csv")
+    completion_paired = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_paired_bootstrap.csv")
     if completion_paired is not None:
         heldout = completion_paired[completion_paired["split"] == "heldout_countries"]
         rows = [
@@ -582,7 +592,7 @@ def main() -> None:
             }
             for row in heldout.itertuples(index=False)
         ]
-        lines += ["## Completion Steering Paired Bootstrap", "", markdown_table(rows), ""]
+        lines += ["### Prompt-Final Completion Steering Paired Bootstrap", "", markdown_table(rows), ""]
 
     position_summary_paths = [
         figures_dir / "completion_margin_steering_summary.csv",
@@ -606,7 +616,7 @@ def main() -> None:
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["## Completion Steering Position Decomposition", "", markdown_table(rows), ""]
+        lines += ["### Completion Steering Position Decomposition", "", markdown_table(rows), ""]
 
     position_paired_paths = [
         figures_dir / "completion_margin_steering_position_prompt_final_paired_bootstrap.csv",
@@ -631,7 +641,7 @@ def main() -> None:
             }
             for row in heldout.itertuples(index=False)
         ]
-        lines += ["## Position Decomposition Paired Bootstrap", "", markdown_table(rows), ""]
+        lines += ["### Position Decomposition Paired Bootstrap", "", markdown_table(rows), ""]
 
     null_summary = read_csv(figures_dir / "completion_margin_steering_null_summary.csv")
     if null_summary is not None:
@@ -649,7 +659,7 @@ def main() -> None:
             }
             for row in null_summary.itertuples(index=False)
         ]
-        lines += ["## Completion Steering Null Distribution", "", markdown_table(rows), ""]
+        lines += ["### Completion Steering Null Distribution", "", markdown_table(rows), ""]
 
     repeated = read_csv(figures_dir / "repeated_split_completion_steering_summary.csv")
     if repeated is not None:
@@ -677,7 +687,7 @@ def main() -> None:
                     "correct_to_wrong_flips": int(row.correct_to_wrong_flips),
                 }
             )
-        lines += ["## Repeated Split Completion Steering", "", markdown_table(rows), ""]
+        lines += ["### Repeated Split Completion Steering", "", markdown_table(rows), ""]
 
     ambiguous = read_csv(figures_dir / "ambiguous_fact_sensitivity_summary.csv")
     if ambiguous is not None:
@@ -719,7 +729,7 @@ def main() -> None:
                         "sign_flips": "",
                     }
                 )
-        lines += ["## Ambiguous-Fact Sensitivity", "", markdown_table(rows), ""]
+        lines += ["### Ambiguous-Fact Sensitivity", "", markdown_table(rows), ""]
 
     rank = read_csv(figures_dir / "candidate_rank_steering_summary.csv")
     if rank is not None:
@@ -737,7 +747,7 @@ def main() -> None:
             }
             for row in rank.itertuples(index=False)
         ]
-        lines += ["## Candidate-Set Rank Steering", "", markdown_table(rows), ""]
+        lines += ["### Candidate-Set Rank Steering", "", markdown_table(rows), ""]
 
     projection_summary = read_csv(figures_dir / "unembedding_projection_baseline_summary.csv")
     if projection_summary is not None:
@@ -758,7 +768,7 @@ def main() -> None:
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["## Unembedding Projection Baseline", "", markdown_table(rows), ""]
+        lines += ["### Unembedding Projection Baseline", "", markdown_table(rows), ""]
 
     ablation = read_csv(figures_dir / "ablation_capital_probe_layer8.csv")
     if ablation is not None:
@@ -771,7 +781,7 @@ def main() -> None:
             }
             for row in ablation.itertuples(index=False)
         ]
-        lines += ["## Probe-Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### Probe-Direction Ablation", "", markdown_table(rows), ""]
 
     balanced_ablation = read_csv(figures_dir / "ablation_capital_balanced_layer6.csv")
     if balanced_ablation is not None:
@@ -784,7 +794,7 @@ def main() -> None:
             }
             for row in balanced_ablation.itertuples(index=False)
         ]
-        lines += ["## Lexically Balanced Probe-Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### Lexically Balanced Probe-Direction Ablation", "", markdown_table(rows), ""]
 
     iterative_ablation = read_csv(figures_dir / "iterative_ablation_capital_layer8.csv")
     if iterative_ablation is not None:
@@ -801,7 +811,7 @@ def main() -> None:
             }
             for row in key_steps.itertuples(index=False)
         ]
-        lines += ["## Iterative Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### Iterative Direction Ablation", "", markdown_table(rows), ""]
 
     balanced_iterative = read_csv(figures_dir / "iterative_ablation_capital_balanced_layer6.csv")
     if balanced_iterative is not None:
@@ -818,7 +828,7 @@ def main() -> None:
             }
             for row in key_steps.itertuples(index=False)
         ]
-        lines += ["## Lexically Balanced Iterative Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### Lexically Balanced Iterative Direction Ablation", "", markdown_table(rows), ""]
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text("\n".join(lines), encoding="utf-8")
