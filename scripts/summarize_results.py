@@ -208,7 +208,7 @@ def main() -> None:
             }
             for row in best.itertuples(index=False)
         ]
-        lines += ["## Probe Sweep: Top Settings", "", markdown_table(rows), ""]
+        lines += ["## Probe Sweep: Top Settings by Direction-Agnostic AUC", "", markdown_table(rows), ""]
 
     probe = read_csv(figures_dir / "probe_capital_answer.csv")
     if probe is not None:
@@ -768,7 +768,7 @@ def main() -> None:
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["### Unembedding Projection Baseline", "", markdown_table(rows), ""]
+        lines += ["### All-Positions Unembedding Projection Baseline", "", markdown_table(rows), ""]
 
     ablation = read_csv(figures_dir / "ablation_capital_probe_layer8.csv")
     if ablation is not None:

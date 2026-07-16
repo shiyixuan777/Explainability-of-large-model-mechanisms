@@ -30,10 +30,12 @@ Expected result: dependencies install successfully and the dataset-building comm
 
 ## Quick Start
 
-These commands reproduce the main balanced-data evidence chain used in the final report. The full command list below keeps the auxiliary diagnostics and earlier exploratory experiments.
+These commands reproduce the core evidence chain used in the final report: original lexical-confound diagnosis, balanced readout, completion compatibility, and prompt-final steering. The full command list below keeps the auxiliary diagnostics and earlier exploratory experiments.
 
 ```powershell
 python -m scripts.build_dataset
+python -m scripts.run_probe --model gpt2-small --data data/facts.csv --language en --domain capital --prompt-template "Statement: {statement}`nAnswer true or false:" --seed 42 --out figures/probe_capital_answer.csv
+python -m scripts.run_surface_baselines --data data/facts.csv --language en --domains all capital --seed 42 --out figures/surface_baselines.csv
 python -m scripts.build_balanced_capital_dataset --out data/capital_balanced.csv
 python -m scripts.run_probe --model gpt2-small --data data/capital_balanced.csv --language en --domain capital_balanced --prompt-template "Statement: {statement}`nAnswer true or false:" --seed 42 --out figures/probe_capital_balanced.csv
 python -m scripts.run_surface_baselines --data data/capital_balanced.csv --language en --domains capital_balanced --seed 42 --out figures/surface_baselines_capital_balanced.csv
@@ -47,7 +49,7 @@ python -m scripts.validate_project
 python -m compileall scripts src
 ```
 
-Main sanity checks: balanced surface baselines should be near random; balanced layer 6 probe AUC should be around 0.81; prompt-final learned steering should produce a positive avg-token completion-margin shift larger than the sampled random/permutation controls.
+Main sanity checks: original capital BOW direction-agnostic AUC should be high, balanced surface baselines should be near random, balanced layer 6 probe AUC should be around 0.81, and prompt-final learned steering should produce a positive avg-token completion-margin shift larger than the sampled random/permutation controls.
 
 ## Dataset
 
@@ -599,11 +601,11 @@ python -m scripts.validate_project
 python -m compileall scripts src
 ```
 
-Expected artifacts:
+Expected generated or refreshed artifacts:
 
 ```text
-reports/final_report.md
+figures/*.png
 reports/results_summary.md
 ```
 
-Expected validation result: `scripts.validate_project` reports required files, report images, core CSV columns, and the balanced dataset shape as valid; `compileall` completes without syntax errors. Exact numerical values should be checked in `reports/results_summary.md`; this checklist only records commands, output files, and coarse sanity checks.
+`reports/final_report.md` is a maintained source document; the plotting commands do not generate it. `scripts.validate_project` checks that its referenced figures exist, along with required files, core CSV columns, and the balanced dataset shape. Expected validation result: `scripts.validate_project` passes and `compileall` completes without syntax errors. Exact numerical values should be checked in `reports/results_summary.md`; this checklist only records commands, output files, and coarse sanity checks.

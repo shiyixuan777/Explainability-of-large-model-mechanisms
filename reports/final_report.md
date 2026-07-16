@@ -24,7 +24,7 @@
 
 本文参考 Bao et al. [1] 的 *Probing the Geometry of Truth: Consistency and Generalization of Truth Directions in LLMs Across Logical Transformations and Question Answering Tasks*。该工作关注 truthfulness probes 是否能跨任务、逻辑变换、问答形式和知识源泛化，并提醒 truth direction 的解释需要经过迁移与行为检验。本文不是完整复现其全部实验，而是在 GPT-2-small [2] 上做受控小模型复现与扩展。
 
-方法上，本文使用 TransformerLens [3] hook 机制提取 residual stream activation，并借鉴 logit lens [4]、activation patching / causal tracing [5,6]、truth geometry / linear probing [7,8] 和 activation engineering [9] 的基本流程。与完整 circuit 级工作相比，本文只做到 layer-level readout、position-specific intervention 和方向级干预，还没有展开 head/MLP/path-level 的机制分解。
+方法上，本文使用 TransformerLens [3] hook 机制提取 residual stream activation，并借鉴 logit lens [4]、activation patching / causal tracing [5,6]、truth geometry / linear probing [7,8] 和 activation engineering [9] 的基本流程。与完整 circuit 级机制分析相比 [10,11]，本文只做到 layer-level readout、position-specific intervention 和方向级干预，还没有展开 head/MLP/path-level 的机制分解。
 
 | 类型 | 研究问题 | 本文对应实验 | 结论关系 |
 |---|---|---|---|
@@ -124,6 +124,8 @@ label-permutation controls 的生成方式也保持固定：只在训练 split �
 
 从定位角度看，本文完成的是两步证据，而不是完整统一路径定位：在事实验证 prompt 中，layer 6 final-token residual activation 的标签可读性较强；将该方向迁移到 bare completion prompt 的 layer 6 final position 进行单点干预，能够移动后续补全评分。该结果构成 layer-level readout localization 和 cross-format position-specific intervention evidence，但尚不是统一计算路径的完整 layer-position localization。当前仍未定位负责生成或传递该效应的具体 attention head、MLP 与下游 computation path。
 
+跨领域方向一致性较弱。在原始多领域数据上，不同领域 probe direction 的平均跨领域余弦相似度仅为 0.077，多数 cross-domain transfer AUC 接近随机水平。局部例外主要出现在语义相近的地理领域，例如 `continent -> capital` 的 AUC 为 0.766。该结果不支持统一的跨领域 truth direction，但提示相关地理任务之间可能共享部分表征结构。由于这些实验使用原始而非词汇平衡多领域数据，本文只将其作为探索性边界证据。
+
 ### 4.3 剩余信号与补全兼容度相关但不等价
 
 为了连接 activation signal 与模型行为，本文使用首都补全偏好作为行为侧指标。例如：
@@ -218,7 +220,7 @@ prompt-final decomposition 进一步说明该方向不是纯粹事实纠错。�
 
 ablation 表明 learned direction 与可分性相关但不充分。原始 capital 数据上，单方向 ablation 能把 fixed-direction score gap 从 0.573 降到接近 0，但重新训练 probe 后 AUC 仍为 0.945。iterative ablation 中 learned removal 从 0.953 降到 0.807，而 random/permutation controls 下降更弱。
 
-在 balanced dataset 上，单方向 ablation 后 fixed-direction gap 接近 0，但 retrained AUC 仍为 0.786；iterative learned removal 16 directions 后 AUC 为 0.726，random control 为 0.793。这说明 learned direction 相关但不是唯一充分机制。
+在 balanced dataset 上，单方向 ablation 后 fixed-direction gap 接近 0，但 retrained AUC 仍为 0.786；iterative learned removal 16 directions 后 AUC 为 0.726，random control 为 0.793。这说明 learned direction 相关但不是唯一充分机制。需要强调的是，balanced iterative ablation 目前只在主 split 上运行，未进行 repeated-split 或 paired-bootstrap 稳健性检验，因此这里只将其作为方向冗余性的定性诊断，而不把 learned-random gap 解释为稳定效应。
 
 争议事实 sensitivity 删除 `Ghana/South Africa`、`Paraguay/Bolivia`、`Israel/Jordan` 三个 block 后，数据变为 140 行、35 个 block，并用同一随机种子重新做 group split，在剩余训练数据上重新训练 probe 和 steering direction。删除后 held-out 为 11 个 block / 44 行；layer 6 residual probe held-out AUC 为 0.864，completion avg-token AUC 为 0.913；prompt-final learned steering delta 为 +0.120，random control 为 -0.038，label-permutation control 为 -0.005。由于该实验重新划分了数据，它只说明主线结论对删除争议事实具有定性稳健性，不用于和主 split 数值直接比较。
 
@@ -228,13 +230,15 @@ ablation 表明 learned direction 与可分性相关但不充分。原始 capita
 
 这一分层解释了为什么本文没有把该方向称为全局 truth direction。probe readout 不等于模型自然使用该方向；completion score improvement 不等于 choice improvement；单方向 ablation 后仍可重新训练出 probe，也说明信号不是单一充分机制。更稳妥的表述是：GPT-2-small 在词汇平衡首都事实中存在一个与事实配对和补全兼容度相关的标签信号，该信号可以弱影响补全评分，但尚未构成完整事实判断机制。
 
-当前工作的主要限制包括：模型只使用 GPT-2-small；主线数据是人工构造首都事实；负样本来自选定错误首都，而不是开放生成；head/MLP/path-level circuit 尚未定位；repeated splits 不是相互独立实验；sampled null distribution 的经验 p 值受方向数量限制。steering alpha 以 L2-normalized direction 的欧氏尺度定义，尚未根据 residual-stream RMS、activation norm 或训练分布中的 projection standard deviation 校准，因此当前结果能说明该方向具有干预效力，但不能充分判断 `alpha=4` 是否处在自然 activation 分布内；Gaussian random controls 做了 L2 norm matching，但没有匹配 residual activation 的协方差结构。后续工作应优先做更接近 Bao et al. 的 QA / logical transformation 复现，以及 final layernorm、后续层、attention head 和 MLP 的路径级因果分解。
+当前工作的主要限制包括：模型只使用 GPT-2-small；主线数据是人工构造首都事实；负样本来自选定错误首都，而不是开放生成；head/MLP/path-level circuit 尚未定位；repeated splits 不是相互独立实验；sampled null distribution 的经验 p 值受方向数量限制。steering alpha 以 L2-normalized direction 的欧氏尺度定义，尚未根据 residual-stream RMS、activation norm 或训练分布中的 projection standard deviation 校准，因此当前结果能说明该方向具有干预效力，但不能充分判断 `alpha=4` 是否处在自然 activation 分布内；Gaussian random controls 做了 L2 norm matching，但没有匹配 residual activation 的协方差结构。
+
+此外，probe 在 residual dimension 高于训练样本数的高维小样本条件下拟合；虽然使用了 L2 正则化、group split 和多 seed 检查，但本文未系统评估不同 split 所得 direction 本身的几何稳定性。词汇平衡与线性 BOW baseline 主要排除了实体 unigram 边际频率和加性词袋线索，不能排除非线性的 country-capital interaction、实体熟悉度或其他语义兼容度因素。后续工作应优先做更接近 Bao et al. 的 QA / logical transformation 复现，以及 final layernorm、后续层、attention head 和 MLP 的路径级因果分解。
 
 ## 6. Conclusion
 
 本文从一个高 probe AUC 的事实验证现象出发，展示了机制可解释性中一个常见风险：线性可读信号很容易被误读为抽象 truth representation。通过词汇平衡、completion margin、prompt-final steering、random/permutation controls、repeated splits 和 ablation，本文将结论收束为一个较窄但更可靠的表述：GPT-2-small 在词汇平衡首都事实中存在一个可读、可弱干预的事实配对标签信号，它主要影响补全评分，而不是稳定的事实选择行为。
 
-对课程项目要求而言，本文完成了 Locate 与 Steer，并对 Improve 进行了系统检验：干预能够稳定移动补全评分，但只产生很弱的选择层面改善。论文复现/扩展部分围绕 Bao et al. [1] 的 truth direction 泛化问题意识，在小模型上复现线性可读现象并补充了 confound 与控制实验。
+对课程项目要求而言，本文按照 Locate、Steer 与 Improve 的行动式机制可解释性框架 [12] 完成了 Locate 与 Steer，并对 Improve 进行了系统检验：干预能够稳定移动补全评分，但只产生很弱的选择层面改善。论文复现/扩展部分围绕 Bao et al. [1] 的 truth direction 泛化问题意识，在小模型上复现线性可读现象并补充了 confound 与控制实验。
 
 ## 7. References
 

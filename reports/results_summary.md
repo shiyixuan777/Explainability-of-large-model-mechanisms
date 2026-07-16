@@ -3,9 +3,9 @@
 This file is generated from CSV artifacts by `python -m scripts.summarize_results`.
 Use it as a compact table index for the report results.
 
-Generated at: 2026-07-16T09:09:06
-Git commit at generation: 6ba62d6
-Working tree dirty at generation: no
+Generated at: 2026-07-16T09:25:02
+Git commit at generation: d86b6f8
+Working tree dirty at generation: yes
 Source directory: project root
 Script: `scripts/summarize_results.py`
 
@@ -34,7 +34,7 @@ Script: `scripts/summarize_results.py`
 | capital | numeric_surface | 0.478 | 0.451 | 0.549 |
 | capital | bag_of_words | 0.174 | 0.067 | 0.933 |
 
-## Probe Sweep: Top Settings
+## Probe Sweep: Top Settings by Direction-Agnostic AUC
 
 | domain | prompt | layer | accuracy | auc | direction_agnostic_auc |
 | --- | --- | --- | --- | --- | --- |
@@ -337,7 +337,7 @@ Misclassified examples:
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 24 | 76 | 0.917 | 10 | 0 | 0.083 | 0.125 | 1 | 0.135 |
 
-### Unembedding Projection Baseline
+### All-Positions Unembedding Projection Baseline
 
 | direction | observed_mean | predicted_mean | observed_abs_mean | predicted_abs_mean | mean_abs_residual | corr | corr_squared |
 | --- | --- | --- | --- | --- | --- | --- | --- |
