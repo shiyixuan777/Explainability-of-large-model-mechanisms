@@ -3,9 +3,9 @@
 This file is generated from CSV artifacts by `python -m scripts.summarize_results`.
 Use it as a compact table index for the report results.
 
-Generated at: 2026-07-16T09:08:06
-Git commit at generation: 0f157cf
-Working tree dirty at generation: yes
+Generated at: 2026-07-16T09:09:06
+Git commit at generation: 6ba62d6
+Working tree dirty at generation: no
 Source directory: project root
 Script: `scripts/summarize_results.py`
 
