@@ -21,12 +21,142 @@ def read_csv(path: Path) -> pd.DataFrame | None:
     return pd.read_csv(path)
 
 
+HEADER_LABELS = {
+    "claim": "结论",
+    "key_result": "关键结果",
+    "domain": "领域",
+    "baseline": "基线",
+    "prompt": "提示词",
+    "layer": "层",
+    "accuracy": "准确率",
+    "auc": "AUC",
+    "direction_agnostic_auc": "方向无关 AUC",
+    "mean_accuracy": "平均准确率",
+    "std_accuracy": "准确率标准差",
+    "mean_auc": "平均 AUC",
+    "std_auc": "AUC 标准差",
+    "min_auc": "最小 AUC",
+    "max_auc": "最大 AUC",
+    "analysis": "分析",
+    "group": "分组",
+    "rows": "样本数",
+    "blocks": "数据块数",
+    "auc_ci_low": "AUC CI 下界",
+    "auc_ci_high": "AUC CI 上界",
+    "grouping_margin_column": "分组得分差列",
+    "grouping_margin_mean": "分组得分差均值",
+    "pc1_explained_variance": "PC1 解释方差",
+    "pc2_explained_variance": "PC2 解释方差",
+    "verbalizer": "标签词",
+    "shots": "示例数",
+    "predicted_true_rate": "预测 true 比例",
+    "mean_logit_margin": "平均 logit 差",
+    "source": "源领域",
+    "target": "目标领域",
+    "mean_cross_domain_cosine": "平均跨领域余弦",
+    "min_cross_domain_cosine": "最小跨领域余弦",
+    "max_cross_domain_cosine": "最大跨领域余弦",
+    "test_rows": "测试样本数",
+    "correct": "正确数",
+    "wrong": "错误数",
+    "statement": "陈述",
+    "label": "标签",
+    "prediction": "预测",
+    "prob_true": "true 概率",
+    "component": "组件",
+    "mean_recovery": "平均恢复率",
+    "median_recovery": "恢复率中位数",
+    "patched_logit_diff": "修补后 logit 差",
+    "mean_abs_logit_shift": "平均绝对 logit 变化",
+    "mean_abs_denominator": "平均绝对分母",
+    "alpha": "alpha",
+    "logit_sign_accuracy": "logit 符号准确率",
+    "heldout_probe_threshold_accuracy": "留出探针阈值准确率",
+    "probe_threshold_accuracy": "探针阈值准确率",
+    "mean_probe_score": "平均探针分数",
+    "split": "划分",
+    "threshold_source": "阈值来源",
+    "mean_logit_correct_margin": "平均正确 logit 得分差",
+    "mean_probe_correct_margin": "平均正确探针得分差",
+    "mode": "模式",
+    "direction": "方向",
+    "mean_delta_avg_token_margin": "平均词元得分差变化",
+    "delta_ci": "变化 CI",
+    "pairwise_avg_accuracy": "配对偏好准确率",
+    "block_exact_accuracy": "数据块完全正确率",
+    "delta_correct_logprob": "正确补全 logprob 变化",
+    "delta_false_logprob": "错误补全 logprob 变化",
+    "delta_margin": "得分差变化",
+    "delta_margin_std": "得分差变化标准差",
+    "baseline_correct_shift": "基线正确时变化",
+    "baseline_wrong_shift": "基线错误时变化",
+    "baseline_correct_minus_wrong": "正确-错误变化差",
+    "baseline_diff_ci": "变化差 CI",
+    "sign_flips": "符号翻转数",
+    "baseline_delta_corr": "基线得分差与变化相关",
+    "metric": "指标",
+    "comparison": "比较",
+    "estimate": "估计值",
+    "ci": "CI",
+    "ci_unit": "CI 单位",
+    "position_mode": "干预位置模式",
+    "control_type": "对照类型",
+    "directions": "方向数",
+    "mean_delta": "平均变化",
+    "null_95_interval": "零分布 95% 区间",
+    "learned_effect": "学习方向效果",
+    "learned_percentile": "学习方向分位数",
+    "empirical_p_ge_learned": "经验 p 值",
+    "scope": "范围",
+    "splits": "划分数",
+    "learned_delta": "学习方向变化",
+    "learned_delta_std": "学习方向变化标准差",
+    "learned_delta_range": "学习方向变化范围",
+    "learned_minus_random_mean": "学习-随机均值",
+    "learned_minus_permutation_mean": "学习-置乱均值",
+    "learned_gt_all_random_splits": "强于全部随机方向的划分数",
+    "learned_gt_all_permutation_splits": "强于全部置乱方向的划分数",
+    "baseline_pairwise_accuracy": "基线配对准确率",
+    "mean_pairwise_accuracy": "平均配对准确率",
+    "pairwise_accuracy_change": "配对准确率变化",
+    "total_sign_flips": "总符号翻转数",
+    "wrong_to_correct_flips": "错误转正确次数",
+    "correct_to_wrong_flips": "正确转错误次数",
+    "heldout_blocks": "留出数据块数",
+    "delta": "变化",
+    "pairwise_accuracy": "配对准确率",
+    "heldout_countries": "留出国家数",
+    "candidate_count": "候选数",
+    "mean_rank_delta": "平均排名变化",
+    "rank_improved_count": "排名改善数",
+    "rank_worsened_count": "排名变差数",
+    "baseline_top1_accuracy": "基线 top-1 准确率",
+    "steered_top1_accuracy": "干预后 top-1 准确率",
+    "top1_changed_count": "top-1 改变数",
+    "selected_pair_margin_delta": "选定配对得分差变化",
+    "observed_mean": "观测均值",
+    "predicted_mean": "预测均值",
+    "observed_abs_mean": "观测绝对均值",
+    "predicted_abs_mean": "预测绝对均值",
+    "mean_abs_residual": "平均绝对残差",
+    "corr": "相关系数",
+    "corr_squared": "决定系数",
+    "strength": "强度",
+    "fixed_direction_score_gap": "固定方向分数差",
+    "fixed_direction_accuracy": "固定方向准确率",
+    "retrained_probe_auc": "重训探针 AUC",
+    "control": "对照",
+    "directions_removed": "移除方向数",
+}
+
+
 def markdown_table(rows: list[dict[str, object]]) -> str:
     if not rows:
-        return "_No data available._\n"
+        return "_无可用数据。_\n"
     headers = list(rows[0].keys())
+    display_headers = [HEADER_LABELS.get(header, header) for header in headers]
     table = [
-        "| " + " | ".join(headers) + " |",
+        "| " + " | ".join(display_headers) + " |",
         "| " + " | ".join("---" for _ in headers) + " |",
     ]
     for row in rows:
@@ -75,20 +205,20 @@ def main() -> None:
     commit, dirty = git_metadata()
 
     lines: list[str] = [
-        "# Results Summary",
+        "# 结果汇总",
         "",
-        "This file is generated from CSV artifacts by `python -m scripts.summarize_results`.",
-        "Use it as a compact table index for the report results.",
+        "本文件由 `python -m scripts.summarize_results` 根据 CSV 结果自动生成。",
+        "它用于作为报告结果的紧凑表格索引。",
         "",
-        f"Generated at: {datetime.now().isoformat(timespec='seconds')}",
-        f"Git commit at generation: {commit}",
-        f"Working tree dirty at generation: {dirty}",
-        "Source directory: project root",
-        "Script: `scripts/summarize_results.py`",
+        f"生成时间：{datetime.now().isoformat(timespec='seconds')}",
+        f"生成时 Git commit：{commit}",
+        f"生成时工作树是否有未提交修改：{dirty}",
+        "源目录：项目根目录",
+        "生成脚本：`scripts/summarize_results.py`",
         "",
-        "`direction_agnostic_auc = max(AUC, 1 - AUC)`. It diagnoses whether scores have a strong label-ranking relation regardless of sign; it is not a claim that the train-time label direction generalizes as a classifier.",
+        "`direction_agnostic_auc = max(AUC, 1 - AUC)`。它诊断预测分数与标签之间是否存在强排序关系，而不关心方向符号；它不表示训练时学到的标签方向一定能作为分类器稳定泛化。",
         "",
-        "`learned_percentile = 1.0` means no sampled null direction exceeded the learned effect in the sampled set; it is not a population percentile estimate. `mean_rank_delta > 0` means the correct candidate moved toward rank 1. Repeated-split flip counts are evaluation occurrences across overlapping splits, not necessarily unique countries.",
+        "`learned_percentile = 1.0` 表示在当前采样集合中没有零分布方向超过学习方向效果；它不是总体分位数估计。`mean_rank_delta > 0` 表示正确候选向 rank 1 移动。重复划分中的翻转计数是跨重叠划分的评价事件，不一定对应互不重复的国家。",
         "",
     ]
 
@@ -103,10 +233,10 @@ def main() -> None:
         if not layer8.empty and not bow.empty:
             core_rows.append(
                 {
-                    "claim": "Original lexical confound",
+                    "claim": "原始数据存在词汇混杂",
                     "key_result": (
-                        f"layer 8 residual AUC {fmt(layer8.iloc[0]['auc'])}; "
-                        f"BOW direction-agnostic AUC {fmt(bow.iloc[0]['separability_auc'])}"
+                        f"第 8 层残差流 AUC {fmt(layer8.iloc[0]['auc'])}；"
+                        f"BOW 方向无关 AUC {fmt(bow.iloc[0]['separability_auc'])}"
                     ),
                 }
             )
@@ -114,7 +244,7 @@ def main() -> None:
     if balanced_probe_for_core is not None:
         layer6 = balanced_probe_for_core[balanced_probe_for_core["layer"] == 6]
         if not layer6.empty:
-            core_rows.append({"claim": "Balanced readout", "key_result": f"layer 6 AUC {fmt(layer6.iloc[0]['auc'])}"})
+            core_rows.append({"claim": "词汇平衡后仍可读出", "key_result": f"第 6 层 AUC {fmt(layer6.iloc[0]['auc'])}"})
     prompt_final_for_core = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_summary.csv")
     if prompt_final_for_core is not None:
         row = prompt_final_for_core[
@@ -125,8 +255,8 @@ def main() -> None:
         if not row.empty:
             core_rows.append(
                 {
-                    "claim": "Score intervention",
-                    "key_result": f"prompt-final delta {fmt(row.iloc[0]['mean_delta_avg_token_margin'])}",
+                    "claim": "评分层面干预",
+                    "key_result": f"提示词末位置变化 {fmt(row.iloc[0]['mean_delta_avg_token_margin'])}",
                 }
             )
     repeated_for_core = read_csv(figures_dir / "repeated_split_completion_steering_summary.csv")
@@ -139,16 +269,16 @@ def main() -> None:
             split_count = len(split_rows_for_core)
             core_rows.append(
                 {
-                    "claim": "Repeated split stability",
-                    "key_result": f"{positive_splits}/{split_count} positive; mean {fmt(row.learned_delta)}",
+                    "claim": "重复划分稳定性",
+                    "key_result": f"{positive_splits}/{split_count} 个划分为正；均值 {fmt(row.learned_delta)}",
                 }
             )
             core_rows.append(
                 {
-                    "claim": "Choice effect",
+                    "claim": "选择层面效果",
                     "key_result": (
-                        f"pairwise change {fmt(row.pairwise_accuracy_change)}; "
-                        f"wrong->correct events {int(row.wrong_to_correct_flips)}"
+                        f"配对准确率变化 {fmt(row.pairwise_accuracy_change)}；"
+                        f"错误转正确事件 {int(row.wrong_to_correct_flips)}"
                     ),
                 }
             )
@@ -157,7 +287,7 @@ def main() -> None:
         row = rank_for_core.iloc[0]
         core_rows.append(
             {
-                "claim": "Candidate-set top-1",
+                "claim": "候选集 top-1",
                 "key_result": f"{fmt(row.baseline_top1_accuracy)} -> {fmt(row.steered_top1_accuracy)}",
             }
         )
@@ -167,12 +297,12 @@ def main() -> None:
         if not strength1.empty:
             core_rows.append(
                 {
-                    "claim": "Mechanism boundary",
-                    "key_result": f"single-direction ablation retrained AUC {fmt(strength1.iloc[0]['auc'])}",
+                    "claim": "机制边界",
+                    "key_result": f"单方向消融后重训 AUC {fmt(strength1.iloc[0]['auc'])}",
                 }
             )
     if core_rows:
-        lines += ["## Core Result Index", "", markdown_table(core_rows), ""]
+        lines += ["## 核心结果索引", "", markdown_table(core_rows), ""]
 
     surface = read_csv(figures_dir / "surface_baselines.csv")
     if surface is not None:
@@ -186,7 +316,7 @@ def main() -> None:
             }
             for row in surface.itertuples(index=False)
         ]
-        lines += ["## Original Surface Baselines", "", markdown_table(rows), ""]
+        lines += ["## 原始数据表面特征基线", "", markdown_table(rows), ""]
 
     sweep = read_csv(figures_dir / "probe_sweep.csv")
     if sweep is not None:
@@ -208,7 +338,7 @@ def main() -> None:
             }
             for row in best.itertuples(index=False)
         ]
-        lines += ["## Probe Sweep: Top Settings by Direction-Agnostic AUC", "", markdown_table(rows), ""]
+        lines += ["## 探针扫描：按方向无关 AUC 排序的最高设置", "", markdown_table(rows), ""]
 
     probe = read_csv(figures_dir / "probe_capital_answer.csv")
     if probe is not None:
@@ -233,13 +363,13 @@ def main() -> None:
             for row in top_acc.itertuples(index=False)
         ]
         lines += [
-            "## Focused Capital Probe",
+            "## 首都任务重点探针",
             "",
-            "Top layers by AUC:",
+            "按 AUC 排序的最高层：",
             "",
             markdown_table(rows_auc),
             "",
-            "Top layers by accuracy:",
+            "按准确率排序的最高层：",
             "",
             markdown_table(rows_acc),
             "",
@@ -271,7 +401,7 @@ def main() -> None:
             }
             for row in summary.itertuples(index=False)
         ]
-        lines += ["## Probe Seed Sensitivity", "", markdown_table(rows), ""]
+        lines += ["## 探针随机种子敏感性", "", markdown_table(rows), ""]
 
     balanced_probe = read_csv(figures_dir / "probe_capital_balanced.csv")
     balanced_surface = read_csv(figures_dir / "surface_baselines_capital_balanced.csv")
@@ -287,7 +417,7 @@ def main() -> None:
             }
             for row in top_balanced.itertuples(index=False)
         ]
-        lines += ["## Lexically Balanced Capital Probe", "", markdown_table(rows), ""]
+        lines += ["## 词汇平衡首都探针", "", markdown_table(rows), ""]
 
     if balanced_surface is not None:
         rows = [
@@ -300,7 +430,7 @@ def main() -> None:
             }
             for row in balanced_surface.itertuples(index=False)
         ]
-        lines += ["## Lexically Balanced Surface Baselines", "", markdown_table(rows), ""]
+        lines += ["## 词汇平衡表面特征基线", "", markdown_table(rows), ""]
 
     if balanced_seeds is not None:
         summary = (
@@ -323,7 +453,7 @@ def main() -> None:
             }
             for row in summary.itertuples(index=False)
         ]
-        lines += ["## Lexically Balanced Probe Seed Sensitivity", "", markdown_table(rows), ""]
+        lines += ["## 词汇平衡探针随机种子敏感性", "", markdown_table(rows), ""]
 
     knowledge = read_csv(figures_dir / "capital_knowledge_margin_summary.csv")
     if knowledge is not None:
@@ -353,17 +483,17 @@ def main() -> None:
             for row in selected.itertuples(index=False)
         ]
         lines += [
-            "## Capital Completion Margin Baseline",
+            "## 首都补全得分差基线",
             "",
-            "`grouping_margin_mean` is the mean of the margin column used to define or summarize the row group; for `residual_probe` rows it is not the mean probe score.",
+            "`grouping_margin_mean` 是用于定义或汇总该行分组的得分差列均值；对于 `residual_probe` 行，它不是平均探针分数。",
             "",
-            "Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` are exploratory, post-hoc subsets defined by avg-token margin and are not used for confirmatory claims.",
+            "`heldout_high_avg_token_margin` 和 `heldout_low_avg_token_margin` 是按平均词元得分差事后划分的探索性子集，不用于确认性结论。",
             "",
             markdown_table(rows),
             "",
         ]
 
-    lines += ["## Exploratory and Supplementary Diagnostics", ""]
+    lines += ["## 探索性与补充诊断", ""]
 
     pca = read_csv(figures_dir / "pca_capital_layer8.csv")
     if pca is not None:
@@ -375,7 +505,7 @@ def main() -> None:
                 "rows": len(pca),
             }
         ]
-        lines += ["### Activation PCA", "", markdown_table(rows), ""]
+        lines += ["### 激活 PCA", "", markdown_table(rows), ""]
 
     readout = read_csv(figures_dir / "output_readout_baselines.csv")
     if readout is not None:
@@ -400,7 +530,7 @@ def main() -> None:
                 }
                 for row in best.itertuples(index=False)
             ]
-            lines += ["### Output Readout Baselines", "", markdown_table(rows), ""]
+            lines += ["### 输出读出基线", "", markdown_table(rows), ""]
 
     transfer = read_csv(figures_dir / "domain_transfer_layer8.csv")
     if transfer is not None:
@@ -417,7 +547,7 @@ def main() -> None:
                 }
                 for row in best_cross.itertuples(index=False)
             ]
-            lines += ["### Cross-Domain Direction Transfer", "", markdown_table(rows), ""]
+            lines += ["### 跨领域方向迁移", "", markdown_table(rows), ""]
 
     cosine = read_csv(figures_dir / "domain_direction_cosine_layer8.csv")
     if cosine is not None:
@@ -430,7 +560,7 @@ def main() -> None:
                     "max_cross_domain_cosine": fmt(cross["cosine_similarity"].max()),
                 }
             ]
-            lines += ["### Domain Direction Cosine Summary", "", markdown_table(rows), ""]
+            lines += ["### 领域方向余弦相似度汇总", "", markdown_table(rows), ""]
 
     errors = read_csv(figures_dir / "error_analysis_capital_layer8.csv")
     if errors is not None:
@@ -445,7 +575,7 @@ def main() -> None:
                 "accuracy": fmt(correct / total),
             }
         ]
-        lines += ["### Error Analysis", "", markdown_table(rows), ""]
+        lines += ["### 错误分析", "", markdown_table(rows), ""]
 
         error_rows = errors.loc[~errors["correct"]].sort_values("confidence", ascending=False).head(8)
         examples = [
@@ -457,7 +587,7 @@ def main() -> None:
             }
             for row in error_rows.itertuples(index=False)
         ]
-        lines += ["Misclassified examples:", "", markdown_table(examples), ""]
+        lines += ["误分类样本：", "", markdown_table(examples), ""]
 
     patching = read_csv(figures_dir / "activation_patching_capital_recall.csv")
     if patching is not None:
@@ -477,7 +607,7 @@ def main() -> None:
             }
             for row in best.itertuples(index=False)
         ]
-        lines += ["### Activation Patching: Best Layer by Component", "", markdown_table(rows), ""]
+        lines += ["### 激活修补：各组件最佳层", "", markdown_table(rows), ""]
 
     truth_patching = read_csv(figures_dir / "truth_verification_patching_resid.csv")
     if truth_patching is not None:
@@ -498,7 +628,7 @@ def main() -> None:
             }
             for row in best.itertuples(index=False)
         ]
-        lines += ["### Truth Verification Patching", "", markdown_table(rows), ""]
+        lines += ["### 事实验证激活修补", "", markdown_table(rows), ""]
 
     steering = read_csv(figures_dir / "steering_capital_probe_layer8.csv")
     if steering is not None:
@@ -513,7 +643,7 @@ def main() -> None:
             }
             for row in steering.itertuples(index=False)
         ]
-        lines += ["### Probe-Direction Steering", "", markdown_table(rows), ""]
+        lines += ["### 探针方向激活干预", "", markdown_table(rows), ""]
 
     oracle = read_csv(figures_dir / "oracle_steering_capital_probe_layer8.csv")
     if oracle is not None:
@@ -528,9 +658,9 @@ def main() -> None:
             }
             for row in oracle.itertuples(index=False)
         ]
-        lines += ["### Oracle Conditional Steering", "", markdown_table(rows), ""]
+        lines += ["### Oracle 条件干预", "", markdown_table(rows), ""]
 
-    lines += ["## Main Balanced Steering Results", ""]
+    lines += ["## 词汇平衡主线干预结果", ""]
 
     completion_steering = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_summary.csv")
     if completion_steering is not None:
@@ -549,7 +679,7 @@ def main() -> None:
             }
             for row in heldout.itertuples(index=False)
         ]
-        lines += ["### Balanced Prompt-Final Completion-Margin Steering", "", markdown_table(rows), ""]
+        lines += ["### 词汇平衡提示词末位置补全得分差干预", "", markdown_table(rows), ""]
 
     completion_decomposition = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_decomposition.csv")
     if completion_decomposition is not None:
@@ -577,7 +707,7 @@ def main() -> None:
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["### Prompt-Final Completion-Margin Steering Decomposition", "", markdown_table(rows), ""]
+        lines += ["### 提示词末位置补全得分差干预分解", "", markdown_table(rows), ""]
 
     completion_paired = read_csv(figures_dir / "completion_margin_steering_position_prompt_final_paired_bootstrap.csv")
     if completion_paired is not None:
@@ -592,7 +722,7 @@ def main() -> None:
             }
             for row in heldout.itertuples(index=False)
         ]
-        lines += ["### Prompt-Final Completion Steering Paired Bootstrap", "", markdown_table(rows), ""]
+        lines += ["### 提示词末位置补全干预配对自助法", "", markdown_table(rows), ""]
 
     position_summary_paths = [
         figures_dir / "completion_margin_steering_summary.csv",
@@ -616,7 +746,7 @@ def main() -> None:
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["### Completion Steering Position Decomposition", "", markdown_table(rows), ""]
+        lines += ["### 补全干预位置分解", "", markdown_table(rows), ""]
 
     position_paired_paths = [
         figures_dir / "completion_margin_steering_position_prompt_final_paired_bootstrap.csv",
@@ -641,7 +771,7 @@ def main() -> None:
             }
             for row in heldout.itertuples(index=False)
         ]
-        lines += ["### Position Decomposition Paired Bootstrap", "", markdown_table(rows), ""]
+        lines += ["### 位置分解配对自助法", "", markdown_table(rows), ""]
 
     null_summary = read_csv(figures_dir / "completion_margin_steering_null_summary.csv")
     if null_summary is not None:
@@ -659,7 +789,7 @@ def main() -> None:
             }
             for row in null_summary.itertuples(index=False)
         ]
-        lines += ["### Completion Steering Null Distribution", "", markdown_table(rows), ""]
+        lines += ["### 补全干预零分布", "", markdown_table(rows), ""]
 
     repeated = read_csv(figures_dir / "repeated_split_completion_steering_summary.csv")
     if repeated is not None:
@@ -687,7 +817,7 @@ def main() -> None:
                     "correct_to_wrong_flips": int(row.correct_to_wrong_flips),
                 }
             )
-        lines += ["### Repeated Split Completion Steering", "", markdown_table(rows), ""]
+        lines += ["### 重复划分补全干预", "", markdown_table(rows), ""]
 
     ambiguous = read_csv(figures_dir / "ambiguous_fact_sensitivity_summary.csv")
     if ambiguous is not None:
@@ -729,7 +859,7 @@ def main() -> None:
                         "sign_flips": "",
                     }
                 )
-        lines += ["### Ambiguous-Fact Sensitivity", "", markdown_table(rows), ""]
+        lines += ["### 争议事实敏感性", "", markdown_table(rows), ""]
 
     rank = read_csv(figures_dir / "candidate_rank_steering_summary.csv")
     if rank is not None:
@@ -747,7 +877,7 @@ def main() -> None:
             }
             for row in rank.itertuples(index=False)
         ]
-        lines += ["### Candidate-Set Rank Steering", "", markdown_table(rows), ""]
+        lines += ["### 候选集排名干预", "", markdown_table(rows), ""]
 
     projection_summary = read_csv(figures_dir / "unembedding_projection_baseline_summary.csv")
     if projection_summary is not None:
@@ -768,7 +898,7 @@ def main() -> None:
             }
             for row in selected.itertuples(index=False)
         ]
-        lines += ["### All-Positions Unembedding Projection Baseline", "", markdown_table(rows), ""]
+        lines += ["### 全位置 unembedding 投影基线", "", markdown_table(rows), ""]
 
     ablation = read_csv(figures_dir / "ablation_capital_probe_layer8.csv")
     if ablation is not None:
@@ -781,7 +911,7 @@ def main() -> None:
             }
             for row in ablation.itertuples(index=False)
         ]
-        lines += ["### Probe-Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### 探针方向消融", "", markdown_table(rows), ""]
 
     balanced_ablation = read_csv(figures_dir / "ablation_capital_balanced_layer6.csv")
     if balanced_ablation is not None:
@@ -794,7 +924,7 @@ def main() -> None:
             }
             for row in balanced_ablation.itertuples(index=False)
         ]
-        lines += ["### Lexically Balanced Probe-Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### 词汇平衡探针方向消融", "", markdown_table(rows), ""]
 
     iterative_ablation = read_csv(figures_dir / "iterative_ablation_capital_layer8.csv")
     if iterative_ablation is not None:
@@ -811,7 +941,7 @@ def main() -> None:
             }
             for row in key_steps.itertuples(index=False)
         ]
-        lines += ["### Iterative Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### 迭代方向消融", "", markdown_table(rows), ""]
 
     balanced_iterative = read_csv(figures_dir / "iterative_ablation_capital_balanced_layer6.csv")
     if balanced_iterative is not None:
@@ -828,7 +958,7 @@ def main() -> None:
             }
             for row in key_steps.itertuples(index=False)
         ]
-        lines += ["### Lexically Balanced Iterative Direction Ablation", "", markdown_table(rows), ""]
+        lines += ["### 词汇平衡迭代方向消融", "", markdown_table(rows), ""]
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text("\n".join(lines), encoding="utf-8")
