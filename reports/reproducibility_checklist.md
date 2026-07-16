@@ -478,10 +478,13 @@ figures/unembedding_projection_baseline_summary.png
 Key expected result:
 
 ```text
-learned_probe alpha=+4 raises correct avg-token logprob by about +0.280 and false avg-token logprob by about +0.147
+all-positions diagnostic: learned_probe alpha=+4 raises correct avg-token logprob by about +0.280, false avg-token logprob by about +0.147, and margin by about +0.133
+prompt-final-only main result: learned_probe alpha=+4 raises correct avg-token logprob by about +0.281, false avg-token logprob by about +0.146, and margin by about +0.135
 held-out sign_flip_total remains 0
-learned minus random delta-margin paired CI is about [0.094, 0.239]
-learned minus label-permutation delta-margin paired CI is about [0.092, 0.233]
+all-positions learned minus random delta-margin paired CI is about [0.094, 0.239]
+all-positions learned minus label-permutation delta-margin paired CI is about [0.092, 0.233]
+prompt-final-only learned minus random delta-margin paired CI is about [0.096, 0.239]
+prompt-final-only learned minus label-permutation delta-margin paired CI is about [0.090, 0.232]
 learned minus random slope paired CI is about [0.024, 0.059]
 learned minus label-permutation slope paired CI is about [0.023, 0.058]
 prompt-final-only learned alpha=+4 shifts held-out avg-token completion margin by about +0.135

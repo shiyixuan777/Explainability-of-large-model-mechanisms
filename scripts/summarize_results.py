@@ -174,6 +174,20 @@ def main() -> None:
     if core_rows:
         lines += ["## Core Result Index", "", markdown_table(core_rows), ""]
 
+    surface = read_csv(figures_dir / "surface_baselines.csv")
+    if surface is not None:
+        rows = [
+            {
+                "domain": row.domain,
+                "baseline": row.baseline,
+                "accuracy": fmt(row.accuracy),
+                "auc": fmt(row.auc),
+                "direction_agnostic_auc": fmt(row.separability_auc),
+            }
+            for row in surface.itertuples(index=False)
+        ]
+        lines += ["## Original Surface Baselines", "", markdown_table(rows), ""]
+
     sweep = read_csv(figures_dir / "probe_sweep.csv")
     if sweep is not None:
         best = (
@@ -387,20 +401,6 @@ def main() -> None:
                 for row in best.itertuples(index=False)
             ]
             lines += ["### Output Readout Baselines", "", markdown_table(rows), ""]
-
-    surface = read_csv(figures_dir / "surface_baselines.csv")
-    if surface is not None:
-        rows = [
-            {
-                "domain": row.domain,
-                "baseline": row.baseline,
-                "accuracy": fmt(row.accuracy),
-                "auc": fmt(row.auc),
-                "direction_agnostic_auc": fmt(row.separability_auc),
-            }
-            for row in surface.itertuples(index=False)
-        ]
-        lines += ["### Surface Baselines", "", markdown_table(rows), ""]
 
     transfer = read_csv(figures_dir / "domain_transfer_layer8.csv")
     if transfer is not None:

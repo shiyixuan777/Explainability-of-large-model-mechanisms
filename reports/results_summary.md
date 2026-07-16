@@ -3,9 +3,9 @@
 This file is generated from CSV artifacts by `python -m scripts.summarize_results`.
 Use it as a compact table index for the report results.
 
-Generated at: 2026-07-16T08:55:28
-Git commit at generation: 78b1b8e
-Working tree dirty at generation: no
+Generated at: 2026-07-16T09:08:06
+Git commit at generation: 0f157cf
+Working tree dirty at generation: yes
 Source directory: project root
 Script: `scripts/summarize_results.py`
 
@@ -24,6 +24,15 @@ Script: `scripts/summarize_results.py`
 | Choice effect | pairwise change 0.025; wrong->correct events 6 |
 | Candidate-set top-1 | 0.083 -> 0.125 |
 | Mechanism boundary | single-direction ablation retrained AUC 0.786 |
+
+## Original Surface Baselines
+
+| domain | baseline | accuracy | auc | direction_agnostic_auc |
+| --- | --- | --- | --- | --- |
+| all | numeric_surface | 0.481 | 0.453 | 0.547 |
+| all | bag_of_words | 0.281 | 0.192 | 0.808 |
+| capital | numeric_surface | 0.478 | 0.451 | 0.549 |
+| capital | bag_of_words | 0.174 | 0.067 | 0.933 |
 
 ## Probe Sweep: Top Settings
 
@@ -137,15 +146,6 @@ Rows named `heldout_high_avg_token_margin` and `heldout_low_avg_token_margin` ar
 | capital | correct_incorrect | statement_correct | 0 | 0.500 | 0.495 | 1.000 | 2.052 |
 | capital | lower_true_false | answer_true_false | 2 | 0.500 | 0.486 | 1.000 | 1.607 |
 | capital | title_true_false | answer_True_False | 0 | 0.500 | 0.530 | 1.000 | 1.510 |
-
-### Surface Baselines
-
-| domain | baseline | accuracy | auc | direction_agnostic_auc |
-| --- | --- | --- | --- | --- |
-| all | numeric_surface | 0.481 | 0.453 | 0.547 |
-| all | bag_of_words | 0.281 | 0.192 | 0.808 |
-| capital | numeric_surface | 0.478 | 0.451 | 0.549 |
-| capital | bag_of_words | 0.174 | 0.067 | 0.933 |
 
 ### Cross-Domain Direction Transfer
 

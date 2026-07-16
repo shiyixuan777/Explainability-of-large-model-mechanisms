@@ -13,7 +13,6 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FILES = [
     "README.md",
     "requirements.txt",
-    "requirements-lock.txt",
     "data/facts.csv",
     "data/capital_balanced.csv",
     "reports/final_report.md",

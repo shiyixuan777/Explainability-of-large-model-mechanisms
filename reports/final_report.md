@@ -4,7 +4,7 @@
 
 本文研究 GPT-2-small 在人工事实验证任务中的 final-token residual stream 是否包含可线性读出的事实配对标签信号，以及该信号是否能通过推理时干预影响模型的后续补全评分。实验首先发现，原始首都事实数据上的 residual probe 很强，layer 8 AUC 为 0.953；但词袋 surface baseline 的方向无关 AUC 也达到 0.933，说明原始高分受到明显词汇伪线索放大。为此，本文构造词汇平衡首都数据集，使每个国家名和首都名在 true/false 标签中的边际频率完全平衡。在该设置下，bag-of-words 和 numeric surface baseline 均降到 0.500，而 layer 6 residual probe 仍保留 0.809 AUC，多 seed mean AUC 为 0.813。
 
-进一步实验显示，这一信号与模型补全兼容度相关，但不是直接的事实选择机制。补全评分 margin 中，total logprob AUC 为 0.861，但按 token 数归一化后 avg-token AUC 降至 0.786，与 residual probe 的 0.809 高度重叠。沿 balanced layer 6 标签相关方向在 prompt-final residual state 上进行干预，可将 held-out avg-token 补全评分 margin 推动约 +0.135，并超过当前采样的 50 条随机方向和 20 条乱标签方向。10 个 repeated group splits 中，learned shift 均为正，均值为 +0.116。
+进一步实验显示，这一信号与模型补全兼容度相关，但不是直接的事实选择机制。补全评分 margin 中，total logprob AUC 为 0.861，但按 token 数归一化后 avg-token AUC 降至 0.786，与 residual probe 的 0.809 接近，且二者 bootstrap 区间高度重叠。沿 balanced layer 6 标签相关方向在 prompt-final residual state 上进行干预，可将 held-out avg-token 补全评分 margin 推动约 +0.135，并超过当前采样的 50 条随机方向和 20 条乱标签方向。10 个 repeated group splits 中，learned shift 均为正，均值为 +0.116。
 
 这种效果主要停留在评分层面。当前主 split 的 pairwise preference accuracy 没有改变；repeated splits 中 pairwise accuracy 只从 0.700 提升到 0.725；candidate-set rank 检查中，正确首都平均 rank 从 15.04 改善到 14.13，top-1 accuracy 仅从 0.083 到 0.125。因此，本文的结论是：GPT-2-small 在词汇平衡首都事实中存在一个可读且可弱干预的事实配对标签信号；它能影响“正确首都 vs 选定错误首都”的补全评分 margin，但尚不能解释为跨领域稳定、可直接控制输出的全局 truth direction，也尚未定位完整事实机制路径。
 
@@ -72,7 +72,7 @@ Germany - Paris   false
 | completion 指标 | 正确首都与选定错误首都的 total logprob margin 和 avg-token margin |
 | bootstrap | 以 `pair_id` block 为采样单位，主实验 2000 次；随机种子为 42 |
 | controls | L2-normalized Gaussian random directions、label-permutation probe directions |
-| 软件环境 | 在 Windows + Python 虚拟环境中运行；完整依赖见 `requirements.txt`，实际版本以本地环境为准 |
+| 测试环境 | Windows 11、Python 3.13.7、PyTorch 2.12.1 CPU、TransformerLens 3.5.1；关键依赖见 `requirements.txt` |
 
 Layer 6 是在主 split 的 balanced probe sweep 中选定的，随后固定用于 completion-margin steering、sampled null controls、position decomposition 和 repeated-split experiments。因此，主 split 上 layer-specific 结果带有探索性选择成分；repeated split experiments 用于检查固定该层后 effect 是否仍能跨多个 group split 重复出现。alpha sweep 预先使用对称集合 `{-4, -2, -1, 0, 1, 2, 4}`，`alpha=4` 作为正向端点用于 null-control 比较。当前 bootstrap/null CI 没有把 layer 选择的不确定性纳入区间。
 
@@ -91,6 +91,10 @@ completion_avg_token_margin =
 ```
 
 total logprob 更接近完整 completion 概率，但偏向短 completion；avg-token logprob 缓解长度差异，但改变了指标含义。因此本文同时报告两者，并将 avg-token margin 作为 steering 主指标。
+
+choice-level 指标的统计单位如下。Pairwise preference accuracy 以 held-out country 为单位：若该国家正确首都的 avg-token score 高于选定错误首都，则记为正确。Block exact accuracy 以四行二国二首都 block 为单位：只有 block 内两个 country-level 判断全部正确，才记为正确。Sign flip 指 steering 前后 pairwise avg-token margin 符号发生改变；wrong -> correct 表示 margin 从非正变为正，correct -> wrong 表示 margin 从正变为非正。Candidate-set rank 在 76 个预设首都候选中按 avg-token score 排序，rank 1 表示模型给该候选最高分；top-1 accuracy 表示正确首都是否排在第一位。Repeated split steering 共包含 10 个 split，每个 split 有 24 个 held-out country-level evaluations，因此 aggregate flip 统计的分母是 240 次 evaluation occurrences；其中观察到 6 次 wrong -> correct flip 和 0 次 correct -> wrong flip，这些 occurrences 不一定对应 6 个互不重复的国家。
+
+label-permutation controls 的生成方式也保持固定：只在训练 split 内逐行随机置换标签，held-out split、输入文本和分组不变；由于是置换，训练集正负标签数量保持不变。每条 permutation direction 都重新拟合 scaler 与 logistic probe，再把 probe 权重转换回原 activation basis 并做 L2 归一化。固定 alpha sweep 中的 label-permutation control 和 sampled null distribution 中的 20 条 permutation directions 使用同一流程。
 
 ## 4. Results
 
@@ -224,7 +228,7 @@ ablation 表明 learned direction 与可分性相关但不充分。原始 capita
 
 这一分层解释了为什么本文没有把该方向称为全局 truth direction。probe readout 不等于模型自然使用该方向；completion score improvement 不等于 choice improvement；单方向 ablation 后仍可重新训练出 probe，也说明信号不是单一充分机制。更稳妥的表述是：GPT-2-small 在词汇平衡首都事实中存在一个与事实配对和补全兼容度相关的标签信号，该信号可以弱影响补全评分，但尚未构成完整事实判断机制。
 
-当前工作的主要限制包括：模型只使用 GPT-2-small；主线数据是人工构造首都事实；负样本来自选定错误首都，而不是开放生成；head/MLP/path-level circuit 尚未定位；repeated splits 不是相互独立实验；sampled null distribution 的经验 p 值受方向数量限制。后续工作应优先做更接近 Bao et al. 的 QA / logical transformation 复现，以及 final layernorm、后续层、attention head 和 MLP 的路径级因果分解。
+当前工作的主要限制包括：模型只使用 GPT-2-small；主线数据是人工构造首都事实；负样本来自选定错误首都，而不是开放生成；head/MLP/path-level circuit 尚未定位；repeated splits 不是相互独立实验；sampled null distribution 的经验 p 值受方向数量限制。steering alpha 以 L2-normalized direction 的欧氏尺度定义，尚未根据 residual-stream RMS、activation norm 或训练分布中的 projection standard deviation 校准，因此当前结果能说明该方向具有干预效力，但不能充分判断 `alpha=4` 是否处在自然 activation 分布内；Gaussian random controls 做了 L2 norm matching，但没有匹配 residual activation 的协方差结构。后续工作应优先做更接近 Bao et al. 的 QA / logical transformation 复现，以及 final layernorm、后续层、attention head 和 MLP 的路径级因果分解。
 
 ## 6. Conclusion
 

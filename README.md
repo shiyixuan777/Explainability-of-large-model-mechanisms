@@ -10,13 +10,12 @@
 - [结果汇总](reports/results_summary.md)：从 CSV 自动生成的结果索引。
 - [复现说明](reports/reproducibility_checklist.md)：完整实验 runbook 和 Quick Start。
 - [直接依赖](requirements.txt)：固定版本的直接 Python 依赖。
-- [环境锁定](requirements-lock.txt)：当前虚拟环境的完整包版本快照。
 
 `figures/` 中已包含预计算 CSV 和 PNG；只阅读报告不需要先重跑实验。
 
 ## 环境
 
-当前结果测试于 Windows 11、Python 3.13.7、PyTorch 2.12.1 CPU、TransformerLens 3.5.1。首次运行 GPT-2-small 会从 Hugging Face 下载模型权重。
+当前结果测试于 Windows 11、Python 3.13.7、PyTorch 2.12.1 CPU、TransformerLens 3.5.1。关键依赖见 `requirements.txt`；首次运行 GPT-2-small 会从 Hugging Face 下载模型权重。
 
 ```powershell
 python -m venv .venv
